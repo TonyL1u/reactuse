@@ -1,0 +1,12 @@
+{
+    "extends": "react-app",
+    "rules": {
+        "no-restricted-globals": ["error", "event", "fdescribe"],
+        "import/no-anonymous-default-export": [
+            "error",
+            {
+                "allowArrowFunction": true
+            }
+        ]
+    }
+}

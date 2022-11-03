@@ -1,0 +1,21 @@
+build
+coverage
+pages
+node_modules
+coverage
+# src
+.DS_Store
+.vscode
+static
+scripts
+public
+*.local
+*.ts
+*.js
+*.html
+*.json
+*.tsbuildinfo
+*.yaml
+*.cjs
+.eslintrc
+!package.json

@@ -1,0 +1,58 @@
+$sp-syntax-color-plain: #151515;
+$sp-syntax-color-comment: #999;
+$sp-syntax-fontStyle-comment: italic;
+$sp-syntax-color-keyword: #7c5ae3;
+$sp-syntax-color-tag: #0971f1;
+$sp-syntax-color-punctuation: #3b3b3b;
+$sp-syntax-color-definition: #85a600;
+$sp-syntax-color-property: #3b3b3b;
+$sp-syntax-color-static: #3b3b3b;
+$sp-syntax-color-string: #2e6bd0;
+
+.editor-container {
+    .mtk4 {
+        color: $sp-syntax-color-string;
+    }
+
+    .mtk10 {
+        color: $sp-syntax-color-keyword;
+    }
+
+    .mtk13 {
+        color: $sp-syntax-color-punctuation;
+    }
+
+    .mtk16 {
+        color: $sp-syntax-color-plain;
+    }
+
+    .jsx-text {
+        color: $sp-syntax-color-plain;
+    }
+
+    .jsx-tag-name {
+        color: $sp-syntax-color-tag;
+    }
+
+    .jsx-tag-angle-bracket {
+        &.jsx-tag-order-1 {
+            color: $sp-syntax-color-plain;
+        }
+
+        &.jsx-tag-order-2 {
+            color: $sp-syntax-color-plain;
+        }
+
+        &.jsx-tag-order-3 {
+            color: $sp-syntax-color-plain;
+        }
+    }
+
+    .jsx-tag-attribute-key {
+        color: $sp-syntax-color-property;
+    }
+
+    .jsx-expression-braces {
+        color: $sp-syntax-color-property;
+    }
+}
