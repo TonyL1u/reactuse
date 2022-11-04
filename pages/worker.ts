@@ -7,9 +7,10 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 import VitesseLight from 'theme-vitesse/themes/vitesse-light.json';
 import ReactTypes from '../node_modules/@types/react/index.d.ts?raw';
+import LodashEsTypes from '../node_modules/@types/lodash-es/index.d.ts?raw';
 import ReactUseTypes from '../src/index.d.ts?raw';
 
-const UiltTypes = `export declare function stringify(data: Record<string, any>): string;`;
+const UtilTypes = `export declare function stringify(data: Record<string, any>): string;`;
 
 window.MonacoEnvironment = {
     getWorker(_, label) {
@@ -32,9 +33,6 @@ window.MonacoEnvironment = {
 loader.config({ monaco });
 loader.init().then(monaco => {
     // do conditional chaining
-    const modelUri = monaco.Uri.file('index.tsx');
-    monaco.editor.createModel('', 'typescript', modelUri);
-
     // @ts-ignore
     monaco.editor.defineTheme('vitesse-light', VitesseLight);
 
@@ -64,9 +62,11 @@ loader.init().then(monaco => {
     });
 
     // add extra libs
+    // monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'react' {}`, 'file:///node_modules/@types/react/index.d.ts');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'react' {${ReactTypes}}`, 'ts:react');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'reactuse' {${ReactUseTypes}}`, 'ts:reactuse');
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module '@doc-utils' {${UiltTypes}}`, 'ts:doc-utils');
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'lodash-es' {${LodashEsTypes}}`, 'ts:lodash-es');
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module '@doc-utils' {${UtilTypes}}`, 'ts:doc-utils');
 
     // or make sure that it exists by other ways
     console.log('here is the monaco instance:', monaco);

@@ -1,13 +1,13 @@
 import { useState, useCallback, useRef } from 'react';
-import { useRouter } from 'reactuse';
+import { useRouter, watchState } from 'reactuse';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
 import Preview from './Preview';
 import ToolBox from './Toolbox';
+import Console from './Console';
 import { EditorContext } from './context';
 import '../../styles/monaco-jsx-highlight.scss';
-import type { PropsWithChildren } from 'react';
 
 const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
     fontSize: 13,
@@ -37,32 +37,29 @@ const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
     renderLineHighlightOnlyWhenFocus: true
 };
 
-export default function MonacoEditor(props: { code: string } & PropsWithChildren) {
-    const { code } = props;
+export default function MonacoEditor(props: { code: string; path: string }) {
+    const { code, path } = props;
+    const { onLocationChange } = useRouter();
+
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const errorDecorator = useRef<string[] | undefined>(undefined);
     const [previewCode, updatePreviewCode] = useState(code);
     const [loading, setLoading] = useState(true);
-    const { onLocationChange } = useRouter();
 
-    const handleEditorDidMount = useCallback(
-        (editor: monaco.editor.IStandaloneCodeEditor) => {
-            editor.setValue(code);
-            editorRef.current = editor;
-            const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(getWorker(), monaco);
-            const { highlighter, dispose } = monacoJsxSyntaxHighlight.highlighterBuilder({ editor });
-            // init highlight
+    const handleEditorDidMount = useCallback((editor: monaco.editor.IStandaloneCodeEditor) => {
+        editorRef.current = editor;
+        const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(getWorker(), monaco);
+        const { highlighter, dispose } = monacoJsxSyntaxHighlight.highlighterBuilder({ editor });
+        // init highlight
+        highlighter();
+
+        editor.onDidChangeModelContent(() => {
+            // content change, highlight
             highlighter();
+        });
 
-            editor.onDidChangeModelContent(() => {
-                // content change, highlight
-                highlighter();
-            });
-
-            return dispose;
-        },
-        [code]
-    );
+        return dispose;
+    }, []);
 
     const handleEditorContentChange = (value?: string) => {
         updatePreviewCode(value ?? '');
@@ -96,22 +93,25 @@ export default function MonacoEditor(props: { code: string } & PropsWithChildren
     });
 
     return (
-        <EditorContext.Provider value={{ initialCode: code, editor: editorRef }}>
-            <div className="live-demo-container tw-rounded tw-flex tw-relative tw-pt-8">
+        <EditorContext.Provider value={{ initialCode: code, path, editor: editorRef }}>
+            <div className="live-demo-container tw-rounded tw-flex tw-flex-col tw-relative">
                 <ToolBox />
-                <Preview code={previewCode} loading={loading} setLoading={setLoading} setErrorLine={setErrorLine} />
-                <Editor
-                    className="editor-container"
-                    height="300px"
-                    width="50%"
-                    options={editorOptions}
-                    defaultLanguage="typescript"
-                    theme="vitesse-light"
-                    value={code}
-                    path={'file:///index.tsx'}
-                    onMount={handleEditorDidMount}
-                    onChange={handleEditorContentChange}
-                />
+                <div className="main tw-h-80 tw-flex">
+                    <Preview code={previewCode} loading={loading} setLoading={setLoading} setErrorLine={setErrorLine} />
+                    <Editor
+                        className="editor-container"
+                        height="100%"
+                        width="50%"
+                        options={editorOptions}
+                        defaultLanguage="typescript"
+                        theme="vitesse-light"
+                        value={code}
+                        path="file:///index.tsx"
+                        onMount={handleEditorDidMount}
+                        onChange={handleEditorContentChange}
+                    />
+                </div>
+                <Console />
                 {loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
             </div>
         </EditorContext.Provider>

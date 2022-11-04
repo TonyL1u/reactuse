@@ -8,7 +8,7 @@ const DefineMenu = create(({ key, name, category }) => {
         category,
         element: (
             <li key={key} className="menu-item">
-                <NavLink to={name} style={({ isActive }) => (isActive ? { color: '#22c55e' } : {})}>
+                <NavLink to={name} style={({ isActive }) => (isActive ? { color: '#2b8844' } : {})}>
                     {name}
                 </NavLink>
             </li>

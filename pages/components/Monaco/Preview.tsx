@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { tryOnMounted, tryOnUnmounted, watchState } from 'reactuse';
+import { useLatest, tryOnMounted, tryOnUnmounted, watchState, throttleFilter } from 'reactuse';
 import { PreviewProxy } from './logic/PreviewProxy';
 import { parse } from '@babel/parser';
 import MagicString from 'magic-string';
@@ -8,14 +8,15 @@ import './styles/loading-cube.scss';
 import type { Dispatch, SetStateAction } from 'react';
 
 function getProxyPath(proxy: string) {
-    return import.meta.env.DEV ? `http://${location.host}/pages/components/Monaco/source/proxy/${proxy}` : '';
+    return import.meta.env.DEV ? `http://${location.host}/pages/components/Monaco/source/proxy/${proxy}-dev-proxy` : '';
 }
 
 const importMap = {
-    reactuse: getProxyPath('reactuse-dev-proxy'),
-    react: getProxyPath('react-dev-proxy'),
-    'react-dom/client': getProxyPath('react-dom-client-dev-proxy'),
-    '@doc-utils': getProxyPath('doc-utils-dev-proxy')
+    reactuse: getProxyPath('reactuse'),
+    react: getProxyPath('react'),
+    'react-dom/client': getProxyPath('react-dom-client'),
+    '@doc-utils': getProxyPath('doc-utils'),
+    'lodash-es': getProxyPath('lodash-es')
 };
 
 const LoadingCube = () => {
@@ -48,22 +49,25 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
     const { code, loading, setLoading, setErrorLine } = props;
     const [runtimeError, setRuntimeError] = useState('');
 
+    const latestCode = useLatest(code);
     const proxy = useRef<PreviewProxy>();
     const sandbox = useRef<HTMLIFrameElement>();
     const container = useRef<HTMLDivElement>(null);
 
     const createSandbox = () => {
+        setLoading(true);
         if (!container.current) return;
 
         if (sandbox.current) {
             proxy.current?.destroy();
             container.current.removeChild(sandbox.current);
         }
+
         sandbox.current = document.createElement('iframe');
         sandbox.current.setAttribute('sandbox.current', ['allow-forms', 'allow-modals', 'allow-pointer-lock', 'allow-popups', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation-by-user-activation'].join(' '));
         sandbox.current.className = 'tw-rounded-lg tw-shadow tw-sticky tw-top-14 tw-bg-white tw-overflow-auto tw-flex-1 tw-border-none';
         sandbox.current.srcdoc = srcDoc.replace(/<!--IMPORT_MAP-->/, JSON.stringify({ imports: importMap }));
-        container.current.appendChild(sandbox.current);
+
         proxy.current = new PreviewProxy(sandbox.current, {
             on_fetch_progress: (progress: any) => {
                 // pending_imports = progress;
@@ -89,7 +93,8 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
                         }
                         setRuntimeError(msg);
                     }
-                } else if (log.level === 'warn') {
+                } else if (log.level === 'log') {
+                    console.log(log);
                 }
             },
             on_console_group: (action: any) => {
@@ -103,10 +108,13 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
             }
         });
 
-        sandbox.current.addEventListener('load', () => {
+        sandbox.current.addEventListener('load', async () => {
             proxy.current?.handle_links();
-            updatePreview(code);
+            await updatePreview(latestCode.current);
+            setLoading(false);
         });
+
+        container.current.appendChild(sandbox.current);
     };
 
     const updatePreview = async (source: string) => {
@@ -120,11 +128,9 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
                 if (node.type === 'ImportDeclaration' && node.source.value === 'react') {
                     const { start, end } = node;
                     s.update(start!, end!, '');
-                    const importsItem: string[] = [];
                     for (const spec of node.specifiers) {
                         if (spec.type === 'ImportSpecifier') {
                             s.prepend(`const { ${spec.local.name} } = React;\n`);
-                            importsItem.push(spec.local.name);
                         }
                     }
                 } else if (node.type === 'ExportDefaultDeclaration' && node.declaration.type === 'ArrowFunctionExpression') {
@@ -132,17 +138,14 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
                 }
             }
             s.prepend(`import React from 'react';\n`);
-            await proxy.current?.eval([s.toString()]);
+            proxy.current?.eval([s.toString()]);
         } catch (e: any) {
-            const { line } = e.loc;
-            setErrorLine(line);
+            setErrorLine(e?.loc.line ?? -1);
             setRuntimeError(`SyntaxError: ${e.message}`);
-        } finally {
-            setLoading(false);
         }
     };
 
-    watchState(code, updatePreview);
+    watchState(code, updatePreview, { eventFilter: throttleFilter(1000) });
 
     watchState(runtimeError, err => {
         if (err === '') setErrorLine(-1);
@@ -155,9 +158,12 @@ export default function Preview(props: { code: string; loading: boolean; setLoad
     });
 
     return (
-        <div ref={container} className="preview-container tw-flex-1 tw-p-6 tw-overflow-auto tw-flex tw-relative">
-            {loading && <LoadingCube />}
-            {runtimeError && <ErrorDisplayPanel error={String(runtimeError)} />}
-        </div>
+        <>
+            {/* <button onClick={createSandbox}>重置</button> */}
+            <div ref={container} className="preview-container tw-flex-1 tw-p-6 tw-overflow-auto tw-flex tw-relative">
+                {loading && <LoadingCube />}
+                {runtimeError && <ErrorDisplayPanel error={String(runtimeError)} />}
+            </div>
+        </>
     );
 }

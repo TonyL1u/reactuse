@@ -5,6 +5,11 @@
     width: 100%;
     display: flex;
 
+    .doc-header {
+        backdrop-filter: saturate(50%) blur(4px);
+        background: rgba(255, 255, 255, 0.7);
+    }
+
     a {
         font-weight: 500;
         text-decoration: none;
@@ -15,7 +20,7 @@
         cursor: pointer;
 
         &:hover {
-            color: #22c55e;
+            color: #2b8844;
         }
 
         a {
@@ -56,12 +61,12 @@
     }
 
     .live-demo-container {
-        height: 300px;
         box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0px 0.8px 2px rgba(0, 0, 0, 0.032), 0px 2.7px 6.7px rgba(0, 0, 0, 0.048), 0px 12px 30px rgba(0, 0, 0, 0.08);
 
         section {
             box-sizing: border-box;
             padding-right: 16px;
+            background: #fff;
         }
 
         .editor-container {
@@ -115,6 +120,10 @@
         .toolbox-container {
             border-bottom: 1px solid #f0f0f0;
         }
+
+        .console-container {
+            border-top: 1px solid #f0f0f0;
+        }
     }
 }
 
@@ -142,10 +151,13 @@
 @media screen and (max-width: 860px) {
     #root {
         .live-demo-container {
-            height: 600px;
-            flex-direction: column;
+            .main {
+                height: 600px;
+                flex-direction: column;
+            }
 
             section {
+                height: 50% !important;
                 width: 100% !important;
             }
         }

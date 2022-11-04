@@ -3,6 +3,7 @@ import MarkdownItHljs from 'markdown-it-highlightjs';
 import MarkdownItAnchor from 'markdown-it-anchor';
 import babel from '@babel/core';
 import fs from 'fs';
+import path from 'path';
 import type { Plugin } from 'vite';
 import type Token from 'markdown-it/lib/token';
 import type Renderer from 'markdown-it/lib/renderer';
@@ -26,16 +27,16 @@ export default (): Plugin => {
         name: 'transform-markdown-file',
         transform(code, id, options?) {
             if (fileRegex.test(id)) {
-                // const [_, category, name] = id.match(/\/src\/(.*)\/(.*)\/index\.md/);
-                return transformMarkdown(code, id);
+                const [_, category, name] = id.match(/\/src\/(.*)\/(.*)\/index\.md/);
+                return transformMarkdown(code, { category, name });
             }
         }
     };
 };
 
-function transformMarkdown(source: string, id: string) {
-    const demoPath = id.replace('index.md', 'demo.tsx');
-    const template = getTemplate(source, demoPath);
+function transformMarkdown(source: string, info: { category: string; name: string }) {
+    const { category, name } = info;
+    const template = getTemplate(source, path.join('src', category, name, 'demo.tsx'));
     const { code, map } = babel.transformSync(template, {
         babelrc: false,
         ast: true,
@@ -60,12 +61,13 @@ function getTemplate(source: string, demoPath: string) {
         import MonacoEditor from '@pages/components/Monaco/MonacoEditor'
         
         const code = \`${demo}\`.trim();
+        const path = \`${demoPath}\`;
 
         export default () => {
             return  (
                 <div className="markdown-body light">
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(0, sliceIndex) + '\n## Demo'))}\`} />
-                    <MonacoEditor code={code} />
+                    <MonacoEditor code={code} path={path} />
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(sliceIndex)))}\`} />
                 </div>
             )

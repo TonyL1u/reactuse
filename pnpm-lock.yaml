@@ -3,14 +3,17 @@ lockfileVersion: 5.4
 specifiers:
   '@babel/core': ^7.19.6
   '@babel/parser': ^7.20.0
+  '@babel/plugin-syntax-flow': ^7.18.6
   '@babel/plugin-transform-react-jsx': ^7.14.9
   '@codesandbox/sandpack-client': ^1.12.1
   '@codesandbox/sandpack-react': ^1.15.5
   '@monaco-editor/react': ^4.4.6
+  '@ricons/ionicons5': ^0.12.0
   '@testing-library/dom': ^8.19.0
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^14.4.3
   '@types/babel__core': ^7.1.19
+  '@types/lodash-es': ^4.17.6
   '@types/markdown-it': ^12.2.3
   '@types/node': ^18.11.5
   '@types/react': ^18.0.17
@@ -24,6 +27,7 @@ specifiers:
   eslint-config-react-app: ^7.0.1
   happy-dom: ^7.6.6
   jsdom: ^20.0.1
+  lodash-es: ^4.17.21
   magic-string: ^0.26.7
   markdown-it: ^13.0.1
   markdown-it-anchor: ^8.6.5
@@ -47,6 +51,7 @@ specifiers:
 dependencies:
   '@codesandbox/sandpack-client': registry.npmmirror.com/@codesandbox/sandpack-client/1.12.1
   '@codesandbox/sandpack-react': registry.npmmirror.com/@codesandbox/sandpack-react/1.15.5_biqbaboplfbrettd7655fr4n2y
+  lodash-es: 4.17.21
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.4.2_biqbaboplfbrettd7655fr4n2y
@@ -54,12 +59,15 @@ dependencies:
 devDependencies:
   '@babel/core': 7.19.6
   '@babel/parser': 7.20.0
+  '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.19.6
   '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.19.6
   '@monaco-editor/react': registry.npmmirror.com/@monaco-editor/react/4.4.6_6vrjaj6ridxbohi43n7zt4gn7q
+  '@ricons/ionicons5': 0.12.0
   '@testing-library/dom': 8.19.0
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
   '@testing-library/user-event': 14.4.3_aaq3sbffpfe3jnxzm2zngsddei
   '@types/babel__core': 7.1.19
+  '@types/lodash-es': 4.17.6
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.7
   '@types/react': 18.0.24
@@ -70,7 +78,7 @@ devDependencies:
   classnames: 2.3.2
   esbuild: 0.15.12
   eslint: 8.26.0
-  eslint-config-react-app: 7.0.1_iwsqhidnkd2vdxbjsyziawt77i
+  eslint-config-react-app: 7.0.1_pbk5dao76lnt7365jxacg2t7ne
   happy-dom: 7.6.6
   jsdom: 20.0.1
   magic-string: 0.26.7
@@ -84,7 +92,7 @@ devDependencies:
   rollup-plugin-dts: registry.npmmirror.com/rollup-plugin-dts/5.0.0_655ssj4e7sdqlljrreeiqtltve
   rollup-plugin-esbuild: registry.npmmirror.com/rollup-plugin-esbuild/4.10.1_droztabqhwwmdz3zmwuhn47qtq
   sass: 1.55.0
-  tailwindcss: 3.2.1
+  tailwindcss: 3.2.1_postcss@8.4.18
   theme-vitesse: registry.npmmirror.com/theme-vitesse/0.5.2
   typescript: 4.8.4
   vite: 3.2.0_sass@1.55.0
@@ -1585,6 +1593,10 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
+  /@ricons/ionicons5/0.12.0:
+    resolution: {integrity: sha512-CzS43wP5XDZTBXmSvuW9XvTgiAeRWLHeeYoUtvHS/3h6yfjlr/T0vqdB8Zhqb7xPnto3li7yXZ4gU9VEgv4w7w==}
+    dev: true
+
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
@@ -1700,6 +1712,16 @@ packages:
 
   /@types/linkify-it/3.0.2:
     resolution: {integrity: sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==}
+    dev: true
+
+  /@types/lodash-es/4.17.6:
+    resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
+    dependencies:
+      '@types/lodash': 4.14.187
+    dev: true
+
+  /@types/lodash/4.14.187:
+    resolution: {integrity: sha512-MrO/xLXCaUgZy3y96C/iOsaIqZSeupyTImKClHunL5GrmaiII2VwvWmLBu2hwa0Kp0sV19CsyjtrTc/Fx8rg/A==}
     dev: true
 
   /@types/markdown-it/12.2.3:
@@ -2910,7 +2932,7 @@ packages:
       source-map: 0.6.1
     dev: true
 
-  /eslint-config-react-app/7.0.1_iwsqhidnkd2vdxbjsyziawt77i:
+  /eslint-config-react-app/7.0.1_pbk5dao76lnt7365jxacg2t7ne:
     resolution: {integrity: sha512-K6rNzvkIeHaTd8m/QEh1Zko0KI7BACWkkneSs6s9cKZC/J27X3eZR6Upt1jkmZ/4FK+XUOPPxMEN7+lbUXfSlA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -2928,7 +2950,7 @@ packages:
       babel-preset-react-app: 10.0.1
       confusing-browser-globals: 1.0.11
       eslint: 8.26.0
-      eslint-plugin-flowtype: 8.0.3_5fiep2ojog4d2q4wd4bxgy22cy
+      eslint-plugin-flowtype: 8.0.3_7ks72dempjexo2aplv7wlxx7le
       eslint-plugin-import: 2.26.0_c2flhriocdzler6lrwbyxxyoca
       eslint-plugin-jest: 25.7.0_fy74h4y2g2kkrxhvsefhiowl74
       eslint-plugin-jsx-a11y: 6.6.1_eslint@8.26.0
@@ -2983,7 +3005,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-flowtype/8.0.3_5fiep2ojog4d2q4wd4bxgy22cy:
+  /eslint-plugin-flowtype/8.0.3_7ks72dempjexo2aplv7wlxx7le:
     resolution: {integrity: sha512-dX8l6qUL6O+fYPtpNRideCFSpmWOUVx5QcaGLVqe/vlDiBSe4vYljDWDETwnyFzpl7By/WVIu6rcrniCgH9BqQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2991,6 +3013,7 @@ packages:
       '@babel/plugin-transform-react-jsx': ^7.14.9
       eslint: ^8.1.0
     dependencies:
+      '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.19.6
       '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.19.6
       eslint: 8.26.0
       lodash: 4.17.21
@@ -3957,6 +3980,10 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: true
@@ -4780,10 +4807,12 @@ packages:
       get-port: 3.2.0
     dev: true
 
-  /tailwindcss/3.2.1:
+  /tailwindcss/3.2.1_postcss@8.4.18:
     resolution: {integrity: sha512-Uw+GVSxp5CM48krnjHObqoOwlCt5Qo6nw1jlCRwfGy68dSYb/LwS9ZFidYGRiM+w6rMawkZiu1mEMAsHYAfoLg==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3

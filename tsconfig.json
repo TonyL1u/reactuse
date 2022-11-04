@@ -18,6 +18,7 @@
         "baseUrl": ".",
         "paths": {
             "reactuse": ["src"],
+            "@/*": ["./*"],
             "@pages": ["pages"],
             "@doc-utils": ["pages/utils"]
         },

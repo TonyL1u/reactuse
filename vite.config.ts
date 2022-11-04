@@ -12,8 +12,9 @@ export default defineConfig({
     resolve: {
         alias: {
             reactuse: path.resolve(__dirname, 'src'),
+            '@': path.resolve(__dirname, '.'),
             '@pages': path.resolve(__dirname, 'pages'),
-            '@doc-utils': path.resolve(__dirname, 'pages/utils')
+            '@doc-utils': path.resolve(__dirname, 'pages', 'utils')
         }
     },
     test: {

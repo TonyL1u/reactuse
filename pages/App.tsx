@@ -4,6 +4,7 @@ import RouterLink from './routers/RouterLink';
 import RouterView from './routers/RouterView';
 import RouterPager from './routers/RouterPager';
 import { Sandpack } from '@codesandbox/sandpack-react';
+import Demo from '@/src/shared/watchState/demo';
 import './styles/App.scss';
 import './styles/doc-demo-widget.scss';
 
@@ -37,7 +38,7 @@ function App() {
 
     return (
         <div className="tw-flex tw-flex-col tw-w-full">
-            <header className="doc-header tw-h-[55px] tw-min-h-[55px] tw-flex tw-items-center tw-pl-16 tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-10 tw-bg-white" style={{ borderBottom: '1px solid #f0f0f0' }}>
+            <header className="doc-header tw-h-[55px] tw-min-h-[55px] tw-flex tw-items-center tw-pl-16 tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-50 " style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <div className="tw-text-2xl tw-font-semibold">ReactUse</div>
             </header>
             <aside className="doc-aside tw-w-[300px] tw-box-border tw-fixed tw-top-0 tw-bottom-0 tw-left-0 tw-pt-14 tw-pl-16" style={{ borderRight: '1px solid #f0f0f0' }}>
@@ -46,6 +47,7 @@ function App() {
             <main className="doc-content tw-flex-1 tw-flex tw-flex-col tw-pl-[300px] tw-pt-14">
                 {/* <Sandpack template="react" files={{ '/App.js': code }} /> */}
                 <RouterView />
+                {/* <Demo /> */}
                 <RouterPager />
             </main>
         </div>
