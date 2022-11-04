@@ -148,10 +148,6 @@
                 window.addEventListener('message', handle_message, false);
 
                 window.onerror = function (msg, url, lineNo, columnNo, error) {
-                    if (msg.includes('module specifier “vue”')) {
-                        // firefox only error, ignore
-                        return false;
-                    }
                     try {
                         parent.postMessage({ action: 'error', value: error }, '*');
                     } catch (e) {
@@ -338,9 +334,7 @@
     </body>
 
     <script type="module">
-        import React from 'react';
         import ReactDOM from 'react-dom/client';
-        const { useState } = React;
 
         const rootNode = document.getElementById('root');
         window.__root__ = ReactDOM.createRoot(rootNode);

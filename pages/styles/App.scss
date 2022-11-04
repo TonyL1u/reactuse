@@ -115,6 +115,10 @@
 
         .preview-container {
             background: rgb(246 247 249);
+
+            &:hover .run-button {
+                opacity: 1;
+            }
         }
 
         .toolbox-container {

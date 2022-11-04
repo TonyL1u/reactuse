@@ -61,7 +61,7 @@ function getTemplate(source: string, demoPath: string) {
         import MonacoEditor from '@pages/components/Monaco/MonacoEditor'
         
         const code = \`${demo}\`.trim();
-        const path = \`${demoPath}\`;
+        const path = \`${''}\`;
 
         export default () => {
             return  (

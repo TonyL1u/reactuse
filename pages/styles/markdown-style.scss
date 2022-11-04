@@ -28,11 +28,11 @@
         color: #22c55e;
     }
 
-    pre {
+    pre:not(.console-output-message) {
         background: #fafafa;
     }
 
-    pre:not(.code-preview) {
+    pre:not(.code-preview):not(.console-output-message) {
         padding: 1em;
         border-radius: 4px;
         transition: 0.2s;
@@ -119,7 +119,7 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        pre:not(.code-preview) {
+        pre:not(.code-preview):not(.console-output-message) {
             background: #fafafa;
         }
 

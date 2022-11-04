@@ -1,13 +1,28 @@
 import { useState, useCallback, useRef } from 'react';
-import { useRouter, watchState } from 'reactuse';
+import { useRouter, useLatest, useThrottleFn, tryOnMounted } from 'reactuse';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
+import { parse } from '@babel/parser';
+import MagicString from 'magic-string';
 import Preview from './Preview';
 import ToolBox from './Toolbox';
 import Console from './Console';
-import { EditorContext } from './context';
+import { useSandbox } from './logic/useSandbox';
 import '../../styles/monaco-jsx-highlight.scss';
+import type { Logs } from './Console';
+
+function getProxyPath(proxy: string) {
+    return import.meta.env.DEV ? `http://${location.host}/pages/components/Monaco/source/proxy/${proxy}-dev-proxy` : '';
+}
+
+const imports = {
+    reactuse: getProxyPath('reactuse'),
+    react: getProxyPath('react'),
+    'react-dom/client': getProxyPath('react-dom-client'),
+    '@doc-utils': getProxyPath('doc-utils'),
+    'lodash-es': getProxyPath('lodash-es')
+};
 
 const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
     fontSize: 13,
@@ -39,12 +54,77 @@ const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
 
 export default function MonacoEditor(props: { code: string; path: string }) {
     const { code, path } = props;
+    const latestCode = useLatest(code);
     const { onLocationChange } = useRouter();
+    const { create, sandbox, proxy, onBeforeCreate, onCreated } = useSandbox({
+        imports,
+        onConsole(log) {
+            if (log.level === 'error') {
+                if (log.args[0] instanceof Error) setRuntimeError(log.args[0].message);
+                else {
+                    let msg = String(log.args[0]);
+                    if (msg.includes('%s')) {
+                        let index = 0;
+                        msg = log.args[0].replace(/%s/g, () => `${log.args[++index]}`);
+                    }
+                    setRuntimeError(msg);
+                }
+            } else if (log.level === 'log') {
+                if (log.args[0]) {
+                    const message = typeof log.args[0] === 'object' ? JSON.stringify(log.args[0]) : String(log.args[0]);
+                    collectLogs(logs => [...logs, { timestamp: +new Date(), message }]);
+                }
+            }
+        },
+        onError(event) {
+            const msg = event.value instanceof Error ? event.value.message : event.value;
+            if (!msg) return;
+            setRuntimeError(event.value);
+        },
+        onHandleRejection(event) {
+            let error = event.value;
+            if (typeof error === 'string') error = { message: error };
+            setRuntimeError(`Uncaught (in promise): ${error.message}`);
+        }
+    });
 
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const previewRef = useRef<{ container: HTMLDivElement | null }>();
     const errorDecorator = useRef<string[] | undefined>(undefined);
-    const [previewCode, updatePreviewCode] = useState(code);
     const [loading, setLoading] = useState(true);
+    const [runtimeError, setRuntimeError] = useState('');
+    const [logs, collectLogs] = useState<Logs>([]);
+
+    const updatePreview = (source: string = editorRef.current?.getValue() ?? '') => {
+        try {
+            setRuntimeError('');
+            setErrorLine(-1);
+            const s = new MagicString(source);
+            const ast = parse(source, { sourceType: 'module', plugins: ['jsx', 'typescript'] }).program.body;
+
+            // fix react import declaration
+            for (const node of ast) {
+                if (node.type === 'ImportDeclaration' && node.source.value === 'react') {
+                    const { start, end } = node;
+                    s.update(start!, end!, '');
+                    for (const spec of node.specifiers) {
+                        if (spec.type === 'ImportSpecifier') {
+                            s.prepend(`const { ${spec.local.name} } = React;\n`);
+                        }
+                    }
+                } else if (node.type === 'ExportDefaultDeclaration' && node.declaration.type === 'ArrowFunctionExpression') {
+                    s.update(node.start!, node.start! + 20, 'export default function Module() ');
+                }
+            }
+            s.prepend(`import React from 'react';\n`);
+            proxy.current?.eval([s.toString()]);
+        } catch (e: any) {
+            setErrorLine(e?.loc?.line ?? -1);
+            setRuntimeError(`SyntaxError: ${e.message}`);
+        }
+    };
+
+    const updatePreviewWithThrottle = useThrottleFn(updatePreview, 1000);
 
     const handleEditorDidMount = useCallback((editor: monaco.editor.IStandaloneCodeEditor) => {
         editorRef.current = editor;
@@ -61,8 +141,8 @@ export default function MonacoEditor(props: { code: string; path: string }) {
         return dispose;
     }, []);
 
-    const handleEditorContentChange = (value?: string) => {
-        updatePreviewCode(value ?? '');
+    const handleEditorContentChange = (value: string = '') => {
+        updatePreviewWithThrottle(value);
     };
 
     const setErrorLine = (line: number) => {
@@ -88,32 +168,58 @@ export default function MonacoEditor(props: { code: string; path: string }) {
         }
     };
 
+    const resetPreview = () => {
+        if (loading) return;
+
+        create();
+        previewRef.current?.container?.appendChild(sandbox.current!);
+        clearConsole();
+    };
+
+    const clearConsole = () => {
+        collectLogs(() => []);
+    };
+
     onLocationChange('pathname', () => {
         editorRef.current?.revealPositionInCenter({ lineNumber: 1, column: 1 });
+        updatePreviewWithThrottle.flush();
+        clearConsole();
+    });
+
+    onBeforeCreate(() => {
+        setLoading(true);
+        sandbox.current && previewRef.current?.container?.removeChild(sandbox.current);
+    });
+
+    onCreated(() => {
+        updatePreview(latestCode.current);
+        setLoading(false);
+    });
+
+    tryOnMounted(() => {
+        sandbox.current && previewRef.current?.container?.appendChild(sandbox.current);
     });
 
     return (
-        <EditorContext.Provider value={{ initialCode: code, path, editor: editorRef }}>
-            <div className="live-demo-container tw-rounded tw-flex tw-flex-col tw-relative">
-                <ToolBox />
-                <div className="main tw-h-80 tw-flex">
-                    <Preview code={previewCode} loading={loading} setLoading={setLoading} setErrorLine={setErrorLine} />
-                    <Editor
-                        className="editor-container"
-                        height="100%"
-                        width="50%"
-                        options={editorOptions}
-                        defaultLanguage="typescript"
-                        theme="vitesse-light"
-                        value={code}
-                        path="file:///index.tsx"
-                        onMount={handleEditorDidMount}
-                        onChange={handleEditorContentChange}
-                    />
-                </div>
-                <Console />
-                {loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
+        <div className="live-demo-container tw-rounded tw-flex tw-flex-col tw-relative">
+            <ToolBox code={code} editor={editorRef} reset={resetPreview} />
+            <div className="main tw-h-80 tw-flex">
+                <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />
+                <Editor
+                    className="editor-container"
+                    height="100%"
+                    width="50%"
+                    options={editorOptions}
+                    defaultLanguage="typescript"
+                    theme="vitesse-light"
+                    value={code}
+                    path="file:///index.tsx"
+                    onMount={handleEditorDidMount}
+                    onChange={handleEditorContentChange}
+                />
             </div>
-        </EditorContext.Provider>
+            <Console logs={logs} clear={clearConsole} />
+            {loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
+        </div>
     );
 }

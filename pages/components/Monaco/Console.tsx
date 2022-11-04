@@ -1,52 +1,38 @@
 import { useState } from 'react';
-import { TerminalOutline, ChevronDown } from '@ricons/ionicons5';
+import { TerminalOutline, Ban } from '@ricons/ionicons5';
 
-const ConsolePanel = () => {
-    const data = [
-        {
-            time: '11:23:05',
-            msg: '123'
-        },
-        {
-            time: '12:59:05',
-            msg: '666'
-        },
-        {
-            time: '01:23:05',
-            msg: 'ok'
-        },
-        {
-            time: '17:23:05',
-            msg: 'ok'
-        },
-        {
-            time: '11:23:06',
-            msg: 'ok'
-        }
-    ];
+export type Logs = {
+    timestamp: number;
+    message: string;
+}[];
+
+export default (props: { logs: Logs; clear: () => void }) => {
+    const { logs, clear } = props;
+    const [collapsed, setCollapsed] = useState(true);
 
     return (
-        <div className="tw-h-40 tw-px-6 tw-overflow-auto" style={{ borderTop: '1px solid #f0f0f0' }}>
-            {data.map(({ time, msg }) => (
-                <div key={time} className="tw-py-2 tw-flex">
-                    {time}
-                    <div className="tw-ml-4 tw-font-bold">{msg}</div>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-export default () => {
-    const [collapsed, setCollapsed] = useState(false);
-
-    return (
-        <div className="console-container tw-text-sm tw-w-full tw-box-border">
+        <div className="console-container tw-text-sm tw-w-full tw-box-border tw-relative">
             <div className="tw-h-8 tw-flex tw-items-center tw-pl-6 tw-cursor-pointer" onClick={() => setCollapsed(c => !c)}>
                 <TerminalOutline width={14} height={14} style={{ marginRight: '6px' }} />
                 Console
             </div>
-            {!collapsed && <ConsolePanel />}
+            {!collapsed && (
+                <div className="tw-max-h-40 tw-px-6 tw-overflow-auto tw-relative" style={{ borderTop: '1px solid #f0f0f0' }}>
+                    {logs.length > 0 ? (
+                        logs.map(({ timestamp, message }) => (
+                            <div key={timestamp} className="tw-py-2 tw-flex tw-items-start tw-leading-4">
+                                <span className="tw-text-gray-400">{new Date(timestamp).toLocaleString()}</span>
+                                <pre className="console-output-message tw-ml-4 tw-flex-1 tw-font-bold tw-truncate tw-whitespace-pre-wrap tw-my-0" style={{ fontFamily: 'inherit' }}>
+                                    {message}
+                                </pre>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="tw-p-4 tw-text-sm tw-text-gray-400 tw-flex tw-items-center tw-justify-center">Nothing Output</div>
+                    )}
+                </div>
+            )}
+            {logs.length > 0 && !collapsed && <Ban width={14} height={14} color="#999" className="tw-absolute tw-bottom-2 tw-right-2 tw-cursor-pointer" onClick={clear} />}
         </div>
     );
 };
