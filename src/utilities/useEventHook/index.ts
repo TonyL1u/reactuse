@@ -1,6 +1,6 @@
-export type EventHookOn<T = any> = (fn: (param: T) => void) => { off: () => void };
-export type EventHookOff<T = any> = (fn: (param: T) => void) => void;
-export type EventHookTrigger<T = any> = (param: T) => void;
+export type EventHookOn<T = any> = (fn: (param?: T) => void) => { off: () => void };
+export type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
+export type EventHookTrigger<T = any> = (param?: T) => void;
 
 export interface EventHook<T = any> {
     on: EventHookOn<T>;
@@ -9,14 +9,14 @@ export interface EventHook<T = any> {
 }
 
 export function useEventHook<T = any>(): EventHook<T> {
-    const fns: Array<(param: T) => void> = [];
+    const fns: Array<(param?: T) => void> = [];
 
-    const off = (fn: (param: T) => void) => {
+    const off = (fn: (param?: T) => void) => {
         const index = fns.indexOf(fn);
         if (index !== -1) fns.splice(index, 1);
     };
 
-    const on = (fn: (param: T) => void) => {
+    const on = (fn: (param?: T) => void) => {
         fns.push(fn);
 
         return {
@@ -24,7 +24,7 @@ export function useEventHook<T = any>(): EventHook<T> {
         };
     };
 
-    const trigger = (param: T) => {
+    const trigger = (param?: T) => {
         fns.forEach(fn => fn(param));
     };
 
