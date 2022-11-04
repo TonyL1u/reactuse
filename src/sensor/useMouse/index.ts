@@ -1,22 +1,20 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useEventListener } from '../../browser';
-import type { EventFilter } from '../../helper';
+import { bypassFilter } from '../../helper';
+import type { ConfigurableEventFilter } from '../../helper';
 
 type CursorState = { x: number; y: number };
 type MouseSourceType = 'mouse' | 'touch' | null;
-interface UseMouseOptions {
+interface UseMouseOptions extends ConfigurableEventFilter {
     type?: 'page' | 'client';
     touch?: boolean;
-    eventFilter?: EventFilter;
     initialValue?: CursorState;
 }
 
 export function useMouse(options: UseMouseOptions = {}) {
-    const { type = 'page', touch = true, eventFilter, initialValue = { x: NaN, y: NaN } } = options;
+    const { type = 'page', touch = true, eventFilter = bypassFilter(), initialValue = { x: NaN, y: NaN } } = options;
     const [cursor, setCursor] = useState<CursorState>({ x: initialValue.x, y: initialValue.y });
     const [sourceType, setSourceType] = useState<MouseSourceType>(null);
-    const mouseHandlerWrapper = useCallback((event: MouseEvent) => (eventFilter === void 0 ? mouseEvent(event) : eventFilter(() => mouseEvent(event), {} as any)), [type, eventFilter]);
-    const touchHandleWrapper = useCallback((event: TouchEvent) => (eventFilter === void 0 ? touchEvent(event) : eventFilter(() => touchEvent(event), {} as any)), [type, eventFilter]);
 
     const mouseEvent = (event: MouseEvent) => {
         if (type === 'page') {
@@ -45,9 +43,9 @@ export function useMouse(options: UseMouseOptions = {}) {
         }
     };
 
-    useEventListener('mousemove', mouseHandlerWrapper, { passive: true });
-    useEventListener('dragover', mouseHandlerWrapper, { passive: true });
-    touch && useEventListener('touchmove', touchHandleWrapper, { passive: true });
+    useEventListener('mousemove', eventFilter(mouseEvent), { passive: true });
+    useEventListener('dragover', eventFilter(mouseEvent), { passive: true });
+    touch && useEventListener('touchmove', eventFilter(touchEvent), { passive: true });
 
     return { ...cursor, sourceType };
 }

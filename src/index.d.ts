@@ -1,21 +1,26 @@
-import { RefObject, Dispatch, SetStateAction, DependencyList } from 'react';
-import { Location } from 'react-router-dom';
+import { DependencyList, RefObject, Dispatch, SetStateAction } from 'react';
+import { DebounceSettings } from 'lodash-es';
+
+declare function depsAreSame(deps: DependencyList, oldDeps: DependencyList): boolean;
 
 declare type Merge<F extends object, S extends object> = {
     [P in keyof F | keyof S]: P extends keyof S ? S[P] : P extends keyof F ? F[P] : never;
 };
 declare type Fn = () => void;
+declare type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
 declare type MaybeRefObject<T> = T | RefObject<T>;
 declare type MaybeElement = Window | Document | HTMLElement | SVGElement | undefined | null;
 declare type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
 
-declare type FunctionArgs<Args extends any[] = any[], Return = void> = (...args: Args) => Return;
-interface FunctionWrapperOptions<Args extends any[] = any[], This = any> {
-    fn: FunctionArgs<Args, This>;
-    args: Args;
-    thisArg: This;
+declare type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
+interface ConfigurableEventFilter {
+    eventFilter?: EventFilter;
 }
-declare type EventFilter<Args extends any[] = any[], This = any> = (invoke: Fn, options: FunctionWrapperOptions<Args, This>) => void;
+declare function bypassFilter<T extends FunctionArgs>(): (invoke: T) => T;
+declare function debounceFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, options?: DebounceSettings): (invoke: T) => any;
+declare function throttleFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, trailing?: boolean, leading?: boolean): (invoke: T) => any;
+
+declare const noop: () => void;
 
 declare type WindowEventName = keyof WindowEventMap;
 declare type EventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
@@ -25,7 +30,7 @@ declare type EventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) 
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends WindowEventName, T extends MaybeElement = Window>(event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<E extends WindowEventName>(event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 /**
  * Overload 2: Custom target
  *
@@ -102,14 +107,7 @@ interface UseWindowSizeOptions {
 }
 declare function useWindowSize(options?: UseWindowSizeOptions): WindowSize;
 
-declare type HookPayload<T extends keyof Location> = Merge<Record<T, Location[T]>, {
-    location: Location;
-}>;
-declare function useRouter(): {
-    onLocationChange<T extends string | number | symbol>(key: T, callback: (param: HookPayload<T>) => void, options?: {
-        immediately?: boolean;
-    }): () => void;
-};
+declare function useRouter(): any;
 
 declare function tryOnMounted(fn: () => void): void;
 
@@ -127,9 +125,9 @@ declare type WatchOptions$1 = {
 declare function watchRef<T>(source: RefObject<T>, callback: WatchCallback$1<T, T>, options?: WatchOptions$1): () => void;
 
 declare type WatchCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-declare type WatchOptions = {
+interface WatchOptions extends ConfigurableEventFilter {
     immediate?: boolean;
-};
+}
 declare function watchState<T>(source: T, callback: WatchCallback<T, T>, options?: WatchOptions): {
     pause(): void;
     resume(): void;
@@ -140,10 +138,9 @@ declare type CursorState = {
     y: number;
 };
 declare type MouseSourceType = 'mouse' | 'touch' | null;
-interface UseMouseOptions {
+interface UseMouseOptions extends ConfigurableEventFilter {
     type?: 'page' | 'client';
     touch?: boolean;
-    eventFilter?: EventFilter;
     initialValue?: CursorState;
 }
 declare function useMouse(options?: UseMouseOptions): {
@@ -151,6 +148,8 @@ declare function useMouse(options?: UseMouseOptions): {
     x: number;
     y: number;
 };
+
+declare function useDebounceFn<T extends FunctionArgs>(fn: T, wait?: number, options?: DebounceSettings): any;
 
 declare type EventHookOn<T = any> = (fn: (param: T) => void) => {
     off: () => void;
@@ -164,4 +163,6 @@ interface EventHook<T = any> {
 }
 declare function useEventHook<T = any>(): EventHook<T>;
 
-export { EventHook, EventHookOff, EventHookOn, EventHookTrigger, tryOnMounted, tryOnUnmounted, useElementBounding, useElementSize, useEventHook, useEventListener, useMounted, useMouse, useMutationObserver, useResizeObserver, useRouter, useSupported, useTitle, useWindowSize, watchRef, watchState };
+declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): any;
+
+export { ConfigurableEventFilter, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, tryOnMounted, tryOnUnmounted, useDebounceFn, useElementBounding, useElementSize, useEventHook, useEventListener, useMounted, useMouse, useMutationObserver, useResizeObserver, useRouter, useSupported, useThrottleFn, useTitle, useWindowSize, watchRef, watchState };

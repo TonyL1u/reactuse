@@ -14,7 +14,7 @@ type EventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
  * @param event
  * @param listener
  */
-export function useEventListener<E extends WindowEventName, T extends MaybeElement = Window>(event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+export function useEventListener<E extends WindowEventName>(event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 
 /**
  * Overload 2: Custom target

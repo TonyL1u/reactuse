@@ -1,7 +1,5 @@
-import React from 'react';
+import { useState } from 'react';
 import { watchState } from 'reactuse';
-
-const { useState } = React;
 
 export default () => {
     const [count, setCount] = useState(0);

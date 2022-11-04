@@ -1,15 +1,21 @@
-import type { Fn } from './types';
+import { useDebounceFn, useThrottleFn } from '../utilities';
+import type { FunctionArgs, MaybeRefObject } from './types';
+import type { DebounceSettings } from 'lodash-es';
 
-export type FunctionArgs<Args extends any[] = any[], Return = void> = (...args: Args) => Return;
+export type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
 
-export interface FunctionWrapperOptions<Args extends any[] = any[], This = any> {
-    fn: FunctionArgs<Args, This>;
-    args: Args;
-    thisArg: This;
+export interface ConfigurableEventFilter {
+    eventFilter?: EventFilter;
 }
 
-export type EventFilter<Args extends any[] = any[], This = any> = (invoke: Fn, options: FunctionWrapperOptions<Args, This>) => void;
+export function bypassFilter<T extends FunctionArgs>() {
+    return (invoke: T) => invoke;
+}
 
-export function debounceFilter(fn: Fn) {
-    return fn;
+export function debounceFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, options: DebounceSettings = {}) {
+    return (invoke: T) => useDebounceFn(invoke, typeof ms === 'number' ? ms : ms.current!, options);
+}
+
+export function throttleFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, trailing = true, leading = true) {
+    return (invoke: T) => useThrottleFn(invoke, typeof ms === 'number' ? ms : ms.current!, trailing, leading);
 }

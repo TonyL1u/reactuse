@@ -34,6 +34,7 @@ export function useRouter() {
     });
 
     return {
+        ...location,
         onLocationChange<T extends keyof Location>(key: T, callback: (param: HookPayload<T>) => void, options: { immediately?: boolean } = {}) {
             const { immediately = false } = options;
 
