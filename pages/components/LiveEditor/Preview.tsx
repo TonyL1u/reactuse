@@ -41,7 +41,7 @@ export default forwardRef((props: { runtimeError: string; loading: boolean; run:
             <div ref={container} className="preview-container tw-flex-1 tw-p-6 tw-overflow-auto tw-flex tw-relative">
                 {loading && <LoadingCube />}
                 {runtimeError && <ErrorDisplayPanel error={String(runtimeError)} />}
-                {!loading && <PlayOutline width={16} height={16} className="run-button tw-absolute tw-bottom-8 tw-right-8 tw-cursor-pointer tw-opacity-0 tw-z-30 tw-transition" onClick={() => run()} />}
+                {!loading && <PlayOutline width={16} height={16} className="run-button tw-absolute tw-bottom-8 tw-right-8 tw-opacity-0 tw-z-30 tw-transition" onClick={() => run()} />}
             </div>
         </>
     );

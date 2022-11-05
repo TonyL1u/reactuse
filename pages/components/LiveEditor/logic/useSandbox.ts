@@ -119,8 +119,9 @@ export function useSandbox(config: SandboxConfig = {}) {
         destroy();
         // create iframe
         sandbox.current = document.createElement('iframe');
-        sandbox.current.setAttribute('sandbox.current', ['allow-forms', 'allow-modals', 'allow-pointer-lock', 'allow-popups', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation-by-user-activation'].join(' '));
-        sandbox.current.className = 'tw-rounded-lg tw-shadow tw-sticky tw-top-14 tw-bg-white tw-overflow-auto tw-flex-1 tw-border-none';
+        sandbox.current.setAttribute('sandbox', ['allow-forms', 'allow-modals', 'allow-pointer-lock', 'allow-popups', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation-by-user-activation'].join(' '));
+        sandbox.current.className = 'tw-rounded-lg tw-shadow tw-bg-white tw-overflow-auto tw-flex-1 tw-border-none';
+        sandbox.current.id = 'sandbox_iframe';
         sandbox.current.srcdoc = srcdoc.replace(/<!--IMPORT_MAP-->/, JSON.stringify({ imports }));
 
         // create message proxy

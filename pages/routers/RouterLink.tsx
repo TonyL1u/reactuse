@@ -35,7 +35,7 @@ export default () => {
         <>
             {Object.entries(Categories).map(([category, elements]) => {
                 return (
-                    <div key={category} className="tw-mt-2">
+                    <div key={category} className="tw-mt-4">
                         <div className="tw-h-8 tw-leading-8 tw-text-sm tw-text-gray-500 tw-capitalize">{category}</div>
                         <ul className="tw-list-none tw-space-y-3 tw-m-0 tw-p-0">{elements}</ul>
                     </div>

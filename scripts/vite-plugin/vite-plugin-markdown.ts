@@ -58,16 +58,16 @@ function getTemplate(source: string, demoPath: string) {
         import React from 'react';
         import Demo from './demo';
         import MdWrapper from '@pages/components/MdWrapper';
-        import MonacoEditor from '@pages/components/Monaco/MonacoEditor'
+        import LiveEditor from '@pages/components/LiveEditor'
         
-        const code = \`${demo}\`.trim();
+        const code = \`${encodeURI(demo)}\`.trim();
         const path = \`${''}\`;
 
         export default () => {
             return  (
                 <div className="markdown-body light">
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(0, sliceIndex) + '\n## Demo'))}\`} />
-                    <MonacoEditor code={code} path={path} />
+                    <LiveEditor code={code} path={path} console />
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(sliceIndex)))}\`} />
                 </div>
             )

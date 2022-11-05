@@ -1,10 +1,11 @@
 import { useState, useCallback, useRef } from 'react';
-import { useRouter, useLatest, useThrottleFn, tryOnMounted } from 'reactuse';
+import { useRouter, useLatest, useThrottleFn, watchState, tryOnMounted } from 'reactuse';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
 import { parse } from '@babel/parser';
 import MagicString from 'magic-string';
+import cn from 'classnames';
 import Preview from './Preview';
 import ToolBox from './Toolbox';
 import Console from './Console';
@@ -13,7 +14,7 @@ import '../../styles/monaco-jsx-highlight.scss';
 import type { Logs } from './Console';
 
 function getProxyPath(proxy: string) {
-    return import.meta.env.DEV ? `http://${location.host}/pages/components/Monaco/source/proxy/${proxy}-dev-proxy` : '';
+    return import.meta.env.DEV ? `http://${location.host}/pages/components/LiveEditor/source/proxy/${proxy}-dev-proxy` : '';
 }
 
 const imports = {
@@ -52,9 +53,18 @@ const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
     renderLineHighlightOnlyWhenFocus: true
 };
 
-export default function MonacoEditor(props: { code: string; path: string }) {
-    const { code, path } = props;
-    const latestCode = useLatest(code);
+interface LiveEditorProps {
+    code: string;
+    path?: string;
+    editor?: boolean;
+    preview?: boolean;
+    toolbox?: boolean;
+    console?: boolean;
+}
+
+export default function LiveEditor(props: LiveEditorProps) {
+    const { code, editor = true, preview = true, toolbox = true, console = false } = props;
+    const latestCode = useLatest(decodeURI(code));
     const { onLocationChange } = useRouter();
     const { create, sandbox, proxy, onBeforeCreate, onCreated } = useSandbox({
         imports,
@@ -180,6 +190,10 @@ export default function MonacoEditor(props: { code: string; path: string }) {
         collectLogs(() => []);
     };
 
+    watchState(code, () => {
+        !editor && updatePreview(decodeURI(code));
+    });
+
     onLocationChange('pathname', () => {
         editorRef.current?.revealPositionInCenter({ lineNumber: 1, column: 1 });
         updatePreviewWithThrottle.flush();
@@ -201,25 +215,27 @@ export default function MonacoEditor(props: { code: string; path: string }) {
     });
 
     return (
-        <div className="live-demo-container tw-rounded tw-flex tw-flex-col tw-relative">
-            <ToolBox code={code} editor={editorRef} reset={resetPreview} />
+        <div className={cn('live-demo-container', 'tw-rounded tw-flex tw-flex-col tw-relative', { 'with-preview': preview, 'with-editor': editor, 'with-toolbox': toolbox, 'with-console': console })}>
+            {toolbox && <ToolBox code={decodeURI(code)} editor={editorRef} reset={resetPreview} />}
             <div className="main tw-h-80 tw-flex">
-                <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />
-                <Editor
-                    className="editor-container"
-                    height="100%"
-                    width="50%"
-                    options={editorOptions}
-                    defaultLanguage="typescript"
-                    theme="vitesse-light"
-                    value={code}
-                    path="file:///index.tsx"
-                    onMount={handleEditorDidMount}
-                    onChange={handleEditorContentChange}
-                />
+                {preview && <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />}
+                {editor && (
+                    <Editor
+                        className="editor-container"
+                        height="100%"
+                        width={preview ? '50%' : '100%'}
+                        options={editorOptions}
+                        defaultLanguage="typescript"
+                        theme="vitesse-light"
+                        value={decodeURI(code)}
+                        path="file:///index.tsx"
+                        onMount={handleEditorDidMount}
+                        onChange={handleEditorContentChange}
+                    />
+                )}
             </div>
-            <Console logs={logs} clear={clearConsole} />
-            {loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
+            {console && <Console logs={logs} clear={clearConsole} />}
+            {preview && loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
         </div>
     );
 }
