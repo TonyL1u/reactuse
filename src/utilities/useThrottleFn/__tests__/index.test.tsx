@@ -1,11 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useThrottleFn } from 'reactuse';
-
-const sleep = (ms: number) => {
-    return new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
-};
+import { sleep } from '../../../helper/testingUtils';
 
 describe('useThrottleFn', () => {
     test('should be defined', () => {

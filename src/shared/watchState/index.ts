@@ -27,7 +27,7 @@ export function watchState<T>(source: T, callback: WatchCallback<T, T>, options:
         oldRef.current = source;
     };
 
-    useEffect(eventFilter(effectCallback), [source]);
+    useEffect(eventFilter(effectCallback), Array.isArray(source) ? source : [source]);
 
     return {
         pause() {

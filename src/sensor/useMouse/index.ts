@@ -5,7 +5,7 @@ import type { ConfigurableEventFilter } from '../../helper';
 
 type CursorState = { x: number; y: number };
 type MouseSourceType = 'mouse' | 'touch' | null;
-interface UseMouseOptions extends ConfigurableEventFilter {
+export interface UseMouseOptions extends ConfigurableEventFilter {
     type?: 'page' | 'client';
     touch?: boolean;
     initialValue?: CursorState;

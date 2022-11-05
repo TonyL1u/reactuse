@@ -39,7 +39,7 @@ export function useRouter() {
             const { immediately = false } = options;
 
             const { on, trigger } = createChangeHook(key);
-            const { off } = on(callback);
+            const { off } = on(callback as any);
 
             tryOnMounted(() => {
                 immediately && trigger({ [key]: location[key], location } as HookPayload<T>);

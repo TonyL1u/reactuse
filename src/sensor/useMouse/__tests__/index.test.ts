@@ -1,23 +1,6 @@
 import { renderHook, fireEvent } from '@testing-library/react';
 import { useMouse } from 'reactuse';
-
-interface MouseEventWithOffsets extends MouseEventInit {
-    pageX?: number;
-    pageY?: number;
-    offsetX?: number;
-    offsetY?: number;
-    x?: number;
-    y?: number;
-}
-
-class FakeMouseEvent extends MouseEvent {
-    constructor(type: string, values: MouseEventWithOffsets) {
-        const { pageX = 0, pageY = 0, offsetX = 0, offsetY = 0, x = 0, y = 0, ...mouseValues } = values;
-        super(type, mouseValues);
-
-        Object.assign(this, { offsetX, offsetY, pageX, pageY, x, y });
-    }
-}
+import { FakeMouseEvent } from '../../../helper/testingUtils';
 
 describe('useMouse', () => {
     test('should be defined', () => {

@@ -1,3 +1,4 @@
+import * as react from 'react';
 import { DependencyList, RefObject, Dispatch, SetStateAction } from 'react';
 import { DebounceSettings } from 'lodash-es';
 
@@ -67,12 +68,6 @@ declare function useTitle(options: UseTitleOptions): UseTitleReturn;
  */
 declare function useTitle(initialTitle?: string, options?: UseTitleOptions): UseTitleReturn;
 
-declare type ElementSize = {
-    width: number;
-    height: number;
-};
-declare function useElementSize<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
-
 declare type ElementBounding = {
     width: number;
     height: number;
@@ -84,6 +79,56 @@ declare type ElementBounding = {
     y: number;
 };
 declare function useElementBounding<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
+
+declare type ElementSize = {
+    width: number;
+    height: number;
+};
+declare function useElementSize<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
+
+declare function useDeviceOrientation(): {
+    isAbsolute: boolean;
+    alpha: number | null;
+    beta: number | null;
+    gamma: number | null;
+    isSupported: boolean;
+};
+
+declare type CursorState = {
+    x: number;
+    y: number;
+};
+declare type MouseSourceType = 'mouse' | 'touch' | null;
+interface UseMouseOptions extends ConfigurableEventFilter {
+    type?: 'page' | 'client';
+    touch?: boolean;
+    initialValue?: CursorState;
+}
+declare function useMouse(options?: UseMouseOptions): {
+    sourceType: MouseSourceType;
+    x: number;
+    y: number;
+};
+
+interface UseParallaxOptions {
+    deviceOrientationTiltAdjust?: (i: number) => number;
+    deviceOrientationRollAdjust?: (i: number) => number;
+    mouseTiltAdjust?: (i: number) => number;
+    mouseRollAdjust?: (i: number) => number;
+}
+declare function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
+    roll: number;
+    tilt: number;
+    source: string;
+};
+
+interface UseMouseInElementOptions extends UseMouseOptions {
+}
+declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): {
+    x: number;
+    y: number;
+    isOutside: boolean;
+};
 
 declare function useMutationObserver<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): {
     isSupported: boolean;
@@ -133,29 +178,19 @@ declare function watchState<T>(source: T, callback: WatchCallback<T, T>, options
     resume(): void;
 };
 
-declare type CursorState = {
-    x: number;
-    y: number;
-};
-declare type MouseSourceType = 'mouse' | 'touch' | null;
-interface UseMouseOptions extends ConfigurableEventFilter {
-    type?: 'page' | 'client';
-    touch?: boolean;
-    initialValue?: CursorState;
-}
-declare function useMouse(options?: UseMouseOptions): {
-    sourceType: MouseSourceType;
-    x: number;
-    y: number;
-};
+declare function useLatest<T>(value: T): react.MutableRefObject<T>;
+
+declare function useReactive(): void;
+
+declare function useUpdate(): () => void;
 
 declare function useDebounceFn<T extends FunctionArgs>(fn: T, wait?: number, options?: DebounceSettings): any;
 
-declare type EventHookOn<T = any> = (fn: (param: T) => void) => {
+declare type EventHookOn<T = any> = (fn: (param?: T) => void) => {
     off: () => void;
 };
-declare type EventHookOff<T = any> = (fn: (param: T) => void) => void;
-declare type EventHookTrigger<T = any> = (param: T) => void;
+declare type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
+declare type EventHookTrigger<T = any> = (param?: T) => void;
 interface EventHook<T = any> {
     on: EventHookOn<T>;
     off: EventHookOff<T>;
@@ -165,4 +200,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
 
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): any;
 
-export { ConfigurableEventFilter, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, tryOnMounted, tryOnUnmounted, useDebounceFn, useElementBounding, useElementSize, useEventHook, useEventListener, useMounted, useMouse, useMutationObserver, useResizeObserver, useRouter, useSupported, useThrottleFn, useTitle, useWindowSize, watchRef, watchState };
+export { ConfigurableEventFilter, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, UseMouseOptions, UseParallaxOptions, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, tryOnMounted, tryOnUnmounted, useDebounceFn, useDeviceOrientation, useElementBounding, useElementSize, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useParallax, useReactive, useResizeObserver, useRouter, useSupported, useThrottleFn, useTitle, useUpdate, useWindowSize, watchRef, watchState };

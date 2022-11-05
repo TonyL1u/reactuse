@@ -1,13 +1,8 @@
 import { useMouse } from 'reactuse';
+import { stringify } from '@doc-utils';
 
 export default () => {
-    const { x, y, sourceType } = useMouse();
+    const mouseState = useMouse();
 
-    return (
-        <>
-            <div>x: {x}</div>
-            <div>y: {y}</div>
-            <div>sourceType: {sourceType}</div>
-        </>
-    );
+    return <div className="tw-whitespace-pre-wrap">{stringify(mouseState)}</div>;
 };
