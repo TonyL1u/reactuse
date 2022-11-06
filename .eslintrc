@@ -5,7 +5,8 @@
         "import/no-anonymous-default-export": [
             "error",
             {
-                "allowArrowFunction": true
+                "allowArrowFunction": true,
+                "allowObject": true
             }
         ]
     }

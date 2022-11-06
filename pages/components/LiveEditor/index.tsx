@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
-import { useRouter, useLatest, useThrottleFn, watchState, tryOnMounted } from 'reactuse';
+import { useLatest, useThrottleFn, watchState, tryOnMounted } from 'reactuse';
+import { useRouter } from '../../composables';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
@@ -10,17 +11,16 @@ import Preview from './Preview';
 import ToolBox from './Toolbox';
 import Console from './Console';
 import { useSandbox } from './logic/useSandbox';
-import '../../styles/monaco-jsx-highlight.scss';
 import type { Logs } from './Console';
 
 function getProxyPath(proxy: string) {
-    return import.meta.env.DEV ? `http://${location.host}/pages/components/LiveEditor/source/proxy/${proxy}-dev-proxy` : '';
+    return import.meta.env.DEV ? `http://${location.host}/pages/components/LiveEditor/source/proxy/${proxy}-dev-proxy` : `http://${location.host}/live-editor-assets/${proxy}.js`;
 }
 
 const imports = {
     reactuse: getProxyPath('reactuse'),
     react: getProxyPath('react'),
-    'react-dom/client': getProxyPath('react-dom-client'),
+    'react-dom/client': getProxyPath('react-dom_client'),
     '@doc-utils': getProxyPath('doc-utils'),
     'lodash-es': getProxyPath('lodash-es')
 };
@@ -182,8 +182,9 @@ export default function LiveEditor(props: LiveEditorProps) {
         if (loading) return;
 
         create();
-        previewRef.current?.container?.appendChild(sandbox.current!);
         clearConsole();
+        previewRef.current?.container?.appendChild(sandbox.current!);
+        editorRef.current?.revealPositionInCenter({ lineNumber: 1, column: 1 });
     };
 
     const clearConsole = () => {

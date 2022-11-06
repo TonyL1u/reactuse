@@ -1,12 +1,14 @@
 import basicConfig, { file } from './rollup.config.js';
-import esbuild from 'rollup-plugin-esbuild';
 
 export default {
     ...basicConfig,
-    plugins: [esbuild()],
     output: {
-        name: 'ReactUse',
+        name: 'reactuse',
         file: file('umd.js'),
-        format: 'umd'
+        format: 'umd',
+        globals: {
+            react: 'React',
+            'lodash-es': '_'
+        }
     }
 };

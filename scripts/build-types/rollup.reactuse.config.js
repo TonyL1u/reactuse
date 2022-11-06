@@ -1,11 +1,10 @@
-import basicConfig, { file } from './rollup.config.js';
 import dts from 'rollup-plugin-dts';
 
 export default {
-    ...basicConfig,
+    input: 'src/index.ts',
     plugins: [dts()],
     output: {
-        file: file('d.ts'),
+        file: 'src/index.d.ts',
         format: 'es'
     }
 };

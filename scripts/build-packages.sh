@@ -1,37 +1,24 @@
-
-
-function buildMjs() {
-    rollup --config scripts/build/rollup.mjs.config.js
+function clear() {
+    rimraf src/index.d.ts
+    rimraf src/index.esm.js
+    rimraf src/index.umd.js
 }
 
-function buildCjs() {
-    rollup --config scripts/build/rollup.cjs.config.js
+function buildEsm() {
+    rollup --config scripts/build/rollup.esm.config.js
 }
 
-function buildIife() {
-    rollup --config scripts/build/rollup.iife.config.js
+function buildUmd() {
+    rollup --config scripts/build/rollup.umd.config.js
 }
-
 
 function buildDts() {
-    rollup --config scripts/build/rollup.dts.config.js
+    rollup --config scripts/build-types/rollup.reactuse.config.js
 }
 
-BUILD=$1;
+clear
 
-if [ $BUILD == 'dts' ]; then
-    buildDts
-elif [ $BUILD == 'cjs' ]; then
-    buildCjs
-elif [ $BUILD == 'mjs' ]; then
-    buildMjs
-elif [ $BUILD == 'iife' ]; then
-    buildIife
-else
-    buildMjs
-    buildCjs
-    buildIife
-    buildDts
-fi
-
+buildEsm
+buildUmd
+buildDts
 

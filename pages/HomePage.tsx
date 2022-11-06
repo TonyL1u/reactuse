@@ -4,12 +4,17 @@ import LiveEditor from './components/LiveEditor';
 
 const code = `
 import { useMouse } from 'reactuse';
-import { stringify } from '@doc-utils';
 
 export default () => {
-    const mouseState = useMouse();
+    const { x, y, sourceType } = useMouse();
 
-    return <div className="tw-whitespace-pre-wrap">{stringify(mouseState)}</div>;
+    return (
+        <>
+            <div>x: {x}</div>
+            <div>y: {y}</div>
+            <div>sourceType: {sourceType}</div>
+        </>
+    );
 };
 `.trim();
 
@@ -26,12 +31,12 @@ export default () => {
     });
 
     return (
-        <div ref={el} className="tw-w-full tw-h-full tw-flex tw-flex-col tw-items-center" style={{ perspective: '300px' }}>
-            <div className="tw-pt-24 tw-pb-16 tw-w-full tw-flex tw-flex-col tw-items-center">
-                <div className="tw-text-6xl tw-font-semibold">React Use</div>
-                <div className="tw-mt-4 tw-text-gray-400">An effective React hooks library</div>
+        <div ref={el} className="home tw-w-full tw-h-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[18px] tw-pt-8 tw-pb-20  tw-box-border" style={{ perspective: '300px' }}>
+            <div className="tw-pb-16 tw-w-full tw-flex tw-flex-col tw-items-center">
+                <div className="tw-text-6xl">React Use</div>
+                <div className="tw-mt-4 tw-text-gray-400 tw-tracking-[3px]">An Effective React Hooks Library</div>
             </div>
-            <div className="tw-w-[50%] tw-max-w-[1000px]" style={{ transform }}>
+            <div className="tw-w-full tw-max-w-[800px] " style={{ transform }}>
                 <LiveEditor code={code} toolbox={false} />
             </div>
         </div>

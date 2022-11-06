@@ -1,9 +1,8 @@
 import { useLocation } from 'react-router-dom';
-import { watchState, tryOnMounted, tryOnUnmounted } from '../../shared';
-import { useEventHook } from '../../utilities';
+import { watchState, tryOnMounted, tryOnUnmounted, useEventHook } from 'reactuse';
 import type { Location } from 'react-router-dom';
-import type { EventHook } from '../../utilities';
-import type { Merge } from '../../helper';
+import type { EventHook } from 'reactuse';
+import type { Merge } from '../utils';
 
 type HookPayload<T extends keyof Location> = Merge<Record<T, Location[T]>, { location: Location }>;
 

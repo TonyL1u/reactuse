@@ -152,8 +152,6 @@ interface UseWindowSizeOptions {
 }
 declare function useWindowSize(options?: UseWindowSizeOptions): WindowSize;
 
-declare function useRouter(): any;
-
 declare function tryOnMounted(fn: () => void): void;
 
 declare function tryOnUnmounted(fn: () => void): void;
@@ -200,4 +198,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
 
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): any;
 
-export { ConfigurableEventFilter, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, UseMouseOptions, UseParallaxOptions, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, tryOnMounted, tryOnUnmounted, useDebounceFn, useDeviceOrientation, useElementBounding, useElementSize, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useParallax, useReactive, useResizeObserver, useRouter, useSupported, useThrottleFn, useTitle, useUpdate, useWindowSize, watchRef, watchState };
+export { ConfigurableEventFilter, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, UseMouseOptions, UseParallaxOptions, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, tryOnMounted, tryOnUnmounted, useDebounceFn, useDeviceOrientation, useElementBounding, useElementSize, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useParallax, useReactive, useResizeObserver, useSupported, useThrottleFn, useTitle, useUpdate, useWindowSize, watchRef, watchState };
