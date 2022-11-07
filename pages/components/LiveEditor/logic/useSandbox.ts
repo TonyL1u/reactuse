@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { tryOnMounted, tryOnUnmounted, useEventHook } from 'reactuse';
 import srcdoc from '../source/template.html?raw';
+import srcdocProd from '../source/template.prod.html?raw';
 
 // ReplProxy and srcdoc implementation from Svelte REPL
 // MIT License https://github.com/sveltejs/svelte-repl/blob/master/LICENSE
@@ -122,7 +123,7 @@ export function useSandbox(config: SandboxConfig = {}) {
         sandbox.current.setAttribute('sandbox', ['allow-forms', 'allow-modals', 'allow-pointer-lock', 'allow-popups', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation-by-user-activation'].join(' '));
         sandbox.current.className = 'tw-rounded-lg tw-shadow tw-bg-white tw-overflow-auto tw-flex-1 tw-border-none';
         sandbox.current.id = 'sandbox_iframe';
-        sandbox.current.srcdoc = srcdoc.replace(/<!--IMPORT_MAP-->/, JSON.stringify({ imports }));
+        sandbox.current.srcdoc = (import.meta.env.PROD ? srcdocProd : srcdoc).replace(/<!--IMPORT_MAP-->/, JSON.stringify({ imports }));
 
         // create message proxy
         proxy.current = new PreviewProxy(sandbox.current, {
