@@ -33,6 +33,7 @@ jobs:
             - name: Install Dependencies
               run: npm install
             - name: Build Site
+              uses: appleboy/ssh-action@master
               with:
                   script: 'sh scripts/build-site.sh'
             - name: Setup Pages
