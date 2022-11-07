@@ -11,6 +11,7 @@ node_modules
 coverage
 public
 dist
+docs
 static
 dist-ssr
 *.local
