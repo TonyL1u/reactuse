@@ -14,7 +14,7 @@ import { useSandbox } from './logic/useSandbox';
 import type { Logs } from './Console';
 
 function getProxyPath(proxy: string) {
-    return import.meta.env.DEV ? `http://${location.host}/pages/components/LiveEditor/source/proxy/${proxy}-dev-proxy` : `https://${location.host}/reactuse/live-editor-assets/${proxy}.js`;
+    return import.meta.env.DEV ? `/pages/components/LiveEditor/source/proxy/${proxy}-dev-proxy` : `/reactuse/live-editor-assets/${proxy}.js`;
 }
 
 const imports = {
