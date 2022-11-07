@@ -6,6 +6,7 @@ import type { Category } from './create';
 const DefineMenu = create(({ key, name, category }) => {
     return {
         category,
+        name,
         element: (
             <li key={key} className="menu-item">
                 <NavLink to={name} style={({ isActive }) => (isActive ? { color: '#2b8844' } : {})}>
@@ -16,21 +17,20 @@ const DefineMenu = create(({ key, name, category }) => {
     };
 });
 
+export const Categories: Record<Category, ReactElement[]> = {
+    browser: [],
+    elements: [],
+    sensor: [],
+    shared: [],
+    state: [],
+    utilities: []
+};
+
+for (const { category, element } of DefineMenu) {
+    Categories[category].push(element);
+}
+
 export default () => {
-    const Categories: Record<Category, ReactElement[]> = {
-        browser: [],
-        elements: [],
-        router: [],
-        sensor: [],
-        shared: [],
-        state: [],
-        utilities: []
-    };
-
-    for (const { category, element } of DefineMenu) {
-        Categories[category].push(element);
-    }
-
     return (
         <>
             {Object.entries(Categories).map(([category, elements]) => {

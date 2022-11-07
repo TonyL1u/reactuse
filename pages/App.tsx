@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTitle } from 'reactuse';
 import { useNavigate } from 'react-router-dom';
 import { useRouter } from './composables';
+import cn from 'classnames';
 import { loader } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 // workers
@@ -15,12 +16,13 @@ import VitesseLight from 'theme-vitesse/themes/vitesse-light.json';
 // custom types
 import ReactTypes from '../node_modules/@types/react/index.d.ts?raw';
 import LodashEsTypes from '../node_modules/@types/lodash-es/index.d.ts?raw';
-import ReactUseTypes from './components/LiveEditor/extra-lib-types/reactuse.d.ts?raw';
-import DocUtilsTypes from './components/LiveEditor/extra-lib-types/doc-utils.d.ts?raw';
+import ReactUseTypes from './components/LiveEditor/extra-lib/reactuse.d.ts?raw';
+import DocUtilsTypes from './components/LiveEditor/extra-lib/doc-utils.d.ts?raw';
 // view
 import RouterLink from './routers/RouterLink';
 import RouterView from './routers/RouterView';
 import RouterPager from './routers/RouterPager';
+import reactLogo from './assets/react.svg';
 // styles
 import './styles/App.scss';
 import './styles/doc-demo-widget.scss';
@@ -76,7 +78,6 @@ loader.init().then(monaco => {
     });
 
     // add extra libs
-    // monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'react' {}`, 'file:///node_modules/@types/react/index.d.ts');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'react' {${ReactTypes}}`, 'ts:react');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'reactuse' {${ReactUseTypes}}`, 'ts:reactuse');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'lodash-es' {${LodashEsTypes}}`, 'ts:lodash-es');
@@ -101,10 +102,11 @@ function App() {
     );
 
     return (
-        <div className="tw-flex tw-flex-col tw-w-full">
-            <header className="doc-header tw-h-[55px] tw-min-h-[55px] tw-flex tw-items-center tw-pl-16 tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-50 " style={{ borderBottom: '1px solid #f0f0f0' }}>
-                <div className="tw-text-2xl tw-font-semibold tw-cursor-pointer" onClick={() => navigate('/')}>
+        <div className={cn({ home: isHomePage }, 'tw-flex tw-flex-col tw-w-full')}>
+            <header className="doc-header tw-h-[55px] tw-min-h-[55px] tw-flex tw-items-center tw-justify-between tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-50 " style={{ borderBottom: '1px solid #f0f0f0' }}>
+                <div className="badge tw-text-2xl tw-font-semibold tw-cursor-pointer tw-pl-16 tw-h-full tw-w-[300px] tw-box-border tw-flex tw-items-center" onClick={() => navigate('/')}>
                     ReactUse
+                    <img src={reactLogo} className="logo react tw-ml-2" alt="React logo" />
                 </div>
             </header>
             {!isHomePage && (

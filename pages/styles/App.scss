@@ -5,9 +5,31 @@
     width: 100%;
     display: flex;
 
+    .home .doc-header .badge {
+        background: transparent;
+    }
+
     .doc-header {
         backdrop-filter: saturate(50%) blur(4px);
         background: rgba(255, 255, 255, 0.7);
+
+        .badge {
+            background: #f9f9f9;
+        }
+
+        .logo.react {
+            width: 24px;
+            height: 24px;
+            animation: logo-spin infinite 12s linear;
+
+            // &:hover {
+            //     filter: drop-shadow(0 0 2em #61dafbaa);
+            // }
+        }
+    }
+
+    .doc-aside {
+        background: #f9f9f9;
     }
 
     a {
@@ -145,13 +167,23 @@
     }
 }
 
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 @media screen and (max-width: 1080px) {
     #root {
         .home {
             padding-bottom: 18px;
         }
 
-        .doc-header {
+        .doc-header .badge {
+            background: transparent;
             padding-left: 18px;
         }
 

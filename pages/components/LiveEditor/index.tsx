@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { useLatest, useThrottleFn, watchState, tryOnMounted } from 'reactuse';
-import { useRouter } from '../../composables';
+import { useRouter } from '@/pages/composables';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
