@@ -12,6 +12,8 @@ coverage
 public
 dist
 docs
+etc
+temp
 static
 dist-ssr
 *.local
