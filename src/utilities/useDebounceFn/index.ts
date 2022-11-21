@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { debounce } from 'lodash-es';
 import { useLatest } from '../../state';
-import { tryOnUnmounted } from '../../shared';
+import { useOnUnmounted } from '../../shared';
 import type { FunctionArgs } from '../../helper';
 import type { DebounceSettings } from 'lodash-es';
 
@@ -19,7 +19,7 @@ export function useDebounceFn<T extends FunctionArgs>(fn: T, wait = 200, options
         []
     );
 
-    tryOnUnmounted(debounced.cancel);
+    useOnUnmounted(debounced.cancel);
 
     return debounced;
 }

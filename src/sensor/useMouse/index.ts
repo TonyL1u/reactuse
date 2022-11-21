@@ -3,14 +3,45 @@ import { useEventListener } from '../../browser';
 import { bypassFilter } from '../../helper';
 import type { ConfigurableEventFilter } from '../../helper';
 
-type CursorState = { x: number; y: number };
-type MouseSourceType = 'mouse' | 'touch' | null;
+/** @public */
+export type CursorState = {
+    x: number;
+    y: number;
+};
+/** @public */
+export type MouseSourceType = 'mouse' | 'touch' | null;
+/** @public */
 export interface UseMouseOptions extends ConfigurableEventFilter {
+    /**
+     * Mouse position based by page or client
+     *
+     * @defaultValue 'page'
+     */
     type?: 'page' | 'client';
+    /**
+     * Listen to `touchmove` events
+     *
+     * @defaultValue true
+     */
     touch?: boolean;
+    /**
+     * Initial values
+     */
     initialValue?: CursorState;
 }
-
+/**
+ * Reactive mouse position.
+ *
+ * @example
+ * ```ts
+ * import { useMouse } from 'reactuse';
+ *
+ * const { x, y, sourceType } = useMouse();
+ * ```
+ * @param options -
+ * @returns Your cursor's position
+ * @public
+ */
 export function useMouse(options: UseMouseOptions = {}) {
     const { type = 'page', touch = true, eventFilter = bypassFilter(), initialValue = { x: NaN, y: NaN } } = options;
     const [cursor, setCursor] = useState<CursorState>({ x: initialValue.x, y: initialValue.y });

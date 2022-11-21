@@ -1,14 +1,14 @@
 import { renderHook } from '@testing-library/react';
-import { tryOnMounted } from 'reactuse';
+import { useOnMounted } from 'reactuse';
 
-describe('tryOnMounted', () => {
+describe('useOnMounted', () => {
     test('should be defined', () => {
-        expect(tryOnMounted).toBeDefined();
+        expect(useOnMounted).toBeDefined();
     });
 
     test('should work', () => {
         const fn = vi.fn();
-        const hook = renderHook(() => tryOnMounted(fn));
+        const hook = renderHook(() => useOnMounted(fn));
         expect(fn).toBeCalledTimes(1);
 
         hook.rerender();
@@ -17,7 +17,7 @@ describe('tryOnMounted', () => {
         hook.unmount();
         expect(fn).toBeCalledTimes(1);
 
-        renderHook(() => tryOnMounted(fn));
+        renderHook(() => useOnMounted(fn));
         expect(fn).toBeCalledTimes(2);
     });
 });

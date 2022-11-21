@@ -96,7 +96,11 @@ function App() {
     onLocationChange(
         'pathname',
         ({ pathname }) => {
-            !isHomePage && setTitle(`${pathname.slice(1)} | ReactUse`);
+            if (isHomePage) {
+                setTitle('ReactUse')
+            } else {
+                setTitle(`${pathname.slice(1)} | ReactUse`);
+            }
         },
         { immediately: true }
     );
@@ -110,7 +114,7 @@ function App() {
                 </div>
             </header>
             {!isHomePage && (
-                <aside className="doc-aside tw-w-[300px] tw-box-border tw-fixed tw-top-0 tw-bottom-0 tw-left-0 tw-pt-14 tw-pl-16" style={{ borderRight: '1px solid #f0f0f0' }}>
+                <aside className="doc-aside tw-w-[300px] tw-box-border tw-fixed tw-top-0 tw-bottom-0 tw-left-0 tw-pt-14 tw-pl-16 tw-overflow-scroll" style={{ borderRight: '1px solid #f0f0f0' }}>
                     <RouterLink />
                 </aside>
             )}

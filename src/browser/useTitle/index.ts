@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { watchState } from '../../shared';
+import { useWatchState } from '../../shared';
 import { useMutationObserver } from '../../elements';
 import type { Dispatch, SetStateAction } from 'react';
 
@@ -51,7 +51,7 @@ export function useTitle(...args: any[]) {
     const { observe = false } = options;
     const [title, setTitle] = useState(initialTitle);
 
-    watchState(
+    useWatchState(
         title,
         val => {
             document.title = val;

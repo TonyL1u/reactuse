@@ -24,4 +24,5 @@ body {
     min-width: 320px;
     width: 100vw;
     min-height: 100vh;
+    scroll-behavior: smooth;
 }

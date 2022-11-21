@@ -4,10 +4,25 @@ import { useElementBounding } from '../useElementBounding';
 import type { UseMouseOptions } from '../../sensor';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-interface UseMouseInElementOptions extends UseMouseOptions {}
-
+/** @public */
+export interface UseMouseInElementOptions extends UseMouseOptions {}
+/**
+ * Reactive mouse position related to an element.
+ *
+ * @example
+ * ```ts
+ * import { useMouseInElement } from 'reactuse';
+ *
+ * const { x, y, isOutside } = useMouseInElement(el);
+ * ```
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param options -
+ * @typeParam T - Type of the real HTML element
+ * @returns
+ * @public
+ */
 export function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options: UseMouseInElementOptions = {}) {
-    const { x, y } = useMouse();
+    const { x, y } = useMouse(options);
     const { top, left, width, height } = useElementBounding(target);
 
     const elementX = useMemo(() => x - left, [x, left]);

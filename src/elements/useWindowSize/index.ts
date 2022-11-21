@@ -1,15 +1,29 @@
 import { useState } from 'react';
 import { useEventListener } from '../../browser';
-import { tryOnMounted } from '../../shared';
+import { useOnMounted } from '../../shared';
 
-type WindowSize = { width: number; height: number };
-interface UseWindowSizeOptions {
+/** @public */
+export type WindowSize = { width: number; height: number };
+/** @public */
+export interface UseWindowSizeOptions {
     initialWidth?: number;
     initialHeight?: number;
     listenOrientation?: boolean;
     includeScrollbar?: boolean;
 }
-
+/**
+ * Reactive window size.
+ *
+ * @example
+ * ```ts
+ * import { useWindowSize } from 'reactuse';
+ *
+ * const { width, height } = useWindowSize();
+ * ```
+ * @param options -
+ * @returns
+ * @public
+ */
 export function useWindowSize(options: UseWindowSizeOptions = {}) {
     const { initialWidth = NaN, initialHeight = NaN, listenOrientation = true, includeScrollbar = true } = options;
     const [size, setSize] = useState<WindowSize>({ width: initialWidth, height: initialHeight });
@@ -26,7 +40,7 @@ export function useWindowSize(options: UseWindowSizeOptions = {}) {
     useEventListener('resize', update, { passive: true });
     listenOrientation && useEventListener('orientationchange', update, { passive: true });
 
-    tryOnMounted(update);
+    useOnMounted(update);
 
     return size;
 }

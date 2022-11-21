@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { watchState, tryOnMounted, tryOnUnmounted, useEventHook } from 'reactuse';
+import { useWatchState, useOnMounted, useOnUnmounted, useEventHook } from 'reactuse';
 import type { Location } from 'react-router-dom';
 import type { EventHook } from 'reactuse';
 import type { Merge } from '../utils';
@@ -20,7 +20,7 @@ export function useRouter() {
         return hooksMap.get(key) as EventHook<HookPayload<T>>;
     };
 
-    watchState(location, (to, from) => {
+    useWatchState(location, (to, from) => {
         for (const [key, hook] of hooksMap) {
             if (to[key] !== from[key]) {
                 hook?.trigger({ [key]: to[key], location });
@@ -28,7 +28,7 @@ export function useRouter() {
         }
     });
 
-    tryOnUnmounted(() => {
+    useOnUnmounted(() => {
         hooksMap.clear();
     });
 
@@ -40,10 +40,10 @@ export function useRouter() {
             const { on, trigger } = createChangeHook(key);
             const { off } = on(callback as any);
 
-            tryOnMounted(() => {
+            useOnMounted(() => {
                 immediately && trigger({ [key]: location[key], location } as HookPayload<T>);
             });
-            tryOnUnmounted(off);
+            useOnUnmounted(off);
 
             return off;
         }

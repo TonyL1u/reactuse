@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { tryOnMounted, tryOnUnmounted, useEventHook } from 'reactuse';
+import { useOnMounted, useOnUnmounted, useEventHook } from 'reactuse';
 import srcdoc from '../source/template.html?raw';
 import srcdocProd from '../source/template.prod.html?raw';
 
@@ -156,9 +156,9 @@ export function useSandbox(config: SandboxConfig = {}) {
         });
     };
 
-    tryOnMounted(create);
+    useOnMounted(create);
 
-    tryOnUnmounted(destroy);
+    useOnUnmounted(destroy);
 
     return {
         create,

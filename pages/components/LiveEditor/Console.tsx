@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useWatchState } from 'reactuse';
 import { TerminalOutline, Ban } from '@ricons/ionicons5';
 
 export type Logs = {
@@ -7,8 +8,15 @@ export type Logs = {
 }[];
 
 export default (props: { logs: Logs; clear: () => void }) => {
+    const messagePanel = useRef<HTMLDivElement>(null);
     const { logs, clear } = props;
     const [collapsed, setCollapsed] = useState(true);
+
+    useWatchState(logs, () => {
+        if (messagePanel.current) {
+            messagePanel.current.scrollTop = 9999;
+        }
+    });
 
     return (
         <div className="console-container tw-text-sm tw-w-full tw-box-border tw-relative">
@@ -17,7 +25,7 @@ export default (props: { logs: Logs; clear: () => void }) => {
                 Console
             </div>
             {!collapsed && (
-                <div className="tw-max-h-40 tw-px-6 tw-overflow-auto tw-relative" style={{ borderTop: '1px solid #f0f0f0' }}>
+                <div ref={messagePanel} className="tw-max-h-40 tw-px-6 tw-overflow-auto tw-relative" style={{ borderTop: '1px solid #f0f0f0' }}>
                     {logs.length > 0 ? (
                         logs.map(({ timestamp, message }) => (
                             <div key={timestamp} className="tw-py-2 tw-flex tw-items-start tw-leading-4">

@@ -1,10 +1,22 @@
 import { useState } from 'react';
-import { tryOnMounted } from '../tryOnMounted';
+import { useOnMounted } from '../useOnMounted';
 
+/**
+ * Reactive hook mounted state.
+ *
+ * @example
+ * ```ts
+ * import { useMounted } from 'reactuse';
+ *
+ * const isMounted = useMounted();
+ * ```
+ * @returns
+ * @public
+ */
 export function useMounted() {
     const [isMounted, update] = useState(false);
 
-    tryOnMounted(() => {
+    useOnMounted(() => {
         update(true);
     });
 

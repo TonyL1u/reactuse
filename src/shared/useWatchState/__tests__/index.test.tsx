@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useState } from 'react';
-import { watchState } from 'reactuse';
+import { useWatchState } from 'reactuse';
 
 const watchFn = vi.fn();
 const Component = () => {
     const [_, change] = useState(0);
 
-    const { pause, resume } = watchState(_, watchFn);
+    const { pause, resume } = useWatchState(_, watchFn);
 
     return (
         <div>
@@ -17,9 +17,9 @@ const Component = () => {
     );
 };
 
-describe('watchState', () => {
+describe('useWatchState', () => {
     test('should be defined', () => {
-        expect(watchState).toBeDefined();
+        expect(useWatchState).toBeDefined();
     });
 
     test('should work', () => {

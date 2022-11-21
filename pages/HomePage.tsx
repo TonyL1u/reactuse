@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useParallax, watchState } from 'reactuse';
+import { useParallax, useWatchState } from 'reactuse';
 import LiveEditor from './components/LiveEditor';
 import './styles/HomePage.scss';
 
@@ -23,7 +23,7 @@ export default () => {
     const navigate = useNavigate();
     const transform = useMemo(() => `rotateX(${roll * 2}deg) rotateY(${tilt * 2}deg)`, [roll, tilt]);
 
-    watchState([roll, tilt], () => {
+    useWatchState([roll, tilt], () => {
         const iframe = document.querySelector('#sandbox_iframe');
         if (iframe) {
             iframe.setAttribute('style', `transform: rotateX(${roll * 5}deg) rotateY(${tilt * 5}deg)`);

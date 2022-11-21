@@ -1,24 +1,11 @@
 import { renderHook, act } from '@testing-library/react';
 import { useElementSize } from 'reactuse';
-
-let callback: any;
-function mockResizeObserver() {
-    Object.defineProperty(global, 'ResizeObserver', {
-        writable: true,
-        value: vi.fn().mockImplementation(cb => {
-            callback = cb;
-            return {
-                observe: vi.fn(),
-                unobserve: vi.fn(),
-                disconnect: vi.fn()
-            };
-        })
-    });
-}
+import { mockResizeObserver } from '../../../helper/testingUtils';
 
 describe('useElementSize', () => {
+    let callback: any;
     beforeEach(() => {
-        mockResizeObserver();
+        mockResizeObserver(cb => callback = cb);
     });
 
     test('should be defined', () => {
@@ -27,8 +14,7 @@ describe('useElementSize', () => {
 
     test('should work', () => {
         const div = document.createElement('div');
-        const target = { current: div };
-        const { result } = renderHook(() => useElementSize(target));
+        const { result } = renderHook(() => useElementSize(div));
 
         act(() => {
             callback([{ contentRect: { width: 100, height: 50 } }]);

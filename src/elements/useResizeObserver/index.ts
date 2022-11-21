@@ -1,9 +1,29 @@
 import { useRef } from 'react';
-import { useSupported, watchRef, tryOnUnmounted } from '../../shared';
+import { useSupported, useWatchRef, useOnUnmounted } from '../../shared';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
 
-export function useResizeObserver<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options: ResizeObserverOptions = {}) {
+/**
+ * Reports changes to the dimensions of an Element's content or the border-box.
+ * 
+ * @example
+ * ```ts
+ * import { useRef } from 'react';
+ * import { useResizeObserver } from 'reactuse';
+ * 
+ * const target = useRef<HTMLDivElement>(null);
+ * useResizeObserver(target, ([entry]) => {
+ *     // ...
+ * })
+ * ```
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param callback - ResizeObserver’s callback
+ * @param options - ResizeObserver’s options
+ * @typeParam T - Type of the real HTML element
+ * @returns 
+ * @public
+ */
+export function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options: ResizeObserverOptions = {}) {
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);
     let ob: ResizeObserver | null = null;
     const isSupported = useSupported(() => window && 'ResizeObserver' in window);
@@ -15,7 +35,7 @@ export function useResizeObserver<T extends MaybeElement = MaybeElement>(target:
         }
     };
 
-    const stopWatch = watchRef(
+    const stopWatch = useWatchRef(
         observeTarget,
         el => {
             clear();
@@ -33,7 +53,7 @@ export function useResizeObserver<T extends MaybeElement = MaybeElement>(target:
         stopWatch();
     };
 
-    tryOnUnmounted(stop);
+    useOnUnmounted(stop);
 
     return { isSupported, stop };
 }

@@ -1,6 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { useLatest } from '../../state';
-import { watchRef, tryOnUnmounted } from '../../shared';
+import { useWatchRef, useOnUnmounted } from '../../shared';
 import { noop } from '../../helper';
 import type { Fn, MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
@@ -34,7 +34,7 @@ export function useEventListener<E extends WindowEventName, T extends MaybeEleme
     const handler = useCallback((event: Event) => listenerRef.current(event as WindowEventMap[E]), [listenerRef]);
     let clear = noop;
 
-    const stopWatch = watchRef(
+    const stopWatch = useWatchRef(
         observeTarget,
         el => {
             clear();
@@ -56,7 +56,7 @@ export function useEventListener<E extends WindowEventName, T extends MaybeEleme
         stopWatch();
     };
 
-    tryOnUnmounted(stop);
+    useOnUnmounted(stop);
 
     return stop;
 }

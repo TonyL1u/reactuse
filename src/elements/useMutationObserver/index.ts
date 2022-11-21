@@ -1,9 +1,19 @@
 import { useRef } from 'react';
-import { useSupported, watchRef, tryOnUnmounted } from '../../shared';
+import { useSupported, useWatchRef, useOnUnmounted } from '../../shared';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
 
-export function useMutationObserver<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}) {
+/**
+ * Watch for changes being made to the DOM tree. [MutationObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+ * 
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param callback - MutationObserver's callback
+ * @param options - MutationObserver's options
+ * @typeParam T - Type of the real HTML element
+ * @returns 
+ * @public
+ */
+export function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}) {
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);
     let ob: MutationObserver | null = null;
     const isSupported = useSupported(() => window && 'MutationObserver' in window);
@@ -15,7 +25,7 @@ export function useMutationObserver<T extends MaybeElement = MaybeElement>(targe
         }
     };
 
-    const stopWatch = watchRef(
+    const stopWatch = useWatchRef(
         observeTarget,
         el => {
             clear();
@@ -35,7 +45,7 @@ export function useMutationObserver<T extends MaybeElement = MaybeElement>(targe
         stopWatch();
     };
 
-    tryOnUnmounted(stop);
+    useOnUnmounted(stop);
 
     return { isSupported, stop };
 }

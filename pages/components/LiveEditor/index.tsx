@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { useLatest, useThrottleFn, watchState, tryOnMounted } from 'reactuse';
+import { useLatest, useThrottleFn, useWatchState, useOnMounted } from 'reactuse';
 import { useRouter } from '@/pages/composables';
 import Editor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
@@ -191,7 +191,7 @@ export default function LiveEditor(props: LiveEditorProps) {
         collectLogs(() => []);
     };
 
-    watchState(code, () => {
+    useWatchState(code, () => {
         !editor && updatePreview(decodeURI(code));
     });
 
@@ -211,7 +211,7 @@ export default function LiveEditor(props: LiveEditorProps) {
         setLoading(false);
     });
 
-    tryOnMounted(() => {
+    useOnMounted(() => {
         sandbox.current && previewRef.current?.container?.appendChild(sandbox.current);
     });
 

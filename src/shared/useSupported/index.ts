@@ -1,11 +1,11 @@
 import { useCallback, useRef } from 'react';
-import { tryOnMounted } from '../tryOnMounted';
+import { useOnMounted } from '../useOnMounted';
 
 export function useSupported(callback: () => unknown) {
     const isSupported = useRef<boolean>(false);
     const update = useCallback(() => (isSupported.current = Boolean(callback())), [callback]);
     update();
-    tryOnMounted(update);
+    useOnMounted(update);
 
     return isSupported.current;
 }

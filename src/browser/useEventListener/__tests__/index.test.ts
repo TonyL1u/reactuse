@@ -21,9 +21,7 @@ describe('useEventListener', () => {
     test('should work with specify target', () => {
         const fn = vi.fn();
         const div = document.createElement('div');
-        const target = { current: div };
-
-        renderHook(() => useEventListener(target, 'mouseenter', fn));
+        renderHook(() => useEventListener(div, 'mouseenter', fn));
 
         fireEvent.mouseEnter(div);
         expect(fn).toBeCalled();
