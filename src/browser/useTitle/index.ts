@@ -50,6 +50,7 @@ export function useTitle(...args: any[]) {
 
     const { observe = false } = options;
     const [title, setTitle] = useState(initialTitle);
+    const titleElement = useRef(document.head.querySelector('title'));
 
     useWatchState(
         title,
@@ -59,18 +60,15 @@ export function useTitle(...args: any[]) {
         { immediate: true }
     );
 
-    if (observe && document) {
-        const titleElement = useRef(document.head.querySelector('title'));
-        useMutationObserver(
-            titleElement,
-            () => {
-                if (document.title !== title) {
-                    setTitle(document.title);
-                }
-            },
-            { childList: true }
-        );
-    }
+    useMutationObserver(
+        titleElement,
+        () => {
+            if (observe && document && document.title !== title) {
+                setTitle(document.title);
+            }
+        },
+        { childList: true }
+    );
 
     return { title, setTitle };
 }

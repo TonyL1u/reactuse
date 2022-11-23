@@ -1,13 +1,35 @@
 # useMutationObserver
-Watch for changes being made to the DOM tree. [MutationObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+
+Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+
 ## Usage
 
-## Type Declarations
 ```ts
-import type { MaybeElementRef, MaybeElement } from '../../helper';
+import { useState, useRef } from 'react';
+import { useMutationObserver } from 'reactuse';
+
+const el = useRef<HTMLDivElement>(null);
+useMutationObserver(el, mutations => {
+    // ...
+});
+```
+
+## Type Declarations
+
+````ts
 /**
- * Watch for changes being made to the DOM tree. [MutationObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+ * Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
  *
+ * @example
+ * ```ts
+ * import { useState, useRef } from 'react';
+ * import { useMutationObserver } from 'reactuse';
+ *
+ * const el = useRef<HTMLDivElement>(null);
+ * useMutationObserver(el, mutations => {
+ *     // ...
+ * });
+ * ```
  * @param target - DOM element or an HTML element wrapped by `useRef()`
  * @param callback - MutationObserver's callback
  * @param options - MutationObserver's options
@@ -15,18 +37,26 @@ import type { MaybeElementRef, MaybeElement } from '../../helper';
  * @returns
  * @public
  */
-export declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): {
+export declare function useMutationObserver<T extends MaybeElement>(
+    target: MaybeElementRef<T>,
+    callback: MutationCallback,
+    options?: MutationObserverInit
+): {
     isSupported: any;
     stop: () => void;
 };
-```
+````
+
 ## Params
-| Name | Type | Description | Optional |
-| :---: | :---: | :---: | :---: |
-| target | `MaybeElementRef<T>` | DOM element or an HTML element wrapped by `useRef()` | false |
-| callback | `MutationCallback` | MutationObserver's callback | false |
-| options | `MutationObserverInit` | MutationObserver's options | true |
+
+|   Name   |          Type          |                     Description                      | Optional |
+| :------: | :--------------------: | :--------------------------------------------------: | :------: |
+|  target  |  `MaybeElementRef<T>`  | DOM element or an HTML element wrapped by `useRef()` |  false   |
+| callback |   `MutationCallback`   |             MutationObserver's callback              |  false   |
+| options  | `MutationObserverInit` |              MutationObserver's options              |   true   |
+
 ## Type Params
-| Name | Constraint | Default Type | Description |
-| :---: | :---: | :---: | :---: |
-| T | `<T extends MaybeElement>` | -  |  Type of the real HTML element |
+
+| Name |         Constraint         | Default Type |          Description          |
+| :--: | :------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |

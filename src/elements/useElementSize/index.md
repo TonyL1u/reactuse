@@ -1,6 +1,6 @@
 # useElementSize
 
-Reactive size of an HTML element. [ResizeObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
+Reactive size of an HTML element. [`ResizeObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
 
 ## Usage
 
@@ -15,7 +15,6 @@ const size = useElementSize(el);
 ## Type Declarations
 
 ````ts
-import type { MaybeElementRef, MaybeElement } from '../../helper';
 /** @public */
 export declare type ElementSize = {
     width: number;

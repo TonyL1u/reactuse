@@ -13,8 +13,6 @@ const { x, y, isOutside } = useMouseInElement(el);
 ## Type Declarations
 
 ````ts
-import type { UseMouseOptions } from '../../sensor';
-import type { MaybeElementRef, MaybeElement } from '../../helper';
 /** @public */
 export interface UseMouseInElementOptions extends UseMouseOptions {}
 /**

@@ -29,6 +29,9 @@ export interface UseMouseOptions extends ConfigurableEventFilter {
      */
     initialValue?: CursorState;
 }
+export interface UseMouseReturn extends CursorState {
+    sourceType: MouseSourceType
+}
 /**
  * Reactive mouse position.
  *
@@ -42,7 +45,7 @@ export interface UseMouseOptions extends ConfigurableEventFilter {
  * @returns Your cursor's position
  * @public
  */
-export function useMouse(options: UseMouseOptions = {}) {
+export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
     const { type = 'page', touch = true, eventFilter = bypassFilter(), initialValue = { x: NaN, y: NaN } } = options;
     const [cursor, setCursor] = useState<CursorState>({ x: initialValue.x, y: initialValue.y });
     const [sourceType, setSourceType] = useState<MouseSourceType>(null);

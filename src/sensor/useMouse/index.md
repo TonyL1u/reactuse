@@ -13,22 +13,11 @@ const { x, y, sourceType } = useMouse();
 ## Type Declarations
 
 ````ts
-import type { ConfigurableEventFilter } from '../../helper';
-/** @public */
-export declare type CursorState = {
-    x: number;
-    y: number;
-};
-/** @public */
-export declare type MouseSourceType = 'mouse' | 'touch' | null;
-/** @public */
-export interface UseMouseOptions extends ConfigurableEventFilter {
+interface UseMouseOptions extends ConfigurableEventFilter {
     /**
-     * Mouse position based by page or client
-     *
-     * @defaultValue 'page'
+     * Initial values
      */
-    type?: 'page' | 'client';
+    initialValue?: CursorState;
     /**
      * Listen to `touchmove` events
      *
@@ -36,12 +25,25 @@ export interface UseMouseOptions extends ConfigurableEventFilter {
      */
     touch?: boolean;
     /**
-     * Initial values
+     * Mouse position based by page or client
+     *
+     * @defaultValue 'page'
      */
-    initialValue?: CursorState;
+    type?: 'page' | 'client';
 }
+interface UseMouseReturn extends CursorState {
+    sourceType: MouseSourceType;
+}
+declare type CursorState = {
+    x: number;
+    y: number;
+};
 /**
  * Reactive mouse position.
+ *
+ * @param options -
+ *
+ * @returns Your cursor's position
  *
  * @example
  * ```ts
@@ -49,15 +51,10 @@ export interface UseMouseOptions extends ConfigurableEventFilter {
  *
  * const { x, y, sourceType } = useMouse();
  * ```
- * @param options -
- * @returns Your cursor's position
+ *
  * @public
  */
-export declare function useMouse(options?: UseMouseOptions): {
-    sourceType: MouseSourceType;
-    x: number;
-    y: number;
-};
+declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 ````
 
 ## Params

@@ -14,7 +14,6 @@ const { roll, tilt } = useParallax(el);
 ## Type Declarations
 
 ````ts
-import type { MaybeElementRef, MaybeElement } from '../../helper';
 /** @public */
 export interface UseParallaxOptions {
     deviceOrientationTiltAdjust?: (i: number) => number;

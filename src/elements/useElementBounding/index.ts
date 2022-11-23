@@ -15,7 +15,7 @@ export type ElementBounding = {
     y: number;
 };
 /**
- * Reactive [bounding box](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
+ * Reactive [`bounding box`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
  *
  * @example
  * ```ts
@@ -30,7 +30,7 @@ export type ElementBounding = {
  * @returns Bounding of the element
  * @public
  */
-export function useElementBounding<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>) {
+export function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>) {
     const [bounding, setBounding] = useState<ElementBounding>({ width: NaN, height: NaN, top: NaN, right: NaN, bottom: NaN, left: NaN, x: NaN, y: NaN });
 
     const update = () => {
