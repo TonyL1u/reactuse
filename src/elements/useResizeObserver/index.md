@@ -20,6 +20,16 @@ useResizeObserver(target, ([entry]) => {
 /**
  * Reports changes to the dimensions of an Element's content or the border-box.
  *
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ *
+ * @param callback - ResizeObserver’s callback
+ *
+ * @param options - ResizeObserver’s options
+ *
+ * @typeParam T - Type of the real HTML element
+ *
+ * @returns
+ *
  * @example
  * ```ts
  * import { useRef } from 'react';
@@ -30,18 +40,14 @@ useResizeObserver(target, ([entry]) => {
  *     // ...
  * })
  * ```
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- * @param callback - ResizeObserver’s callback
- * @param options - ResizeObserver’s options
- * @returns
- * @public
+ *
  */
-export declare function useResizeObserver<T extends MaybeElement>(
+declare function useResizeObserver<T extends MaybeElement>(
     target: MaybeElementRef<T>,
     callback: ResizeObserverCallback,
     options?: ResizeObserverOptions
 ): {
-    isSupported: any;
+    isSupported: boolean;
     stop: () => void;
 };
 ````
@@ -56,6 +62,6 @@ export declare function useResizeObserver<T extends MaybeElement>(
 
 ## Type Params
 
-| Name |         Constraint         | Default Type | Description |
-| :--: | :------------------------: | :----------: | :---------: |
-|  T   | `<T extends MaybeElement>` |      -       |             |
+| Name |         Constraint         | Default Type |          Description          |
+| :--: | :------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |

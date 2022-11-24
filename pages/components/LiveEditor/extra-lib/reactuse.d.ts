@@ -1,45 +1,47 @@
 import * as react from 'react';
-import { DependencyList, RefObject, Dispatch, SetStateAction } from 'react';
-import { DebounceSettings, DebouncedFunc as DebouncedFunc$1 } from 'lodash-es';
+import { RefObject, Dispatch, SetStateAction, DependencyList } from 'react';
+import { DebounceSettings, DebouncedFunc } from 'lodash-es';
 
-declare function depsAreSame(deps: DependencyList, oldDeps: DependencyList): boolean;
-
-declare type Merge<F extends object, S extends object> = {
-    [P in keyof F | keyof S]: P extends keyof S ? S[P] : P extends keyof F ? F[P] : never;
-};
 declare type Fn = () => void;
 declare type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
 declare type MaybeRefObject<T> = T | RefObject<T>;
-declare type MaybeElement = Window | Document | HTMLElement | SVGElement | undefined | null;
-declare type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
+declare type MaybeElement = Window | Document | Element | SVGElement | undefined | null;
+declare type MaybeElementRef<T extends MaybeElement> = MaybeRefObject<T>;
 
 declare type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
 interface ConfigurableEventFilter {
     eventFilter?: EventFilter;
 }
-declare function bypassFilter<T extends FunctionArgs>(): (invoke: T) => T;
-declare function debounceFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, options?: DebounceSettings): (invoke: T) => any;
-declare function throttleFilter<T extends FunctionArgs>(ms: MaybeRefObject<number>, trailing?: boolean, leading?: boolean): (invoke: T) => DebouncedFunc<(...args: Parameters<T_1>) => ReturnType<T_1>>;
-
-declare const noop: () => void;
 
 declare type WindowEventName = keyof WindowEventMap;
-declare type EventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
+declare type DocumentEventName = keyof DocumentEventMap;
+declare type GeneralEventName = keyof GlobalEventHandlersEventMap;
+declare type WindowEventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
+declare type DocumentEventListener<E extends DocumentEventName> = (ev: DocumentEventMap[E]) => any;
+declare type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlersEventMap[E]) => any;
 /**
  * Overload 1: Omitted Window target
  *
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends WindowEventName>(event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<E extends WindowEventName>(event: E, listener: WindowEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 /**
- * Overload 2: Custom target
+ * Overload 2: Explicitly Document target
  *
  * @param target
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends WindowEventName, T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, event: E, listener: EventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<E extends DocumentEventName>(target: Document, event: E, listener: DocumentEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+/**
+ * Overload 3: Custom target
+ *
+ * @param target
+ * @param event
+ * @param listener
+ */
+declare function useEventListener<E extends GeneralEventName, T extends MaybeElement>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 
 interface UseTitleOptions {
     observe?: boolean;
@@ -68,7 +70,20 @@ declare function useTitle(options: UseTitleOptions): UseTitleReturn;
  */
 declare function useTitle(initialTitle?: string, options?: UseTitleOptions): UseTitleReturn;
 
-/** @public */
+/**
+ * Reactively track [`document.visibilityState`](https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState).
+ *
+ * @example
+ * ```ts
+ * import { useDocumentVisibility } from 'reactuse';
+ *
+ * const visible = useDocumentVisibility();
+ * ```
+ * @returns
+ *
+ */
+declare function useDocumentVisibility(): DocumentVisibilityState;
+
 declare type ElementBounding = {
     width: number;
     height: number;
@@ -80,7 +95,7 @@ declare type ElementBounding = {
     y: number;
 };
 /**
- * Reactive [bounding box](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
+ * Reactive [`bounding box`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
  *
  * @example
  * ```ts
@@ -93,17 +108,16 @@ declare type ElementBounding = {
  * @param target - DOM element or an HTML element wrapped by `useRef()`
  * @typeParam T - Type of the real HTML element
  * @returns Bounding of the element
- * @public
+ *
  */
-declare function useElementBounding<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
+declare function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
 
-/** @public */
 declare type ElementSize = {
     width: number;
     height: number;
 };
 /**
- * Reactive size of an HTML element. [ResizeObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
+ * Reactive size of an HTML element. [`ResizeObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
  *
  * @example
  * ```ts
@@ -117,23 +131,39 @@ declare type ElementSize = {
  * @param options - ResizeObserver’s options
  * @typeParam T - Type of the real HTML element
  * @returns Size of the element
- * @public
+ *
  */
-declare function useElementSize<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
+declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
 
-/** @public */
+/**
+ * Tracks the visibility of an element within the viewport.
+ *
+ * @example
+ * ```ts
+ * import { useRef } from 'react';
+ * import { useElementVisibility } from 'reactuse';
+ *
+ * const el = useRef<HTMLDivElement>(null);
+ * // visible is expected to be `false` when element is out of the viewport
+ * const visible = useElementVisibility();
+ * ```
+ * @param target -
+ * @typeParam T -
+ *
+ */
+declare function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>): boolean;
+
 interface DeviceOrientationState {
     isAbsolute: boolean;
     alpha: number | null;
     beta: number | null;
     gamma: number | null;
 }
-/** @public */
 interface UseDeviceOrientationReturn extends DeviceOrientationState {
     isSupported: boolean;
 }
 /**
- * Reactive [DeviceOrientationEvent](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent). Provide web developers with information from the physical orientation of the device running the web page.
+ * Reactive [`DeviceOrientationEvent`](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent). Provide web developers with information from the physical orientation of the device running the web page.
  *
  * @example
  * ```ts
@@ -142,18 +172,15 @@ interface UseDeviceOrientationReturn extends DeviceOrientationState {
  * const { isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
  * ```
  * @returns
- * @public
+ *
  */
 declare function useDeviceOrientation(): UseDeviceOrientationReturn;
 
-/** @public */
 declare type CursorState = {
     x: number;
     y: number;
 };
-/** @public */
 declare type MouseSourceType = 'mouse' | 'touch' | null;
-/** @public */
 interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Mouse position based by page or client
@@ -172,6 +199,9 @@ interface UseMouseOptions extends ConfigurableEventFilter {
      */
     initialValue?: CursorState;
 }
+interface UseMouseReturn extends CursorState {
+    sourceType: MouseSourceType;
+}
 /**
  * Reactive mouse position.
  *
@@ -183,15 +213,10 @@ interface UseMouseOptions extends ConfigurableEventFilter {
  * ```
  * @param options -
  * @returns Your cursor's position
- * @public
+ *
  */
-declare function useMouse(options?: UseMouseOptions): {
-    sourceType: MouseSourceType;
-    x: number;
-    y: number;
-};
+declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 
-/** @public */
 interface UseParallaxOptions {
     deviceOrientationTiltAdjust?: (i: number) => number;
     deviceOrientationRollAdjust?: (i: number) => number;
@@ -212,7 +237,7 @@ interface UseParallaxOptions {
  * @param options -
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ *
  */
 declare function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
     roll: number;
@@ -220,7 +245,6 @@ declare function useParallax<T extends MaybeElement = MaybeElement>(target: Mayb
     source: string;
 };
 
-/** @public */
 interface UseMouseInElementOptions extends UseMouseOptions {
 }
 /**
@@ -236,7 +260,7 @@ interface UseMouseInElementOptions extends UseMouseOptions {
  * @param options -
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ *
  */
 declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): {
     x: number;
@@ -244,22 +268,60 @@ declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target
     isOutside: boolean;
 };
 
-declare function useMutationObserver<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): {
+/**
+ * Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+ *
+ * @example
+ * ```ts
+ * import { useState, useRef } from 'react';
+ * import { useMutationObserver } from 'reactuse';
+ *
+ * const el = useRef<HTMLDivElement>(null);
+ * useMutationObserver(el, mutations => {
+ *     // ...
+ * });
+ * ```
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param callback - MutationObserver's callback
+ * @param options - MutationObserver's options
+ * @typeParam T - Type of the real HTML element
+ * @returns
+ *
+ */
+declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): {
     isSupported: boolean;
     stop: () => void;
 };
 
-declare function useResizeObserver<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): {
+/**
+ * Reports changes to the dimensions of an Element's content or the border-box.
+ *
+ * @example
+ * ```ts
+ * import { useRef } from 'react';
+ * import { useResizeObserver } from 'reactuse';
+ *
+ * const target = useRef<HTMLDivElement>(null);
+ * useResizeObserver(target, ([entry]) => {
+ *     // ...
+ * })
+ * ```
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param callback - ResizeObserver’s callback
+ * @param options - ResizeObserver’s options
+ * @typeParam T - Type of the real HTML element
+ * @returns
+ *
+ */
+declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): {
     isSupported: boolean;
     stop: () => void;
 };
 
-/** @public */
 declare type WindowSize = {
     width: number;
     height: number;
 };
-/** @public */
 interface UseWindowSizeOptions {
     initialWidth?: number;
     initialHeight?: number;
@@ -277,7 +339,7 @@ interface UseWindowSizeOptions {
  * ```
  * @param options -
  * @returns
- * @public
+ *
  */
 declare function useWindowSize(options?: UseWindowSizeOptions): WindowSize;
 
@@ -293,7 +355,7 @@ declare function useWindowSize(options?: UseWindowSizeOptions): WindowSize;
  * })
  * ```
  * @param fn - The function to be executed
- * @public
+ *
  */
 declare function useOnMounted(fn: () => void): void;
 
@@ -308,8 +370,8 @@ declare function useOnMounted(fn: () => void): void;
  *     // something you want to call when component is unmounted...
  * })
  * ```
- * @param fn The function to be executed
- * @public
+ * @param fn - The function to be executed
+ *
  */
 declare function useOnUnmounted(fn: () => void): void;
 
@@ -323,15 +385,13 @@ declare function useOnUnmounted(fn: () => void): void;
  * const isMounted = useMounted();
  * ```
  * @returns
- * @public
+ *
  */
 declare function useMounted(): boolean;
 
 declare function useSupported(callback: () => unknown): boolean;
 
-/** @public */
 declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
 interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
 }
@@ -358,21 +418,19 @@ interface WatchStateOptions extends ConfigurableEventFilter {
  * @param options -
  * @typeParam T - Type of the state value
  * @returns
- * @public
+ *
  */
 declare function useWatchState<T extends any>(source: T, callback: WatchStateCallback<T, T>, options?: WatchStateOptions): {
     pause(): void;
     resume(): void;
 };
 
-/** @public */
 declare type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
 interface WatchRefOptions extends WatchStateOptions {
     deps?: DependencyList;
 }
 /**
- * Watch a ref object value. It's always be used for watching a DOM element.
+ * Watch a ref DOM element.
  *
  * @example
  * ```ts
@@ -381,16 +439,17 @@ interface WatchRefOptions extends WatchStateOptions {
  *
  * const el = useRef<HTMLDivElement>(null);
  * useWatchRef(el, () => {
- *     // when the ref object element is mounted or unmounted, callback function will be triggered...
+ *     // when the ref DOM element is mounted or unmounted, callback function will be triggered...
  * })
  * ```
- * @param source - A ref object
+ * @param source - A ref DOM element
  * @param callback - Value & old value callback
  * @param options -
+ * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ *
  */
-declare function useWatchRef<T>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options?: WatchRefOptions): () => void;
+declare function useWatchRef<T extends MaybeElement>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options?: WatchRefOptions): () => void;
 
 declare function useLatest<T>(value: T): react.MutableRefObject<T>;
 
@@ -398,7 +457,24 @@ declare function useReactive(): void;
 
 declare function useUpdate(): () => void;
 
-declare function useDebounceFn<T extends FunctionArgs>(fn: T, wait?: number, options?: DebounceSettings): any;
+/**
+ * Debounce execution of a function.
+ *
+ * > Debounce is an overloaded waiter: if you keep asking him your requests will be ignored until you stop and give him some time to think about your latest inquiry.
+ *
+ * @example
+ * ```ts
+ * import { useDebounceFn } from 'reactuse';
+ * const { cancel, flush } = useDebounceFn(() => {
+ *     // write the callback function to be debounced here...
+ * }, 1000);
+ * ```
+ * @param fn - The function to debounce
+ * @param wait - The number of milliseconds to delay
+ * @param options -
+ * @returns Returns the new debounced function.
+ */
+declare function useDebounceFn<T extends FunctionArgs>(fn: T, wait?: number, options?: DebounceSettings): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
 declare type EventHookOn<T = any> = (fn: (param?: T) => void) => {
     off: () => void;
@@ -413,7 +489,6 @@ interface EventHook<T = any> {
 declare function useEventHook<T = any>(): EventHook<T>;
 
 /**
- *
  * Throttle execution of a function. Especially useful for rate limiting execution of handlers on events like resize and scroll.
  *
  * > Throttle is a spring that throws balls: after a ball flies out it needs some time to shrink back, so it cannot throw any more balls unless it's ready.
@@ -430,9 +505,9 @@ declare function useEventHook<T = any>(): EventHook<T>;
  * @param trailing - Specify invoking on the leading edge of the timeout
  * @param leading - Specify invoking on the trailing edge of the timeout
  * @typeParam T - Type of the throttle target
- * @returns
- * @public
+ * @returns Returns the new throttled function.
+ *
  */
-declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc$1<(...args: Parameters<T>) => ReturnType<T>>;
+declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { ConfigurableEventFilter, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventFilter, EventHook, EventHookOff, EventHookOn, EventHookTrigger, Fn, FunctionArgs, MaybeElement, MaybeElementRef, MaybeRefObject, Merge, MouseSourceType, UseDeviceOrientationReturn, UseMouseInElementOptions, UseMouseOptions, UseParallaxOptions, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, bypassFilter, debounceFilter, depsAreSame, noop, throttleFilter, useDebounceFn, useDeviceOrientation, useElementBounding, useElementSize, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useSupported, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MouseSourceType, UseDeviceOrientationReturn, UseMouseInElementOptions, UseMouseOptions, UseMouseReturn, UseParallaxOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useSupported, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

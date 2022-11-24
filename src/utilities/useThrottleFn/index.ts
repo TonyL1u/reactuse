@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
 import { throttle } from 'lodash-es';
-import { useLatest } from '../../state';
-import { useOnUnmounted } from '../../shared';
+import { useLatest } from '../../state/useLatest';
+import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import type { DebouncedFunc } from 'lodash-es';
 import type { FunctionArgs } from '../../helper';
 
 /**
- *
  * Throttle execution of a function. Especially useful for rate limiting execution of handlers on events like resize and scroll.
  *
  * > Throttle is a spring that throws balls: after a ball flies out it needs some time to shrink back, so it cannot throw any more balls unless it's ready.
@@ -23,8 +22,8 @@ import type { FunctionArgs } from '../../helper';
  * @param trailing - Specify invoking on the leading edge of the timeout
  * @param leading - Specify invoking on the trailing edge of the timeout
  * @typeParam T - Type of the throttle target
- * @returns
- * @public
+ * @returns Returns the new throttled function.
+ * 
  */
 export function useThrottleFn<T extends FunctionArgs>(fn: T, wait = 200, trailing = true, leading = true): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>> {
     const fnRef = useLatest(fn);

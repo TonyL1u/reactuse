@@ -12,7 +12,7 @@ import { useEffect } from 'react';
  * })
  * ```
  * @param fn - The function to be executed
- * @public
+ * 
  */
 export function useOnMounted(fn: () => void) {
     useEffect(() => {

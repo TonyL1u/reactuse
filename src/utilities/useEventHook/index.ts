@@ -8,6 +8,9 @@ export interface EventHook<T = any> {
     trigger: EventHookTrigger<T>;
 }
 
+/**
+ * Utility for creating event hooks.
+ */
 export function useEventHook<T = any>(): EventHook<T> {
     const fns: Array<(param?: T) => void> = [];
 

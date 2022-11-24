@@ -18,6 +18,8 @@ useOnUnmounted(() => {
 /**
  * A hook that executes the function right before the component is unmounted.
  *
+ * @param fn - The function to be executed
+ *
  * @example
  * ```ts
  * import { useOnUnmounted } from 'reactuse';
@@ -26,10 +28,9 @@ useOnUnmounted(() => {
  *     // something you want to call when component is unmounted...
  * })
  * ```
- * @param fn - The function to be executed
- * @public
+ *
  */
-export declare function useOnUnmounted(fn: () => void): void;
+declare function useOnUnmounted(fn: () => void): void;
 ````
 
 ## Params

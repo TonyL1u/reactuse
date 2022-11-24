@@ -16,14 +16,15 @@ const isMounted = useMounted();
 /**
  * Reactive hook mounted state.
  *
+ * @returns
+ *
  * @example
  * ```ts
  * import { useMounted } from 'reactuse';
  *
  * const isMounted = useMounted();
  * ```
- * @returns
- * @public
+ *
  */
-export declare function useMounted(): boolean;
+declare function useMounted(): boolean;
 ````

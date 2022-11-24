@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useEventListener } from '../../browser';
-import { useOnMounted } from '../../shared';
+import { useEventListener } from '../../browser/useEventListener';
+import { useOnMounted } from '../../shared/useOnMounted';
 
-/** @public */
+
 export type WindowSize = { width: number; height: number };
-/** @public */
+
 export interface UseWindowSizeOptions {
     initialWidth?: number;
     initialHeight?: number;
@@ -22,7 +22,7 @@ export interface UseWindowSizeOptions {
  * ```
  * @param options -
  * @returns
- * @public
+ * 
  */
 export function useWindowSize(options: UseWindowSizeOptions = {}) {
     const { initialWidth = NaN, initialHeight = NaN, listenOrientation = true, includeScrollbar = true } = options;

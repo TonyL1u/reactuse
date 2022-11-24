@@ -18,7 +18,7 @@ import type { MaybeElementRef, MaybeElement } from '../../helper';
  * ```
  * @param target -
  * @typeParam T - 
- * @public
+ * 
  */
 export function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>) {
     const [visible, setVisible] = useState(false);

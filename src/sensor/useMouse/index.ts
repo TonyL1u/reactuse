@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { useEventListener } from '../../browser';
+import { useEventListener } from '../../browser/useEventListener';
 import { bypassFilter } from '../../helper';
 import type { ConfigurableEventFilter } from '../../helper';
 
-/** @public */
+
 export type CursorState = {
     x: number;
     y: number;
 };
-/** @public */
+
 export type MouseSourceType = 'mouse' | 'touch' | null;
-/** @public */
+
 export interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Mouse position based by page or client
@@ -43,7 +43,7 @@ export interface UseMouseReturn extends CursorState {
  * ```
  * @param options -
  * @returns Your cursor's position
- * @public
+ * 
  */
 export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
     const { type = 'page', touch = true, eventFilter = bypassFilter(), initialValue = { x: NaN, y: NaN } } = options;

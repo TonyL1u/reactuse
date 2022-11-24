@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useResizeObserver } from '../useResizeObserver';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-/** @public */
 export type ElementSize = {
     width: number;
     height: number;
@@ -22,7 +21,7 @@ export type ElementSize = {
  * @param options - ResizeObserver’s options
  * @typeParam T - Type of the real HTML element
  * @returns Size of the element
- * @public
+ * 
  */
 export function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options: ResizeObserverOptions = {}) {
     const { box = 'content-box' } = options;

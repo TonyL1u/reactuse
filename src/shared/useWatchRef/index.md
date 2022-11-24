@@ -17,14 +17,22 @@ useWatchRef(el, () => {
 ## Type Declarations
 
 ````ts
-/** @public */
-export declare type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
-export interface WatchRefOptions extends WatchStateOptions {
+declare type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+interface WatchRefOptions extends WatchStateOptions {
     deps?: DependencyList;
 }
 /**
  * Watch a ref DOM element.
+ *
+ * @param source - A ref DOM element
+ *
+ * @param callback - Value & old value callback
+ *
+ * @param options -
+ *
+ * @typeParam T - Type of the real HTML element
+ *
+ * @returns
  *
  * @example
  * ```ts
@@ -36,14 +44,9 @@ export interface WatchRefOptions extends WatchStateOptions {
  *     // when the ref DOM element is mounted or unmounted, callback function will be triggered...
  * })
  * ```
- * @param source - A ref DOM element
- * @param callback - Value & old value callback
- * @param options -
- * @typeParam T - Type of the real HTML element
- * @returns
- * @public
+ *
  */
-export declare function useWatchRef<T extends MaybeElement>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options?: WatchRefOptions): () => void;
+declare function useWatchRef<T extends MaybeElement>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options?: WatchRefOptions): () => void;
 ````
 
 ## Params

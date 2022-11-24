@@ -15,8 +15,7 @@ const bounding = useElementBounding(el);
 ## Type Declarations
 
 ````ts
-/** @public */
-export declare type ElementBounding = {
+declare type ElementBounding = {
     width: number;
     height: number;
     top: number;
@@ -27,7 +26,13 @@ export declare type ElementBounding = {
     y: number;
 };
 /**
- * Reactive [bounding box](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
+ * Reactive [`bounding box`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
+ *
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ *
+ * @typeParam T - Type of the real HTML element
+ *
+ * @returns Bounding of the element
  *
  * @example
  * ```ts
@@ -37,12 +42,9 @@ export declare type ElementBounding = {
  * const el = useRef<HTMLTextAreaElement | null>(null);
  * const bounding = useElementBounding(el);
  * ```
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- * @typeParam T - Type of the real HTML element
- * @returns Bounding of the element
- * @public
+ *
  */
-export declare function useElementBounding<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
+declare function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
 ````
 
 ## Params
@@ -53,6 +55,6 @@ export declare function useElementBounding<T extends MaybeElement = MaybeElement
 
 ## Type Params
 
-| Name |         Constraint         |  Default Type  |          Description          |
-| :--: | :------------------------: | :------------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` | `MaybeElement` | Type of the real HTML element |
+| Name |         Constraint         | Default Type |          Description          |
+| :--: | :------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |

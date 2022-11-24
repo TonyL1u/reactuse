@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
  * })
  * ```
  * @param fn - The function to be executed
- * @public
+ * 
  */
 export function useOnUnmounted(fn: () => void) {
     const ref = useRef(fn);

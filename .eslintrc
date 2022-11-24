@@ -8,6 +8,7 @@
                 "allowArrowFunction": true,
                 "allowObject": true
             }
-        ]
+        ],
+        "no-unused-vars": ["warn", { "destructuredArrayIgnorePattern": "^_", "args": "none" }]
     }
 }

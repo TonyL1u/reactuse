@@ -31,13 +31,14 @@ interface UseMouseOptions extends ConfigurableEventFilter {
      */
     type?: 'page' | 'client';
 }
-interface UseMouseReturn extends CursorState {
-    sourceType: MouseSourceType;
-}
 declare type CursorState = {
     x: number;
     y: number;
 };
+interface UseMouseReturn extends CursorState {
+    sourceType: MouseSourceType;
+}
+declare type MouseSourceType = 'mouse' | 'touch' | null;
 /**
  * Reactive mouse position.
  *
@@ -52,7 +53,6 @@ declare type CursorState = {
  * const { x, y, sourceType } = useMouse();
  * ```
  *
- * @public
  */
 declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 ````

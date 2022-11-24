@@ -19,6 +19,7 @@ const DefineMenu = create(({ key, name, category }) => {
 
 export const Categories: Record<Category, ReactElement[]> = {
     browser: [],
+    effect: [],
     elements: [],
     sensor: [],
     shared: [],

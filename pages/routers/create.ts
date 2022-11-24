@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type Category = 'browser' | 'elements' | 'sensor' | 'shared' | 'state' | 'utilities';
+export type Category = 'browser' | 'effect' | 'elements' | 'sensor' | 'shared' | 'state' | 'utilities';
 interface DynamicImportData {
     key: string;
     category: Category;

@@ -11,7 +11,7 @@ import { useOnMounted } from '../useOnMounted';
  * const isMounted = useMounted();
  * ```
  * @returns
- * @public
+ * 
  */
 export function useMounted() {
     const [isMounted, update] = useState(false);

@@ -4,9 +4,9 @@ import type { RefObject, DependencyList } from 'react';
 import type { WatchStateOptions } from '../useWatchState';
 import type {MaybeElement} from '../../helper'
 
-/** @public */
+
 export type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
+
 export interface WatchRefOptions extends WatchStateOptions {
     deps?: DependencyList;
 }
@@ -28,7 +28,7 @@ export interface WatchRefOptions extends WatchStateOptions {
  * @param options -
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ * 
  */
 export function useWatchRef<T extends MaybeElement>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options: WatchRefOptions = {}) {
     if (source.current && !isHTMLElement(source.current)) {

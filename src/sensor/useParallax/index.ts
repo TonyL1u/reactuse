@@ -4,7 +4,7 @@ import { useElementSize } from '../../elements/useElementSize';
 import { useMouseInElement } from '../../elements/useMouseInElement';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-/** @public */
+
 export interface UseParallaxOptions {
     deviceOrientationTiltAdjust?: (i: number) => number;
     deviceOrientationRollAdjust?: (i: number) => number;
@@ -25,7 +25,7 @@ export interface UseParallaxOptions {
  * @param options -
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ * 
  */
 export function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options: UseParallaxOptions = {}) {
     const { deviceOrientationTiltAdjust = i => i, deviceOrientationRollAdjust = i => i, mouseTiltAdjust = i => i, mouseRollAdjust = i => i } = options;

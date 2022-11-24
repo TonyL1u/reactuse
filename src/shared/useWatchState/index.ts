@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { bypassFilter } from '../../helper';
 import type { ConfigurableEventFilter } from '../../helper';
 
-/** @public */
+
 export type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
+
 export interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
 }
@@ -31,7 +31,7 @@ export interface WatchStateOptions extends ConfigurableEventFilter {
  * @param options -
  * @typeParam T - Type of the state value
  * @returns
- * @public
+ * 
  */
 export function useWatchState<T extends any>(source: T, callback: WatchStateCallback<T, T>, options: WatchStateOptions = {}) {
     const { immediate = false, eventFilter = bypassFilter() } = options;

@@ -3,7 +3,7 @@ import { useResizeObserver } from '../useResizeObserver';
 import { useEventListener } from '../../browser/useEventListener';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-/** @public */
+
 export type ElementBounding = {
     width: number;
     height: number;
@@ -28,7 +28,7 @@ export type ElementBounding = {
  * @param target - DOM element or an HTML element wrapped by `useRef()`
  * @typeParam T - Type of the real HTML element
  * @returns Bounding of the element
- * @public
+ * 
  */
 export function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>) {
     const [bounding, setBounding] = useState<ElementBounding>({ width: NaN, height: NaN, top: NaN, right: NaN, bottom: NaN, left: NaN, x: NaN, y: NaN });

@@ -27,8 +27,8 @@ export default (props: { logs: Logs; clear: () => void }) => {
             {!collapsed && (
                 <div ref={messagePanel} className="tw-max-h-40 tw-px-6 tw-overflow-auto tw-relative" style={{ borderTop: '1px solid #f0f0f0' }}>
                     {logs.length > 0 ? (
-                        logs.map(({ timestamp, message }) => (
-                            <div key={timestamp} className="tw-py-2 tw-flex tw-items-start tw-leading-4">
+                        logs.map(({ timestamp, message }, index) => (
+                            <div key={timestamp + index} className="tw-py-2 tw-flex tw-items-start tw-leading-4">
                                 <span className="tw-text-gray-400">{new Date(timestamp).toLocaleString()}</span>
                                 <pre className="console-output-message tw-ml-4 tw-flex-1 tw-font-bold tw-truncate tw-whitespace-pre-wrap tw-my-0" style={{ fontFamily: 'inherit' }}>
                                     {message}

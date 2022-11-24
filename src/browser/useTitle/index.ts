@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
-import { useWatchState } from '../../shared';
-import { useMutationObserver } from '../../elements';
+import { useWatchState } from '../../shared/useWatchState';
+import { useMutationObserver } from '../../elements/useMutationObserver';
 import type { Dispatch, SetStateAction } from 'react';
 
-interface UseTitleOptions {
+export interface UseTitleOptions {
     observe?: boolean;
 }
 
-interface UseTitleReturn {
+export interface UseTitleReturn {
     title: string;
     setTitle: Dispatch<SetStateAction<string>>;
 }
@@ -27,7 +27,7 @@ export function useTitle(initialTitle: string): UseTitleReturn;
 export function useTitle(options: UseTitleOptions): UseTitleReturn;
 
 /**
- * Overload 3
+ * Overload 3: with initial title & options
  *
  * @param initialTitle
  * @param options

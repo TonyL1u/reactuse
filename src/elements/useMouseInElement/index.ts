@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { useMouse } from '../../sensor';
+import { useMouse } from '../../sensor/useMouse';
 import { useElementBounding } from '../useElementBounding';
-import type { UseMouseOptions } from '../../sensor';
+import type { UseMouseOptions } from '../../sensor/useMouse';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-/** @public */
+
 export interface UseMouseInElementOptions extends UseMouseOptions {}
 /**
  * Reactive mouse position related to an element.
@@ -19,7 +19,7 @@ export interface UseMouseInElementOptions extends UseMouseOptions {}
  * @param options -
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ * 
  */
 export function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options: UseMouseInElementOptions = {}) {
     const { x, y } = useMouse(options);

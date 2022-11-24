@@ -1,5 +1,7 @@
 import { useRef } from 'react';
-import { useSupported, useWatchRef, useOnUnmounted } from '../../shared';
+import { useSupported } from '../../shared/useSupported';
+import { useWatchRef } from '../../shared/useWatchRef';
+import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
 
@@ -10,7 +12,7 @@ import type { RefObject } from 'react';
  * ```ts
  * import { useState, useRef } from 'react';
  * import { useMutationObserver } from 'reactuse';
- * 
+ *
  * const el = useRef<HTMLDivElement>(null);
  * useMutationObserver(el, mutations => {
  *     // ...
@@ -21,7 +23,7 @@ import type { RefObject } from 'react';
  * @param options - MutationObserver's options
  * @typeParam T - Type of the real HTML element
  * @returns
- * @public
+ *
  */
 export function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}) {
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);

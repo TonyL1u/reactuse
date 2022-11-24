@@ -1,6 +1,7 @@
 import { useRef, useCallback } from 'react';
-import { useLatest } from '../../state';
-import { useWatchRef, useOnUnmounted } from '../../shared';
+import { useLatest } from '../../state/useLatest';
+import { useWatchRef } from '../../shared/useWatchRef';
+import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import { noop } from '../../helper';
 import type { Fn, MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
@@ -25,7 +26,7 @@ export function useEventListener<E extends WindowEventName>(event: E, listener: 
  * @param event
  * @param listener
  */
- export function useEventListener<E extends DocumentEventName>(target: Document, event: E, listener: DocumentEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+export function useEventListener<E extends DocumentEventName>(target: Document, event: E, listener: DocumentEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 /**
  * Overload 3: Custom target
  *
@@ -33,8 +34,8 @@ export function useEventListener<E extends WindowEventName>(event: E, listener: 
  * @param event
  * @param listener
  */
-export function useEventListener<E extends GeneralEventName, T extends MaybeElement>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
-export function useEventListener<E extends GeneralEventName, T extends MaybeElement>(...args: any[]) {
+export function useEventListener<T extends MaybeElement, E extends GeneralEventName>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+export function useEventListener<T extends MaybeElement, E extends GeneralEventName>(...args: any[]) {
     const argsOffset = typeof args[0] !== 'string';
     const observeTarget = (argsOffset ? (args[0] && 'current' in args[0] ? args[0] : useRef(args[0])) : useRef(window)) as RefObject<T>;
     const event = args[+argsOffset] as GeneralEventName;

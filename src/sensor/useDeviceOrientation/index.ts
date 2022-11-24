@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { useSupported } from '../../shared';
-import { useEventListener } from '../../browser';
+import { useSupported } from '../../shared/useSupported';
+import { useEventListener } from '../../browser/useEventListener';
 
-/** @public */
+
 export interface DeviceOrientationState {
     isAbsolute: boolean;
     alpha: number | null;
     beta: number | null;
     gamma: number | null;
 }
-/** @public */
+
 export interface UseDeviceOrientationReturn extends DeviceOrientationState {
     isSupported: boolean;
 }
@@ -23,7 +23,7 @@ export interface UseDeviceOrientationReturn extends DeviceOrientationState {
  * const { isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
  * ```
  * @returns
- * @public
+ * 
  */
 export function useDeviceOrientation(): UseDeviceOrientationReturn {
     const [orientationState, setOrientationState] = useState<DeviceOrientationState>({ isAbsolute: false, alpha: null, beta: null, gamma: null });

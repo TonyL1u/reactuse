@@ -22,14 +22,22 @@ useEffect(() => {
 ## Type Declarations
 
 ````ts
-/** @public */
-export declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
-/** @public */
-export interface WatchStateOptions extends ConfigurableEventFilter {
+declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
 }
 /**
  * Watch a state value. Idea from Vue `watch` function.
+ *
+ * @param source - Source state value you need to watch
+ *
+ * @param callback - Value & old value callback
+ *
+ * @param options -
+ *
+ * @typeParam T - Type of the state value
+ *
+ * @returns
  *
  * @example
  * ```ts
@@ -46,14 +54,9 @@ export interface WatchStateOptions extends ConfigurableEventFilter {
  *   // ...
  * }, [count]);
  * ```
- * @param source - Source state value you need to watch
- * @param callback - Value & old value callback
- * @param options -
- * @typeParam T - Type of the state value
- * @returns
- * @public
+ *
  */
-export declare function useWatchState<T extends any>(
+declare function useWatchState<T extends any>(
     source: T,
     callback: WatchStateCallback<T, T>,
     options?: WatchStateOptions
