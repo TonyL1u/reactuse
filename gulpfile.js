@@ -126,6 +126,10 @@ function fixEndSlash(str) {
     return str.endsWith('/') ? str.slice(0, -1) : str;
 }
 
+function fixCommentEscape(str) {
+    return str.replace(/\\\/\*/g, '/*').replace(/\*\\\//g, '*/');
+}
+
 async function getTaskIds() {
     const [_, category, hook] = process.env.INIT_CWD.match(/src\/(.*)\/(.*)/) ?? [];
     if (category && hook) return [`${category}/${hook}`];
@@ -184,15 +188,15 @@ class MarkdownFlow {
         this.entry.push('## Usage');
         const example = this.commentTags.find(tag => tag.title === 'example')?.description ?? '';
 
-        this.entry.push(fixEndSlash(example));
+        this.entry.push(fixCommentEscape(fixEndSlash(example)));
         return this;
     }
 
     addTypeDeclarations(reference) {
         this.entry.push('## Type Declarations');
 
-        const revealContent = analysisReference(this.meta.excerptTokens, reference);
-        this.entry.push('```ts', ...revealContent, this.meta.docComment.trim(), mergeToken(this.meta.excerptTokens), '```');
+        const revealContent = new Set(analysisReference(this.meta.excerptTokens, reference));
+        this.entry.push('```ts', ...revealContent, mergeToken(this.meta.excerptTokens), '```');
         return this;
     }
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, memo } from 'react';
 import { useLatest, useThrottleFn, useWatchState, useOnMounted } from 'reactuse';
 import { useRouter } from '@/pages/composables';
 import Editor from '@monaco-editor/react';
@@ -22,7 +22,8 @@ const imports = {
     react: getProxyPath('react'),
     'react-dom/client': getProxyPath('react-dom_client'),
     '@doc-utils': getProxyPath('doc-utils'),
-    'lodash-es': getProxyPath('lodash-es')
+    'lodash-es': getProxyPath('lodash-es'),
+    'classnames': getProxyPath('classnames')
 };
 
 const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -56,14 +57,14 @@ const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
 interface LiveEditorProps {
     code: string;
     path?: string;
-    editor?: boolean;
-    preview?: boolean;
-    toolbox?: boolean;
-    console?: boolean;
+    showEditor?: boolean;
+    showPreview?: boolean;
+    showToolbox?: boolean;
+    showConsole?: boolean;
 }
 
-export default function LiveEditor(props: LiveEditorProps) {
-    const { code, editor = true, preview = true, toolbox = true, console = false } = props;
+export default memo(function LiveEditor(props: LiveEditorProps) {
+    const { code, showEditor = true, showPreview = true, showToolbox = true, showConsole = false } = props;
     const latestCode = useLatest(decodeURI(code));
     const { onLocationChange } = useRouter();
     const { create, sandbox, proxy, onBeforeCreate, onCreated } = useSandbox({
@@ -80,21 +81,17 @@ export default function LiveEditor(props: LiveEditorProps) {
                     setRuntimeError(msg);
                 }
             } else if (log.level === 'log') {
-                if (log.args[0]) {
-                    const message = typeof log.args[0] === 'object' ? JSON.stringify(log.args[0]) : String(log.args[0]);
-                    collectLogs(logs => [...logs, { timestamp: +new Date(), message }]);
-                }
+                const message = typeof log.args[0] === 'object' ? JSON.stringify(log.args[0]) : String(log.args[0]);
+                collectLogs(logs => [...logs, { timestamp: +new Date(), message }]);
             }
         },
         onError(event) {
             const msg = event.value instanceof Error ? event.value.message : event.value;
             if (!msg) return;
-            setRuntimeError(event.value);
+            setRuntimeError(event.value as string);
         },
         onHandleRejection(event) {
-            let error = event.value;
-            if (typeof error === 'string') error = { message: error };
-            setRuntimeError(`Uncaught (in promise): ${error.message}`);
+            setRuntimeError(`Uncaught (in promise): ${event.value}`);
         }
     });
 
@@ -192,7 +189,7 @@ export default function LiveEditor(props: LiveEditorProps) {
     };
 
     useWatchState(code, () => {
-        !editor && updatePreview(decodeURI(code));
+        !showEditor && updatePreview(decodeURI(code));
     });
 
     onLocationChange('pathname', () => {
@@ -216,15 +213,15 @@ export default function LiveEditor(props: LiveEditorProps) {
     });
 
     return (
-        <div className={cn('live-demo-container', 'tw-rounded tw-flex tw-flex-col tw-relative', { 'with-preview': preview, 'with-editor': editor, 'with-toolbox': toolbox, 'with-console': console })}>
-            {toolbox && <ToolBox code={decodeURI(code)} editor={editorRef} reset={resetPreview} />}
+        <div className={cn('live-demo-container', 'tw-rounded tw-flex tw-flex-col tw-relative', { 'with-preview': showPreview, 'with-editor': showEditor, 'with-toolbox': showToolbox, 'with-console': showConsole })}>
+            {showToolbox && <ToolBox code={decodeURI(code)} editor={editorRef} reset={resetPreview} />}
             <div className="main tw-h-80 tw-flex">
-                {preview && <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />}
-                {editor && (
+                {showPreview && <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />}
+                {showEditor && (
                     <Editor
                         className="editor-container"
                         height="100%"
-                        width={preview ? '50%' : '100%'}
+                        width={showPreview ? '50%' : '100%'}
                         options={editorOptions}
                         defaultLanguage="typescript"
                         theme="vitesse-light"
@@ -235,8 +232,8 @@ export default function LiveEditor(props: LiveEditorProps) {
                     />
                 )}
             </div>
-            {console && <Console logs={logs} clear={clearConsole} />}
-            {preview && loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
+            {showConsole && <Console logs={logs} clear={clearConsole} />}
+            {showPreview && loading && <div className="tw-absolute tw-top-0 tw-right-0 tw-left-0 tw-bottom-0 tw-select-none"></div>}
         </div>
     );
-}
+});

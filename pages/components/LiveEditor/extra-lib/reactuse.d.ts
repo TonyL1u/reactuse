@@ -41,7 +41,7 @@ declare function useEventListener<E extends DocumentEventName>(target: Document,
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends GeneralEventName, T extends MaybeElement>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<T extends MaybeElement, E extends GeneralEventName>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 
 interface UseTitleOptions {
     observe?: boolean;
@@ -63,7 +63,7 @@ declare function useTitle(initialTitle: string): UseTitleReturn;
  */
 declare function useTitle(options: UseTitleOptions): UseTitleReturn;
 /**
- * Overload 3
+ * Overload 3: with initial title & options
  *
  * @param initialTitle
  * @param options
@@ -153,29 +153,6 @@ declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<
  */
 declare function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>): boolean;
 
-interface DeviceOrientationState {
-    isAbsolute: boolean;
-    alpha: number | null;
-    beta: number | null;
-    gamma: number | null;
-}
-interface UseDeviceOrientationReturn extends DeviceOrientationState {
-    isSupported: boolean;
-}
-/**
- * Reactive [`DeviceOrientationEvent`](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent). Provide web developers with information from the physical orientation of the device running the web page.
- *
- * @example
- * ```ts
- * import { useDeviceOrientation } from 'reactuse';
- *
- * const { isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
- * ```
- * @returns
- *
- */
-declare function useDeviceOrientation(): UseDeviceOrientationReturn;
-
 declare type CursorState = {
     x: number;
     y: number;
@@ -216,34 +193,6 @@ interface UseMouseReturn extends CursorState {
  *
  */
 declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
-
-interface UseParallaxOptions {
-    deviceOrientationTiltAdjust?: (i: number) => number;
-    deviceOrientationRollAdjust?: (i: number) => number;
-    mouseTiltAdjust?: (i: number) => number;
-    mouseRollAdjust?: (i: number) => number;
-}
-/**
- * Create parallax effect easily. It uses `useDeviceOrientation` and fallback to `useMouse` if orientation is not supported.
- *
- * @example
- * ```ts
- * import { useParallax } from 'reactuse';
- *
- * const el = useRef<HTMLDivElement | null>(null);
- * const { roll, tilt } = useParallax(el);
- * ```
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- * @param options -
- * @typeParam T - Type of the real HTML element
- * @returns
- *
- */
-declare function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
-    roll: number;
-    tilt: number;
-    source: string;
-};
 
 interface UseMouseInElementOptions extends UseMouseOptions {
 }
@@ -389,8 +338,6 @@ declare function useOnUnmounted(fn: () => void): void;
  */
 declare function useMounted(): boolean;
 
-declare function useSupported(callback: () => unknown): boolean;
-
 declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
 interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
@@ -451,6 +398,77 @@ interface WatchRefOptions extends WatchStateOptions {
  */
 declare function useWatchRef<T extends MaybeElement>(source: RefObject<T>, callback: WatchRefCallback<T | null, T | null>, options?: WatchRefOptions): () => void;
 
+interface DeviceOrientationState {
+    isAbsolute: boolean;
+    alpha: number | null;
+    beta: number | null;
+    gamma: number | null;
+}
+interface UseDeviceOrientationReturn extends DeviceOrientationState {
+    isSupported: boolean;
+}
+/**
+ * Reactive [`DeviceOrientationEvent`](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent). Provide web developers with information from the physical orientation of the device running the web page.
+ *
+ * @example
+ * ```ts
+ * import { useDeviceOrientation } from 'reactuse';
+ *
+ * const { isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
+ * ```
+ * @returns
+ *
+ */
+declare function useDeviceOrientation(): UseDeviceOrientationReturn;
+
+interface MagicKeysInternal {
+    current: Set<string>;
+}
+interface UseMagicKeysOptions {
+    passive?: boolean;
+    onEventFired?: (e: KeyboardEvent) => void | boolean;
+}
+declare type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
+/**
+ * Reactive keys pressed state, with magical keys combination support.
+ *
+ * @example
+ * ```ts
+ * import { useMagicKeys, useWatchState } from 'reactuse';
+ *
+ * const
+ * ```
+ */
+declare function useMagicKeys(options?: UseMagicKeysOptions): UseMagicKeysReturn;
+
+interface UseParallaxOptions {
+    deviceOrientationTiltAdjust?: (i: number) => number;
+    deviceOrientationRollAdjust?: (i: number) => number;
+    mouseTiltAdjust?: (i: number) => number;
+    mouseRollAdjust?: (i: number) => number;
+}
+/**
+ * Create parallax effect easily. It uses `useDeviceOrientation` and fallback to `useMouse` if orientation is not supported.
+ *
+ * @example
+ * ```ts
+ * import { useParallax } from 'reactuse';
+ *
+ * const el = useRef<HTMLDivElement | null>(null);
+ * const { roll, tilt } = useParallax(el);
+ * ```
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param options -
+ * @typeParam T - Type of the real HTML element
+ * @returns
+ *
+ */
+declare function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
+    roll: number;
+    tilt: number;
+    source: string;
+};
+
 declare function useLatest<T>(value: T): react.MutableRefObject<T>;
 
 declare function useReactive(): void;
@@ -486,6 +504,9 @@ interface EventHook<T = any> {
     off: EventHookOff<T>;
     trigger: EventHookTrigger<T>;
 }
+/**
+ * Utility for creating event hooks.
+ */
 declare function useEventHook<T = any>(): EventHook<T>;
 
 /**
@@ -510,4 +531,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MouseSourceType, UseDeviceOrientationReturn, UseMouseInElementOptions, UseMouseOptions, UseMouseReturn, UseParallaxOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useSupported, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseOptions, UseMouseReturn, UseParallaxOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

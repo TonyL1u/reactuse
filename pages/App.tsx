@@ -18,6 +18,7 @@ import ReactTypes from '../node_modules/@types/react/index.d.ts?raw';
 import LodashEsTypes from '../node_modules/@types/lodash-es/index.d.ts?raw';
 import ReactUseTypes from './components/LiveEditor/extra-lib/reactuse.d.ts?raw';
 import DocUtilsTypes from './components/LiveEditor/extra-lib/doc-utils.d.ts?raw';
+import ClassnamesTypes from '../node_modules/classnames/index.d.ts?raw';
 // view
 import RouterLink from './routers/RouterLink';
 import RouterView from './routers/RouterView';
@@ -82,6 +83,7 @@ loader.init().then(monaco => {
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'reactuse' {${ReactUseTypes}}`, 'ts:reactuse');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'lodash-es' {${LodashEsTypes}}`, 'ts:lodash-es');
     monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module '@doc-utils' {${DocUtilsTypes}}`, 'ts:doc-utils');
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare module 'classnames' {${ClassnamesTypes}}`, 'ts:classnames');
 
     // or make sure that it exists by other ways
     console.log('here is the monaco instance:', monaco);

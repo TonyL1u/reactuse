@@ -67,7 +67,7 @@ function getTemplate(source: string, demoPath: string) {
             return  (
                 <div className="markdown-body light">
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(0, sliceIndex) + '\n## Demo'))}\`} />
-                    <LiveEditor code={code} path={path} console />
+                    <LiveEditor code={code} path={path} showConsole />
                     <MdWrapper code={\`${encodeURI(md.render(source.slice(sliceIndex)))}\`} />
                 </div>
             )

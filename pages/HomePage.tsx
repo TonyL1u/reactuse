@@ -58,7 +58,7 @@ export default () => {
                 </div>
             </div>
             <div className="tw-w-full tw-max-w-[800px] " style={{ transform }}>
-                <LiveEditor code={code} toolbox={false} />
+                <LiveEditor code={code} showToolbox={false} />
             </div>
         </div>
     );

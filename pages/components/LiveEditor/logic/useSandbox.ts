@@ -3,6 +3,26 @@ import { useOnMounted, useOnUnmounted, useEventHook } from 'reactuse';
 import srcdoc from '../source/template.html?raw';
 import srcdocProd from '../source/template.prod.html?raw';
 
+type ActionType = 'error' | 'console' | 'unhandledrejection';
+type ConsoleLevel = 'clear' | 'log' | 'info' | 'dir' | 'warn' | 'error' | 'table';
+interface MessageAction<A extends ActionType> {
+    action: A;
+}
+interface PostMessageConsole extends MessageAction<'console'> {
+    level: ConsoleLevel;
+    args: any[];
+    value: Error | string;
+    duplicate?: boolean;
+}
+
+interface PostMessageError extends MessageAction<'error'> {
+    value: Error | string
+}
+
+interface PostMessageRejection extends MessageAction<'unhandledrejection'> {
+    value: string;
+}
+
 // ReplProxy and srcdoc implementation from Svelte REPL
 // MIT License https://github.com/sveltejs/svelte-repl/blob/master/LICENSE
 let uid = 1;
@@ -95,9 +115,9 @@ class PreviewProxy {
 
 interface SandboxConfig {
     imports?: Record<string, string>;
-    onHandleRejection?: (event: any) => void;
-    onError?: (event: any) => void;
-    onConsole?: (log: any) => void;
+    onHandleRejection?: (event: PostMessageRejection) => void;
+    onError?: (event: PostMessageError) => void;
+    onConsole?: (log: PostMessageConsole) => void;
 }
 
 export function useSandbox(config: SandboxConfig = {}) {
@@ -130,13 +150,13 @@ export function useSandbox(config: SandboxConfig = {}) {
             on_fetch_progress: (progress: any) => {
                 // pending_imports = progress;
             },
-            on_error: (event: any) => {
+            on_error: (event: PostMessageError) => {
                 onError?.(event);
             },
-            on_unhandled_rejection: (event: any) => {
+            on_unhandled_rejection: (event: PostMessageRejection) => {
                 onHandleRejection?.(event);
             },
-            on_console: (log: any) => {
+            on_console: (log: PostMessageConsole) => {
                 onConsole?.(log);
             },
             on_console_group: (action: any) => {

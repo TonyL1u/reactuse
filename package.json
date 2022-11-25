@@ -8,6 +8,9 @@
         "dev": "vite",
         "build:site": "sh scripts/build-site.sh",
         "build:packages": "sh scripts/build-packages.sh",
+        "build:monaco": "pnpm build:monaco-assets && pnpm build:monaco-types",
+        "build:monaco-assets": "sh scripts/build-monaco/generate-monaco-assets.sh",
+        "build:monaco-types": "sh scripts/build-monaco/generate-monaco-types.sh",
         "preview": "vite preview",
         "test": "vitest",
         "coverage": "vitest run --coverage"
