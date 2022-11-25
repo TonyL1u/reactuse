@@ -14,7 +14,7 @@ const bounding = useElementBounding(el);
 
 ## Type Declarations
 
-````ts
+```ts
 declare type ElementBounding = {
     width: number;
     height: number;
@@ -25,27 +25,8 @@ declare type ElementBounding = {
     x: number;
     y: number;
 };
-/**
- * Reactive [`bounding box`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element.
- *
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- *
- * @typeParam T - Type of the real HTML element
- *
- * @returns Bounding of the element
- *
- * @example
- * ```ts
- * import { useRef } from 'react';
- * import { useElementBounding } from 'reactuse';
- *
- * const el = useRef<HTMLTextAreaElement | null>(null);
- * const bounding = useElementBounding(el);
- * ```
- *
- */
 declare function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
-````
+```
 
 ## Params
 

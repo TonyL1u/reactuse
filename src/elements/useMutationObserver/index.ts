@@ -5,6 +5,13 @@ import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
 
+export interface UseMutationObserverReturn {
+    isSupported: boolean;
+    /**
+     * To stop the observation manually
+     */
+    stop: () => void;
+}
 /**
  * Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
  *
@@ -25,7 +32,7 @@ import type { RefObject } from 'react';
  * @returns
  *
  */
-export function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}) {
+export function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}): UseMutationObserverReturn {
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);
     let ob: MutationObserver | null = null;
     const isSupported = useSupported(() => window && 'MutationObserver' in window);

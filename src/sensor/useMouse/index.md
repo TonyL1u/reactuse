@@ -12,7 +12,7 @@ const { x, y, sourceType } = useMouse();
 
 ## Type Declarations
 
-````ts
+```ts
 interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Initial values
@@ -39,23 +39,8 @@ interface UseMouseReturn extends CursorState {
     sourceType: MouseSourceType;
 }
 declare type MouseSourceType = 'mouse' | 'touch' | null;
-/**
- * Reactive mouse position.
- *
- * @param options -
- *
- * @returns Your cursor's position
- *
- * @example
- * ```ts
- * import { useMouse } from 'reactuse';
- *
- * const { x, y, sourceType } = useMouse();
- * ```
- *
- */
 declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
-````
+```
 
 ## Params
 

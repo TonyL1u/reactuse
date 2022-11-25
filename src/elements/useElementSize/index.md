@@ -14,34 +14,13 @@ const size = useElementSize(el);
 
 ## Type Declarations
 
-````ts
+```ts
 declare type ElementSize = {
     width: number;
     height: number;
 };
-/**
- * Reactive size of an HTML element. [`ResizeObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
- *
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- *
- * @param options - ResizeObserver’s options
- *
- * @typeParam T - Type of the real HTML element
- *
- * @returns Size of the element
- *
- * @example
- * ```ts
- * import { useRef } from 'react';
- * import { useElementSize } from 'reactuse';
- *
- * const el = useRef<HTMLTextAreaElement | null>(null);
- * const size = useElementSize(el);
- * ```
- *
- */
 declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
-````
+```
 
 ## Params
 

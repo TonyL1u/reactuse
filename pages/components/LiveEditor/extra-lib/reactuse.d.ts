@@ -196,6 +196,9 @@ declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 
 interface UseMouseInElementOptions extends UseMouseOptions {
 }
+interface UseMouseInElementReturn extends UseMouseReturn {
+    isOutside: boolean;
+}
 /**
  * Reactive mouse position related to an element.
  *
@@ -211,12 +214,15 @@ interface UseMouseInElementOptions extends UseMouseOptions {
  * @returns
  *
  */
-declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): {
-    x: number;
-    y: number;
-    isOutside: boolean;
-};
+declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): UseMouseInElementReturn;
 
+interface UseMutationObserverReturn {
+    isSupported: boolean;
+    /**
+     * To stop the observation manually
+     */
+    stop: () => void;
+}
 /**
  * Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
  *
@@ -237,11 +243,15 @@ declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target
  * @returns
  *
  */
-declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): {
-    isSupported: boolean;
-    stop: () => void;
-};
+declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
 
+interface UseResizeObserverReturn {
+    isSupported: boolean;
+    /**
+     * To stop the observation manually
+     */
+    stop: () => void;
+}
 /**
  * Reports changes to the dimensions of an Element's content or the border-box.
  *
@@ -262,10 +272,7 @@ declare function useMutationObserver<T extends MaybeElement>(target: MaybeElemen
  * @returns
  *
  */
-declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): {
-    isSupported: boolean;
-    stop: () => void;
-};
+declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
 
 declare type WindowSize = {
     width: number;
@@ -422,21 +429,66 @@ interface UseDeviceOrientationReturn extends DeviceOrientationState {
 declare function useDeviceOrientation(): UseDeviceOrientationReturn;
 
 interface MagicKeysInternal {
+    /**
+     * A Set of currently pressed keys
+     */
     current: Set<string>;
 }
 interface UseMagicKeysOptions {
+    /**
+     * The separator that splits the combination keys
+     */
+    delimiter?: string;
+    /**
+     * Register passive listener
+     *
+     * @default true
+     */
     passive?: boolean;
+    /**
+     * Custom event handler for keydown/keyup event
+     */
     onEventFired?: (e: KeyboardEvent) => void | boolean;
 }
 declare type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
 /**
  * Reactive keys pressed state, with magical keys combination support.
  *
+ * > This hook returns a [`proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object. So that, it's **NOT** support by <u>IE 11 or below</u>.
+ *
+ * @param options -
+ *
  * @example
+ *
  * ```ts
  * import { useMagicKeys, useWatchState } from 'reactuse';
  *
- * const
+ * const { shift , \/* keys you want to monitor *\/ } = useMagicKeys();
+ * useWatchState(shift, v => {
+ *     // when press down the shift key, the `v` will be true
+ *     if (v) {
+ *         console.log('shift has been pressed');
+ *     }
+ * })
+ * ```
+ *
+ * Notice that, name of the key is **CASE INSENSITIVE**. [Click here](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values) to check all available keycodes.
+ *
+ * You can combine any keys together with the delimiter `+`, `-` or `.` .
+ *
+ * ```ts
+ * import { useMagicKeys, useWatchState } from 'reactuse';
+ *
+ * const { ctrl_a } = useMagicKeys();
+ * useWatchState(ctrl_a, v => {
+ *     if (v) {
+ *         console.log('control + a have been pressed');
+ *     }
+ * })
+ *
+ * // or do the same thing in this way
+ * const keys = useMagicKeys();
+ * const ShiftA = keys['shift+a'];
  * ```
  */
 declare function useMagicKeys(options?: UseMagicKeysOptions): UseMagicKeysReturn;
@@ -531,4 +583,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseOptions, UseMouseReturn, UseParallaxOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

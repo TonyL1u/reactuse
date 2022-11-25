@@ -16,41 +16,16 @@ useMutationObserver(el, mutations => {
 
 ## Type Declarations
 
-````ts
-/**
- * Watch for changes being made to the DOM tree. [`MutationObserver MDN`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
- *
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- *
- * @param callback - MutationObserver's callback
- *
- * @param options - MutationObserver's options
- *
- * @typeParam T - Type of the real HTML element
- *
- * @returns
- *
- * @example
- * ```ts
- * import { useState, useRef } from 'react';
- * import { useMutationObserver } from 'reactuse';
- *
- * const el = useRef<HTMLDivElement>(null);
- * useMutationObserver(el, mutations => {
- *     // ...
- * });
- * ```
- *
- */
-declare function useMutationObserver<T extends MaybeElement>(
-    target: MaybeElementRef<T>,
-    callback: MutationCallback,
-    options?: MutationObserverInit
-): {
+```ts
+interface UseMutationObserverReturn {
     isSupported: boolean;
+    /**
+     * To stop the observation manually
+     */
     stop: () => void;
-};
-````
+}
+declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
+```
 
 ## Params
 

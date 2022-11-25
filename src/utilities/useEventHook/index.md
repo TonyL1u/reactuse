@@ -17,9 +17,6 @@ declare type EventHookOn<T = any> = (fn: (param?: T) => void) => {
     off: () => void;
 };
 declare type EventHookTrigger<T = any> = (param?: T) => void;
-/**
- * Utility for creating event hooks.
- */
 declare function useEventHook<T = any>(): EventHook<T>;
 ```
 

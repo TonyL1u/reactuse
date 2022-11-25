@@ -5,6 +5,13 @@ import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 import type { RefObject } from 'react';
 
+export interface UseResizeObserverReturn {
+    isSupported: boolean;
+    /**
+     * To stop the observation manually
+     */
+    stop: () => void;
+}
 /**
  * Reports changes to the dimensions of an Element's content or the border-box.
  *
@@ -25,7 +32,7 @@ import type { RefObject } from 'react';
  * @returns
  *
  */
-export function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options: ResizeObserverOptions = {}) {
+export function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options: ResizeObserverOptions = {}): UseResizeObserverReturn {
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);
     let ob: ResizeObserver | null = null;
     const isSupported = useSupported(() => window && 'ResizeObserver' in window);

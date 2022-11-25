@@ -14,24 +14,9 @@ useOnMounted(() => {
 
 ## Type Declarations
 
-````ts
-/**
- * A hook that executes a function after the component is mounted.
- *
- * @param fn - The function to be executed
- *
- * @example
- * ```ts
- * import { useOnMounted } from 'reactuse';
- *
- * useOnMounted(() => {
- *     // something you want to call when component is mounted...
- * })
- * ```
- *
- */
+```ts
 declare function useOnMounted(fn: () => void): void;
-````
+```
 
 ## Params
 

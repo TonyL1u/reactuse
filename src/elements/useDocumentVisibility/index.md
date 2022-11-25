@@ -12,19 +12,6 @@ const visible = useDocumentVisibility();
 
 ## Type Declarations
 
-````ts
-/**
- * Reactively track [`document.visibilityState`](https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState).
- *
- * @returns
- *
- * @example
- * ```ts
- * import { useDocumentVisibility } from 'reactuse';
- *
- * const visible = useDocumentVisibility();
- * ```
- *
- */
+```ts
 declare function useDocumentVisibility(): DocumentVisibilityState;
-````
+```

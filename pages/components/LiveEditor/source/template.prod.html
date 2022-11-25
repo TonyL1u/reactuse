@@ -35,6 +35,8 @@
         </style>
         <script src="https://cdn.tailwindcss.com"></script>
         <script type="text/javascript">
+            window.__vite_plugin_react_preamble_installed__ = true;
+
             tailwind.config = {
                 mode: 'jit',
                 prefix: 'tw-',
@@ -173,27 +175,25 @@
                     const original = console[level];
                     console[level] = (...args) => {
                         const msg = String(args[0]);
-
-                        const stringifiedArgs = stringify(args);
-                        if (previous.level === level && previous.args && previous.args === stringifiedArgs) {
-                            parent.postMessage({ action: 'console', level, args, duplicate: true }, '*');
-                        } else {
-                            previous = { level, args: stringifiedArgs };
-
-                            try {
+                        try {
+                            const stringifiedArgs = stringify(args);
+                            if (previous.level === level && previous.args && previous.args === stringifiedArgs) {
+                                parent.postMessage({ action: 'console', level, args, duplicate: true }, '*');
+                            } else {
+                                previous = { level, args: stringifiedArgs };
                                 parent.postMessage({ action: 'console', level, args }, '*');
-                            } catch (err) {
-                                parent.postMessage(
-                                    {
-                                        action: 'console',
-                                        level,
-                                        args: args.map(a => {
-                                            return a instanceof Error ? a.message : String(a);
-                                        })
-                                    },
-                                    '*'
-                                );
                             }
+                        } catch (err) {
+                            parent.postMessage(
+                                {
+                                    action: 'console',
+                                    level,
+                                    args: args.map(a => {
+                                        return a instanceof Error ? a.message : String(a);
+                                    })
+                                },
+                                '*'
+                            );
                         }
 
                         original(...args);

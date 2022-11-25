@@ -12,19 +12,6 @@ const isMounted = useMounted();
 
 ## Type Declarations
 
-````ts
-/**
- * Reactive hook mounted state.
- *
- * @returns
- *
- * @example
- * ```ts
- * import { useMounted } from 'reactuse';
- *
- * const isMounted = useMounted();
- * ```
- *
- */
+```ts
 declare function useMounted(): boolean;
-````
+```

@@ -13,33 +13,13 @@ const { roll, tilt } = useParallax(el);
 
 ## Type Declarations
 
-````ts
+```ts
 interface UseParallaxOptions {
     deviceOrientationRollAdjust?: (i: number) => number;
     deviceOrientationTiltAdjust?: (i: number) => number;
     mouseRollAdjust?: (i: number) => number;
     mouseTiltAdjust?: (i: number) => number;
 }
-/**
- * Create parallax effect easily. It uses `useDeviceOrientation` and fallback to `useMouse` if orientation is not supported.
- *
- * @param target - DOM element or an HTML element wrapped by `useRef()`
- *
- * @param options -
- *
- * @typeParam T - Type of the real HTML element
- *
- * @returns
- *
- * @example
- * ```ts
- * import { useParallax } from 'reactuse';
- *
- * const el = useRef<HTMLDivElement | null>(null);
- * const { roll, tilt } = useParallax(el);
- * ```
- *
- */
 declare function useParallax<T extends MaybeElement = MaybeElement>(
     target: MaybeElementRef<T>,
     options?: UseParallaxOptions
@@ -48,7 +28,7 @@ declare function useParallax<T extends MaybeElement = MaybeElement>(
     tilt: number;
     source: string;
 };
-````
+```
 
 ## Params
 
