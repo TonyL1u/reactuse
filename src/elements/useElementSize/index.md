@@ -19,7 +19,7 @@ declare type ElementSize = {
     width: number;
     height: number;
 };
-declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
+declare function useElementSize<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
 ```
 
 ## Params
@@ -31,6 +31,6 @@ declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<
 
 ## Type Params
 
-| Name |         Constraint         | Default Type |          Description          |
-| :--: | :------------------------: | :----------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

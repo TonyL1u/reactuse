@@ -24,7 +24,7 @@ interface UseResizeObserverReturn {
      */
     stop: () => void;
 }
-declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
+declare function useResizeObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
 ```
 
 ## Params
@@ -37,6 +37,6 @@ declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementR
 
 ## Type Params
 
-| Name |         Constraint         | Default Type |          Description          |
-| :--: | :------------------------: | :----------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

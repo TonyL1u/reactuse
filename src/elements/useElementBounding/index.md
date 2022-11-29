@@ -25,7 +25,7 @@ declare type ElementBounding = {
     x: number;
     y: number;
 };
-declare function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
+declare function useElementBounding<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): ElementBounding;
 ```
 
 ## Params
@@ -36,6 +36,6 @@ declare function useElementBounding<T extends MaybeElement>(target: MaybeElement
 
 ## Type Params
 
-| Name |         Constraint         | Default Type |          Description          |
-| :--: | :------------------------: | :----------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

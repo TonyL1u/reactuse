@@ -27,7 +27,7 @@ export interface UseParallaxOptions {
  * @returns
  * 
  */
-export function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options: UseParallaxOptions = {}) {
+export function useParallax<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options: UseParallaxOptions = {}) {
     const { deviceOrientationTiltAdjust = i => i, deviceOrientationRollAdjust = i => i, mouseTiltAdjust = i => i, mouseRollAdjust = i => i } = options;
     const { isSupported, alpha, gamma, beta } = useDeviceOrientation();
     const { width, height } = useElementSize(target);

@@ -20,7 +20,7 @@ interface UseParallaxOptions {
     mouseRollAdjust?: (i: number) => number;
     mouseTiltAdjust?: (i: number) => number;
 }
-declare function useParallax<T extends MaybeElement = MaybeElement>(
+declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(
     target: MaybeElementRef<T>,
     options?: UseParallaxOptions
 ): {
@@ -39,6 +39,6 @@ declare function useParallax<T extends MaybeElement = MaybeElement>(
 
 ## Type Params
 
-| Name |         Constraint         |  Default Type  |          Description          |
-| :--: | :------------------------: | :------------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` | `MaybeElement` | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

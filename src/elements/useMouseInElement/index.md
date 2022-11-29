@@ -17,7 +17,7 @@ interface UseMouseInElementOptions extends UseMouseOptions {}
 interface UseMouseInElementReturn extends UseMouseReturn {
     isOutside: boolean;
 }
-declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): UseMouseInElementReturn;
+declare function useMouseInElement<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): UseMouseInElementReturn;
 ```
 
 ## Params
@@ -29,6 +29,6 @@ declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target
 
 ## Type Params
 
-| Name |         Constraint         |  Default Type  |          Description          |
-| :--: | :------------------------: | :------------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` | `MaybeElement` | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

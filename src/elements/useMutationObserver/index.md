@@ -24,7 +24,7 @@ interface UseMutationObserverReturn {
      */
     stop: () => void;
 }
-declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
+declare function useMutationObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
 ```
 
 ## Params
@@ -37,6 +37,6 @@ declare function useMutationObserver<T extends MaybeElement>(target: MaybeElemen
 
 ## Type Params
 
-| Name |         Constraint         | Default Type |          Description          |
-| :--: | :------------------------: | :----------: | :---------------------------: |
-|  T   | `<T extends MaybeElement>` |      -       | Type of the real HTML element |
+| Name |                       Constraint                        | Default Type |          Description          |
+| :--: | :-----------------------------------------------------: | :----------: | :---------------------------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       | Type of the real HTML element |

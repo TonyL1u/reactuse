@@ -6,7 +6,7 @@ declare type Fn = () => void;
 declare type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
 declare type MaybeRefObject<T> = T | RefObject<T>;
 declare type MaybeElement = Window | Document | Element | SVGElement | undefined | null;
-declare type MaybeElementRef<T extends MaybeElement> = MaybeRefObject<T>;
+declare type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
 
 declare type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
 interface ConfigurableEventFilter {
@@ -83,6 +83,59 @@ declare function useTitle(initialTitle?: string, options?: UseTitleOptions): Use
  *
  */
 declare function useDocumentVisibility(): DocumentVisibilityState;
+
+interface UseDraggableOptions {
+    draggingArea?: MaybeElementRef;
+    wrap?: boolean;
+    onStart?: (e: PointerEvent) => void | boolean;
+    onDragging?: (e: PointerEvent) => void;
+    onEnd?: (e: PointerEvent) => void;
+}
+interface UseDraggableReturn {
+    x: number;
+    y: number;
+    style: {
+        transform: string;
+    };
+    isDragging: boolean;
+    syncPosition: (x: number, y: number) => void;
+}
+/**
+ * Make elements draggable.
+ *
+ * @example
+ * Under hook, `useDraggable` uses [`CSS translate`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate) to make elements draggable. You can also choose your own way to position the element. For example:
+ *
+ * ```ts
+ * const el = useRef<HTMLDivElement>(null);
+ * const { x, y } = useDraggable(el);
+ * ```
+ *
+ * ```tsx
+ * <div ref={el} style={{ position: 'absolute', top: y, left: x }}></div>
+ * ```
+ *
+ * Sometimes you may want to restrict an element that can only be dragged in a specific area. All you need to do is giving it an dragging wrapper area (default is Window).
+ *
+ * ```tsx
+ * import { useRef } from 'react';
+ * import { useDraggable } from 'reactuse';
+ *
+ * export default () => {
+ *     const wrapper = useRef<HTMLDivElement>(null);
+ *     const el = useRef<HTMLDivElement>(null);
+ *     const { style } = useDraggable(el, { wrap: true, draggingArea: wrapper });
+ *
+ *     return <div ref={wrapper}>
+ *         <div ref={el} style={style}></div>
+ *     </div>
+ * }
+ * ```
+ * @param target
+ * @param options
+ * @returns
+ */
+declare function useDraggable<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseDraggableOptions): UseDraggableReturn;
 
 declare type ElementBounding = {
     width: number;
@@ -583,4 +636,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

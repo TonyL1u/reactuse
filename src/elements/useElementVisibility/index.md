@@ -16,7 +16,7 @@ const visible = useElementVisibility();
 ## Type Declarations
 
 ```ts
-declare function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>): boolean;
+declare function useElementVisibility<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): boolean;
 ```
 
 ## Params
@@ -27,6 +27,6 @@ declare function useElementVisibility<T extends MaybeElement>(target: MaybeEleme
 
 ## Type Params
 
-| Name |         Constraint         | Default Type | Description |
-| :--: | :------------------------: | :----------: | :---------: |
-|  T   | `<T extends MaybeElement>` |      -       |             |
+| Name |                       Constraint                        | Default Type | Description |
+| :--: | :-----------------------------------------------------: | :----------: | :---------: |
+|  T   | `<T extends Exclude<MaybeElement, Window \| Document>>` |      -       |             |

@@ -1,4 +1,5 @@
 export * from './useDocumentVisibility';
+export * from './useDraggable';
 export * from './useElementBounding';
 export * from './useElementSize';
 export * from './useElementVisibility';

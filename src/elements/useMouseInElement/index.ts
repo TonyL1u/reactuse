@@ -23,7 +23,7 @@ export interface UseMouseInElementReturn extends UseMouseReturn {
  * @returns
  *
  */
-export function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options: UseMouseInElementOptions = {}): UseMouseInElementReturn {
+export function useMouseInElement<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options: UseMouseInElementOptions = {}): UseMouseInElementReturn {
     const { x, y, sourceType } = useMouse(options);
     const { top, left, width, height } = useElementBounding(target);
 

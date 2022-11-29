@@ -20,7 +20,7 @@ import type { MaybeElementRef, MaybeElement } from '../../helper';
  * @typeParam T - 
  * 
  */
-export function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>) {
+export function useElementVisibility<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>) {
     const [visible, setVisible] = useState(false);
     const { top, height: elHeight, left, width: elWidth } = useElementBounding(target);
     const { width, height } = useWindowSize();

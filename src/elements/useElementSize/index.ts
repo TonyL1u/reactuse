@@ -23,7 +23,7 @@ export type ElementSize = {
  * @returns Size of the element
  * 
  */
-export function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options: ResizeObserverOptions = {}) {
+export function useElementSize<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options: ResizeObserverOptions = {}) {
     const { box = 'content-box' } = options;
     const [size, setSize] = useState<ElementSize>({ width: NaN, height: NaN });
 
