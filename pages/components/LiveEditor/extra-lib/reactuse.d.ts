@@ -131,8 +131,9 @@ interface UseDraggableReturn {
  *     </div>
  * }
  * ```
- * @param target
- * @param options
+ * @param target - DOM element or an HTML element wrapped by `useRef()`
+ * @param options -
+ * @typeParam T - Type of the real HTML element
  * @returns
  */
 declare function useDraggable<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseDraggableOptions): UseDraggableReturn;
@@ -163,7 +164,7 @@ declare type ElementBounding = {
  * @returns Bounding of the element
  *
  */
-declare function useElementBounding<T extends MaybeElement>(target: MaybeElementRef<T>): ElementBounding;
+declare function useElementBounding<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): ElementBounding;
 
 declare type ElementSize = {
     width: number;
@@ -186,7 +187,7 @@ declare type ElementSize = {
  * @returns Size of the element
  *
  */
-declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
+declare function useElementSize<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: ResizeObserverOptions): ElementSize;
 
 /**
  * Tracks the visibility of an element within the viewport.
@@ -204,7 +205,7 @@ declare function useElementSize<T extends MaybeElement>(target: MaybeElementRef<
  * @typeParam T -
  *
  */
-declare function useElementVisibility<T extends MaybeElement>(target: MaybeElementRef<T>): boolean;
+declare function useElementVisibility<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): boolean;
 
 declare type CursorState = {
     x: number;
@@ -267,7 +268,7 @@ interface UseMouseInElementReturn extends UseMouseReturn {
  * @returns
  *
  */
-declare function useMouseInElement<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): UseMouseInElementReturn;
+declare function useMouseInElement<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseMouseInElementOptions): UseMouseInElementReturn;
 
 interface UseMutationObserverReturn {
     isSupported: boolean;
@@ -296,7 +297,7 @@ interface UseMutationObserverReturn {
  * @returns
  *
  */
-declare function useMutationObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
+declare function useMutationObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: MutationCallback, options?: MutationObserverInit): UseMutationObserverReturn;
 
 interface UseResizeObserverReturn {
     isSupported: boolean;
@@ -325,7 +326,7 @@ interface UseResizeObserverReturn {
  * @returns
  *
  */
-declare function useResizeObserver<T extends MaybeElement>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
+declare function useResizeObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
 
 declare type WindowSize = {
     width: number;
@@ -481,6 +482,32 @@ interface UseDeviceOrientationReturn extends DeviceOrientationState {
  */
 declare function useDeviceOrientation(): UseDeviceOrientationReturn;
 
+declare type KeyEventGuard = (event: KeyboardEvent) => boolean;
+declare type KeyEventHandler = (e: KeyboardEvent) => void;
+declare type KeyFilter = string | string[] | KeyEventGuard;
+interface UseKeyStrokeOptions {
+    target?: MaybeElementRef;
+    event?: 'keydown' | 'keyup' | 'keypress';
+    passive?: boolean;
+}
+/**
+ * Overload 1: Omitted key, listen to all keys
+ *
+ * @param handler - callback
+ * @param options
+ */
+declare function useKeyStroke(handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
+/**
+ * Overload 2: Listen to a specific key
+ * @param key - The key to be listener
+ * @param handler - callback
+ * @param options
+ */
+declare function useKeyStroke(key: KeyFilter, handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
+declare const useKeyDown: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
+declare const useKeyUp: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
+declare const useKeyPress: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
+
 interface MagicKeysInternal {
     /**
      * A Set of currently pressed keys
@@ -568,7 +595,7 @@ interface UseParallaxOptions {
  * @returns
  *
  */
-declare function useParallax<T extends MaybeElement = MaybeElement>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
+declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
     roll: number;
     tilt: number;
     source: string;
@@ -636,4 +663,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

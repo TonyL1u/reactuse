@@ -1,6 +1,11 @@
 @mixin custom-markdown-style {
-    ol {
+    ol,
+    ul {
         padding-left: 20px;
+    }
+
+    li + li {
+        margin-top: 8px;
     }
 
     blockquote {

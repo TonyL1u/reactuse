@@ -11,7 +11,7 @@ import dts from 'rollup-plugin-dts';
 import through from 'through2';
 
 const { series, src, dest, parallel } = gulp;
-const ignoreTasks = ['browser/useEventListener', 'browser/useTitle'];
+const ignoreTasks = ['browser/useEventListener', 'browser/useTitle', 'sensor/useKeyStroke'];
 
 // task
 function Cleanup() {

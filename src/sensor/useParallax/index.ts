@@ -4,7 +4,6 @@ import { useElementSize } from '../../elements/useElementSize';
 import { useMouseInElement } from '../../elements/useMouseInElement';
 import type { MaybeElementRef, MaybeElement } from '../../helper';
 
-
 export interface UseParallaxOptions {
     deviceOrientationTiltAdjust?: (i: number) => number;
     deviceOrientationRollAdjust?: (i: number) => number;
