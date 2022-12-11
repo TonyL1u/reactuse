@@ -504,9 +504,9 @@ declare function useKeyStroke(handler: KeyEventHandler, options?: UseKeyStrokeOp
  * @param options
  */
 declare function useKeyStroke(key: KeyFilter, handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
-declare const useKeyDown: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
-declare const useKeyUp: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
-declare const useKeyPress: (key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>) => Fn;
+declare function useKeyDown(key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>): Fn;
+declare function useKeyUp(key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>): Fn;
+declare function useKeyPress(key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>): Fn;
 
 interface MagicKeysInternal {
     /**
@@ -601,6 +601,22 @@ declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>
     source: string;
 };
 
+/**
+ * Reactively track user text selection based on [`Window.getSelection`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection).
+ *
+ * @example
+ * ```ts
+ * import { useTextSelection } from 'reactuse';
+ *
+ * const { text } = useTextSelection();
+ * ```
+ */
+declare function useTextSelection(): {
+    text: string;
+    ranges: Range[];
+    rects: DOMRect[];
+};
+
 declare function useLatest<T>(value: T): react.MutableRefObject<T>;
 
 declare function useReactive(): void;
@@ -663,4 +679,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useTextSelection, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

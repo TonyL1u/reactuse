@@ -215,7 +215,7 @@ export default memo(function LiveEditor(props: LiveEditorProps) {
     return (
         <div className={cn('live-demo-container', 'tw-rounded tw-flex tw-flex-col tw-relative', { 'with-preview': showPreview, 'with-editor': showEditor, 'with-toolbox': showToolbox, 'with-console': showConsole })}>
             {showToolbox && <ToolBox code={decodeURI(code)} editor={editorRef} reset={resetPreview} />}
-            <div className="main tw-h-80 tw-flex">
+            <div className="main tw-h-[400px] tw-flex">
                 {showPreview && <Preview ref={previewRef} loading={loading} runtimeError={runtimeError} run={updatePreviewWithThrottle} />}
                 {showEditor && (
                     <Editor
