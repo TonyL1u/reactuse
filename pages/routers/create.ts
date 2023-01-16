@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type Category = 'browser' | 'effect' | 'elements' | 'sensor' | 'shared' | 'state' | 'utilities';
+export type Category = 'animation' | 'browser' | 'effect' | 'elements' | 'sensor' | 'shared' | 'state' | 'utilities';
 interface DynamicImportData {
     key: string;
     category: Category;
@@ -15,5 +15,3 @@ export function create<T>(callback: (data: DynamicImportData) => T) {
         return callback({ key, category: category as Category, name, element: module.default() });
     });
 }
-
-// export function createCategory<T extends Category, E>(category: T, callback: (data: DynamicImportData) => E) {}

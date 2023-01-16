@@ -23,7 +23,7 @@ const imports = {
     'react-dom/client': getProxyPath('react-dom_client'),
     '@doc-utils': getProxyPath('doc-utils'),
     'lodash-es': getProxyPath('lodash-es'),
-    'classnames': getProxyPath('classnames')
+    classnames: getProxyPath('classnames')
 };
 
 const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -126,6 +126,7 @@ export default memo(function LiveEditor(props: LiveEditorProps) {
             s.prepend(`import React from 'react';\n`);
             proxy.current?.eval([s.toString()]);
         } catch (e: any) {
+            console.log(e?.loc);
             setErrorLine(e?.loc?.line ?? -1);
             setRuntimeError(`SyntaxError: ${e.message}`);
         }

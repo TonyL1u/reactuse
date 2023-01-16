@@ -2,6 +2,48 @@ import * as react from 'react';
 import { RefObject, Dispatch, SetStateAction, DependencyList } from 'react';
 import { DebounceSettings, DebouncedFunc } from 'lodash-es';
 
+interface UseTimeoutFnOptions {
+    /**
+     * Running the timer automatically after calling this function
+     *
+     * @defaultValue `true`
+     */
+    auto?: boolean;
+}
+/**
+ *
+ * @param cb
+ * @param interval
+ * @param options
+ * @returns
+ */
+declare function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, options?: UseTimeoutFnOptions): {
+    isPending: boolean;
+    start: (...args: unknown[]) => void;
+    stop: () => void;
+};
+
+interface UseClipboardOptions {
+    source?: string;
+    legacy?: boolean;
+    copiedDelay?: number;
+}
+/**
+ * Reactive [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).
+ * Provides the ability to respond to clipboard commands (cut, copy, and paste) as well as to asynchronously read from and write to the system clipboard.
+ * Access to the contents of the clipboard is gated behind the [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API).
+ * Without user permission, reading or altering the clipboard contents is not permitted.
+ *
+ * @param options
+ * @returns
+ */
+declare function useClipboard(options?: UseClipboardOptions): {
+    isSupported: boolean;
+    copy: (value?: string) => Promise<void>;
+    text: string;
+    copied: boolean;
+};
+
 declare type Fn = () => void;
 declare type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
 declare type MaybeRefObject<T> = T | RefObject<T>;
@@ -679,4 +721,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useTextSelection, useThrottleFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useTextSelection, useThrottleFn, useTimeoutFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

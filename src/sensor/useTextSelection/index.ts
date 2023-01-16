@@ -15,11 +15,11 @@ function getRangesFromSelection(selection: Selection) {
 
 /**
  * Reactively track user text selection based on [`Window.getSelection`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection).
- * 
+ *
  * @example
  * ```ts
  * import { useTextSelection } from 'reactuse';
- * 
+ *
  * const { text } = useTextSelection();
  * ```
  */
@@ -28,7 +28,7 @@ export function useTextSelection() {
     const [selection, setSelection] = useState<Selection | null>(null);
     const text = useLatest(selection?.toString() ?? '');
     const ranges = useLatest(selection ? getRangesFromSelection(selection) : []);
-    const rects = useLatest(ranges.current.map(range => range.getBoundingClientRect()))
+    const rects = useLatest(ranges.current.map(range => range.getBoundingClientRect()));
 
     useEventListener(document, 'selectionchange', () => {
         const sel = window.getSelection();

@@ -11,7 +11,7 @@ import dts from 'rollup-plugin-dts';
 import through from 'through2';
 
 const { series, src, dest, parallel } = gulp;
-const ignoreTasks = ['browser/useEventListener', 'browser/useTitle', 'sensor/useKeyStroke'];
+const ignoredTasks = ['browser/useEventListener', 'browser/useTitle', 'sensor/useKeyStroke'];
 
 // task
 function Cleanup() {
@@ -67,7 +67,7 @@ async function createParallelTasks() {
         return task;
     }
 
-    return parallel(taskIds.filter(id => ignoreTasks.indexOf(id) === -1).map(id => createTask(id)));
+    return parallel(taskIds.filter(id => ignoredTasks.indexOf(id) === -1).map(id => createTask(id)));
 }
 
 export default series(Cleanup, BuildDts, ExtractApi, await createParallelTasks());

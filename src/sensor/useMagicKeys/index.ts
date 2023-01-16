@@ -18,7 +18,7 @@ export interface UseMagicKeysOptions {
     /**
      * Register passive listener
      *
-     * @default true
+     * @defaultValue true
      */
     passive?: boolean;
     /**

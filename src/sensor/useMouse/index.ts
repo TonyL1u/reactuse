@@ -3,7 +3,6 @@ import { useEventListener } from '../../browser/useEventListener';
 import { bypassFilter } from '../../helper';
 import type { ConfigurableEventFilter } from '../../helper';
 
-
 export type CursorState = {
     x: number;
     y: number;
@@ -30,7 +29,7 @@ export interface UseMouseOptions extends ConfigurableEventFilter {
     initialValue?: CursorState;
 }
 export interface UseMouseReturn extends CursorState {
-    sourceType: MouseSourceType
+    sourceType: MouseSourceType;
 }
 /**
  * Reactive mouse position.
@@ -43,7 +42,7 @@ export interface UseMouseReturn extends CursorState {
  * ```
  * @param options -
  * @returns Your cursor's position
- * 
+ *
  */
 export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
     const { type = 'page', touch = true, eventFilter = bypassFilter(), initialValue = { x: NaN, y: NaN } } = options;
@@ -63,7 +62,7 @@ export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
     };
 
     const touchEvent = (event: TouchEvent) => {
-        if (event.touches.length > 0) {
+        if (touch && event.touches.length > 0) {
             const touch = event.touches[0];
             if (type === 'page') {
                 const { pageX: x, pageY: y } = touch;
@@ -79,7 +78,7 @@ export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
 
     useEventListener('mousemove', eventFilter(mouseEvent), { passive: true });
     useEventListener('dragover', eventFilter(mouseEvent), { passive: true });
-    touch && useEventListener('touchmove', eventFilter(touchEvent), { passive: true });
+    useEventListener('touchmove', eventFilter(touchEvent), { passive: true });
 
     return { ...cursor, sourceType };
 }
