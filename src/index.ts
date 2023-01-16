@@ -1,3 +1,4 @@
+export * from './animation';
 export * from './browser';
 export * from './elements';
 export * from './shared';
