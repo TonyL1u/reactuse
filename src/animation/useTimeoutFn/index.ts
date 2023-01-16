@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useOnUnmounted } from '../../shared/useOnUnmounted';
 
-interface UseTimeoutFnOptions {
+export interface UseTimeoutFnOptions {
     /**
      * Running the timer automatically after calling this function
      *
