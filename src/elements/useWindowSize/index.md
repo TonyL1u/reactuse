@@ -19,7 +19,7 @@ interface UseWindowSizeOptions {
     initialWidth?: number;
     listenOrientation?: boolean;
 }
-declare type WindowSize = {
+type WindowSize = {
     width: number;
     height: number;
 };

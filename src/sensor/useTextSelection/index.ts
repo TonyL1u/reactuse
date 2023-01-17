@@ -3,6 +3,15 @@ import { useEventListener } from '../../browser/useEventListener';
 import { useLatest } from '../../state/useLatest';
 import { useUpdate } from '../../state/useUpdate';
 
+export interface UseTextSelectionReturn {
+    /**
+     * Current selected text.
+     */
+    text: string;
+    ranges: Range[];
+    rects: DOMRect[];
+}
+
 function getRangesFromSelection(selection: Selection) {
     const rangeCount = selection.rangeCount ?? 0;
     const ranges = new Array<Range>(rangeCount);
@@ -23,7 +32,7 @@ function getRangesFromSelection(selection: Selection) {
  * const { text } = useTextSelection();
  * ```
  */
-export function useTextSelection() {
+export function useTextSelection(): UseTextSelectionReturn {
     const update = useUpdate();
     const [selection, setSelection] = useState<Selection | null>(null);
     const text = useLatest(selection?.toString() ?? '');

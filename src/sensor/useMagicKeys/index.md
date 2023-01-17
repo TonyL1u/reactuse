@@ -52,11 +52,11 @@ interface UseMagicKeysOptions {
     /**
      * Register passive listener
      *
-     * @default true
+     * @defaultValue true
      */
     passive?: boolean;
 }
-declare type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
+type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
 interface MagicKeysInternal {
     /**
      * A Set of currently pressed keys

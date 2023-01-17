@@ -1,26 +1,46 @@
 import { useRef, useState } from 'react';
+import { useOnMounted } from '../../shared/useOnMounted';
 import { useOnUnmounted } from '../../shared/useOnUnmounted';
+import { useLatest } from '../../state/useLatest';
 
 export interface UseTimeoutFnOptions {
     /**
      * Running the timer automatically after calling this function
      *
-     * @defaultValue `true`
+     * @defaultValue true
      */
     auto?: boolean;
 }
 
+export interface UseTimeoutFnReturn {
+    isPending: boolean;
+    start: () => void;
+    stop: () => void;
+}
+
 /**
+ * Wrapper for `setTimeout` with controls.
  *
- * @param cb
- * @param interval
- * @param options
+ * @example
+ * ```ts
+ * import { useTimeoutFn } from 'reactuse';
+ *
+ * const { start, stop } = useTimeoutFn(() => {
+ *     // fired after 1000ms...
+ * }, 1000)
+ *
+ * start(); // start timer
+ * stop(); // stop timer
+ * ```
+ * @param cb -
+ * @param interval -
+ * @param options -
  * @returns
  */
-export function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, options: UseTimeoutFnOptions = {}) {
+export function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, options: UseTimeoutFnOptions = {}): UseTimeoutFnReturn {
     const { auto = true } = options;
     const [pending, setPending] = useState(false);
-    const hasAutoStarted = useRef(false);
+    const fnRef = useLatest(cb);
     const timer = useRef<number>();
 
     const clear = () => {
@@ -38,14 +58,13 @@ export function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, 
         setPending(true);
         timer.current = window.setTimeout(() => {
             stop();
-            cb(...args);
+            fnRef.current(...args);
         }, interval);
     };
 
-    if (auto && !hasAutoStarted.current) {
-        start();
-        hasAutoStarted.current = true;
-    }
+    useOnMounted(() => {
+        if (auto) start();
+    });
 
     useOnUnmounted(stop);
 

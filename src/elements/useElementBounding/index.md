@@ -15,7 +15,7 @@ const bounding = useElementBounding(el);
 ## Type Declarations
 
 ```ts
-declare type ElementBounding = {
+type ElementBounding = {
     width: number;
     height: number;
     top: number;

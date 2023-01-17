@@ -17,7 +17,7 @@ useWatchRef(el, () => {
 ## Type Declarations
 
 ```ts
-declare type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
 interface WatchRefOptions extends WatchStateOptions {
     deps?: DependencyList;
 }

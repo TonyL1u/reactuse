@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { useOnMounted } from '../../shared/useOnMounted';
+import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import { useLatest } from '../../state/useLatest';
 
-export interface useRafFnFnCallbackArguments {
+export interface UseRafFnFnCallbackArguments {
     /**
      * Time elapsed between this and the last frame.
      */
@@ -15,9 +16,9 @@ export interface useRafFnFnCallbackArguments {
 
 export interface UseRafFnOptions {
     /**
-     * run fn immediately
+     * Run the callback function immediately
      *
-     * @defaultValue `true`
+     * @defaultValue true
      */
     immediate?: boolean;
 }
@@ -31,11 +32,21 @@ export interface UseRafFnReturn {
 /**
  * Call function on every `requestAnimationFrame`. With controls of pausing and resuming.
  *
- * @param fn callback fn
- * @param options
+ * @example
+ * ```ts
+ * import { useState } from 'react';
+ * import { useRafFn } from 'reactuse';
+ *
+ * const [count, setCount] = useState(0);
+ * const { resume, pause } = useRafFn(() => {
+ *     setCount(count + 1);
+ * });
+ * ```
+ * @param fn - Callback function
+ * @param options -
  * @returns
  */
-export function useRafFn(fn: (args: useRafFnFnCallbackArguments) => void, options: UseRafFnOptions = {}): UseRafFnReturn {
+export function useRafFn(fn: (args: UseRafFnFnCallbackArguments) => void, options: UseRafFnOptions = {}): UseRafFnReturn {
     const { immediate = true } = options;
     const fnRef = useLatest(fn);
     const [isActive, setIsActive] = useState(false);
@@ -58,12 +69,15 @@ export function useRafFn(fn: (args: useRafFnFnCallbackArguments) => void, option
         if (!isActive || rafId.current === null) return;
 
         window.cancelAnimationFrame(rafId.current);
+        rafId.current = null;
         setIsActive(false);
     }
 
     useOnMounted(() => {
         if (immediate) resume();
     });
+
+    useOnUnmounted(pause);
 
     return { isActive, resume, pause };
 }

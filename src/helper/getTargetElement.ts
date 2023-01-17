@@ -8,6 +8,7 @@ export function getTargetElement<T extends MaybeElement>(target: MaybeElementRef
 
     let targetElement: T | null;
 
+    // @ts-ignore
     if (target && 'current' in target) {
         targetElement = target.current;
     } else {

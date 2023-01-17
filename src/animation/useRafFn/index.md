@@ -4,10 +4,20 @@ Call function on every `requestAnimationFrame`. With controls of pausing and res
 
 ## Usage
 
+```ts
+import { useState } from 'react';
+import { useRafFn } from 'reactuse';
+
+const [count, setCount] = useState(0);
+const { resume, pause } = useRafFn(() => {
+    setCount(count + 1);
+});
+```
+
 ## Type Declarations
 
 ```ts
-interface useRafFnFnCallbackArguments {
+interface UseRafFnFnCallbackArguments {
     /**
      * Time elapsed between this and the last frame.
      */
@@ -17,20 +27,25 @@ interface useRafFnFnCallbackArguments {
      */
     timestamp: DOMHighResTimeStamp;
 }
-interface useRafFnOptions {
+interface UseRafFnOptions {
+    /**
+     * Run the callback function immediately
+     *
+     * @defaultValue true
+     */
     immediate?: boolean;
 }
-interface useRafFnReturn {
+interface UseRafFnReturn {
     isActive: boolean;
     pause: () => void;
     resume: () => void;
 }
-declare function useRafFn(fn: (args: useRafFnFnCallbackArguments) => void, options?: useRafFnOptions): useRafFnReturn;
+declare function useRafFn(fn: (args: UseRafFnFnCallbackArguments) => void, options?: UseRafFnOptions): UseRafFnReturn;
 ```
 
 ## Params
 
-|  Name   |                     Type                      | Description | Optional |
-| :-----: | :-------------------------------------------: | :---------: | :------: |
-|   fn    | `(args: useRafFnFnCallbackArguments) => void` | callback fn |  false   |
-| options |               `useRafFnOptions`               |      -      |   true   |
+|  Name   |                     Type                      |    Description    | Optional |
+| :-----: | :-------------------------------------------: | :---------------: | :------: |
+|   fn    | `(args: UseRafFnFnCallbackArguments) => void` | Callback function |  false   |
+| options |               `UseRafFnOptions`               |         -         |   true   |

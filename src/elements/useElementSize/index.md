@@ -15,7 +15,7 @@ const size = useElementSize(el);
 ## Type Declarations
 
 ```ts
-declare type ElementSize = {
+type ElementSize = {
     width: number;
     height: number;
 };

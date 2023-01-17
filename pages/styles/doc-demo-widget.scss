@@ -41,7 +41,7 @@
         cursor: pointer;
         transition: border-color 0.25s;
 
-        &:hover {
+        &:not(:disabled):hover {
             border-color: #646cff;
         }
 

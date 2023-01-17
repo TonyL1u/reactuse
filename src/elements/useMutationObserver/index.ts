@@ -33,6 +33,7 @@ export interface UseMutationObserverReturn {
  *
  */
 export function useMutationObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: MutationCallback, options: MutationObserverInit = {}): UseMutationObserverReturn {
+    // @ts-ignore
     const observeTarget: RefObject<T> = target && 'current' in target ? target : useRef(target);
     let ob: MutationObserver | null = null;
     const isSupported = useSupported(() => window && 'MutationObserver' in window);

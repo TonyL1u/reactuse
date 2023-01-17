@@ -7,6 +7,19 @@ Reactive [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipbo
 ## Type Declarations
 
 ```ts
+interface UseClipboardOptions {
+    copiedDelay?: number;
+    /**
+     * Fall back to lower api when the Clipboard API {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin} not supported
+     */
+    legacy?: boolean;
+    /**
+     * Initial copying source text
+     *
+     * @defaultValue ''
+     */
+    source?: string;
+}
 declare function useClipboard(options?: UseClipboardOptions): {
     isSupported: boolean;
     copy: (value?: string) => Promise<void>;

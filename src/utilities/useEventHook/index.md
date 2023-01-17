@@ -12,11 +12,11 @@ interface EventHook<T = any> {
     on: EventHookOn<T>;
     trigger: EventHookTrigger<T>;
 }
-declare type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
-declare type EventHookOn<T = any> = (fn: (param?: T) => void) => {
+type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
+type EventHookOn<T = any> = (fn: (param?: T) => void) => {
     off: () => void;
 };
-declare type EventHookTrigger<T = any> = (param?: T) => void;
+type EventHookTrigger<T = any> = (param?: T) => void;
 declare function useEventHook<T = any>(): EventHook<T>;
 ```
 

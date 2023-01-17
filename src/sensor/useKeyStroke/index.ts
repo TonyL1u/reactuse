@@ -27,9 +27,10 @@ const createEventGuard = (key: KeyFilter | null) => {
 export function useKeyStroke(handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
 /**
  * Overload 2: Listen to a specific key
+ *
  * @param key - The key to be listener
  * @param handler - callback
- * @param options
+ * @param options -
  */
 export function useKeyStroke(key: KeyFilter, handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
 export function useKeyStroke(...args: any[]) {

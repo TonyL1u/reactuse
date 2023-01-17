@@ -8,6 +8,18 @@ export interface UseTimestampOptions {
     callback?: (timestamp: number) => void;
 }
 
+/**
+ * Reactive current timestamp.
+ *
+ * @example
+ * ```ts
+ * import { useTimestamp } from 'reactuse';
+ *
+ * const now = useTimestamp();
+ * ```
+ * @param options -
+ * @returns
+ */
 export function useTimestamp(options: UseTimestampOptions = {}) {
     const { offset = 0, immediate = true, callback } = options;
     const [timestamp, setTimestamp] = useState(createTimestamp() + offset);

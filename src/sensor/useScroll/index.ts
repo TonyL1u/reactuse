@@ -68,7 +68,6 @@ export function useScroll<T extends Exclude<MaybeElement, Document>>(target: May
     }, idle);
 
     const onScrollHandler = (e: Event) => {
-        console.log(e);
         const target = e.target === document ? (e.target as Document).documentElement : (e.target as HTMLElement);
         const { scrollTop, scrollLeft, clientWidth, scrollWidth, clientHeight, scrollHeight } = target;
 

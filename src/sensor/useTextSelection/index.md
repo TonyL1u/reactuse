@@ -13,9 +13,13 @@ const { text } = useTextSelection();
 ## Type Declarations
 
 ```ts
-declare function useTextSelection(): {
-    text: string;
+interface UseTextSelectionReturn {
     ranges: Range[];
     rects: DOMRect[];
-};
+    /**
+     * Current selected text.
+     */
+    text: string;
+}
+declare function useTextSelection(): UseTextSelectionReturn;
 ```

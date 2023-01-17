@@ -22,7 +22,7 @@ useEffect(() => {
 ## Type Declarations
 
 ```ts
-declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
 interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
 }

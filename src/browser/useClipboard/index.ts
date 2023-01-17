@@ -2,10 +2,25 @@ import { useState } from 'react';
 import { useTimeoutFn } from '../../animation/useTimeoutFn';
 import { useSupported } from '../../shared/useSupported';
 
-interface UseClipboardOptions {
+export interface UseClipboardOptions {
+    /**
+     * Initial copying source text
+     *
+     * @defaultValue ''
+     */
     source?: string;
+    /**
+     * Fall back to lower api when the Clipboard API {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin} not supported
+     */
     legacy?: boolean;
     copiedDelay?: number;
+}
+
+export interface UseClipboardReturn {
+    isSupported: boolean;
+    copy: (source?: string) => void;
+    text: string;
+    copied: boolean;
 }
 
 /**
@@ -14,7 +29,7 @@ interface UseClipboardOptions {
  * Access to the contents of the clipboard is gated behind the [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API).
  * Without user permission, reading or altering the clipboard contents is not permitted.
  *
- * @param options
+ * @param options -
  * @returns
  */
 export function useClipboard(options: UseClipboardOptions = {}) {

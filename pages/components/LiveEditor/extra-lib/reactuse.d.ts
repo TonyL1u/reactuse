@@ -2,6 +2,42 @@ import * as react from 'react';
 import { RefObject, Dispatch, SetStateAction, DependencyList } from 'react';
 import { DebounceSettings, DebouncedFunc } from 'lodash-es';
 
+interface UseRafFnFnCallbackArguments {
+    /**
+     * Time elapsed between this and the last frame.
+     */
+    delta: number;
+    /**
+     * Time elapsed since the creation of the web page. See {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin Time origin}.
+     */
+    timestamp: DOMHighResTimeStamp;
+}
+interface UseRafFnOptions {
+    /**
+     * run fn immediately
+     *
+     * @defaultValue `true`
+     */
+    immediate?: boolean;
+}
+interface UseRafFnReturn {
+    isActive: boolean;
+    resume: () => void;
+    pause: () => void;
+}
+/**
+ * Call function on every `requestAnimationFrame`. With controls of pausing and resuming.
+ *
+ * @example
+ * ```ts
+ * const { pause, resume } = useRafFn();
+ * ```
+ * @param fn callback fn
+ * @param options
+ * @returns
+ */
+declare function useRafFn(fn: (args: UseRafFnFnCallbackArguments) => void, options?: UseRafFnOptions): UseRafFnReturn;
+
 interface UseTimeoutFnOptions {
     /**
      * Running the timer automatically after calling this function
@@ -17,11 +53,22 @@ interface UseTimeoutFnOptions {
  * @param options
  * @returns
  */
-declare function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, options?: UseTimeoutFnOptions): {
+declare function useTimeoutFn(
+    cb: (...args: unknown[]) => any,
+    interval: number,
+    options?: UseTimeoutFnOptions
+): {
     isPending: boolean;
     start: (...args: unknown[]) => void;
     stop: () => void;
 };
+
+interface UseTimestampOptions {
+    offset?: number;
+    immediate?: boolean;
+    callback?: (timestamp: number) => void;
+}
+declare function useTimestamp(options?: UseTimestampOptions): number;
 
 interface UseClipboardOptions {
     source?: string;
@@ -44,30 +91,30 @@ declare function useClipboard(options?: UseClipboardOptions): {
     copied: boolean;
 };
 
-declare type Fn = () => void;
-declare type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
-declare type MaybeRefObject<T> = T | RefObject<T>;
-declare type MaybeElement = Window | Document | Element | SVGElement | undefined | null;
-declare type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
+type Fn = () => void;
+type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
+type MaybeRefObject<T> = T | RefObject<T>;
+type MaybeElement = Window | Document | Element | SVGElement | undefined | null;
+type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
 
-declare type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
+type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
 interface ConfigurableEventFilter {
     eventFilter?: EventFilter;
 }
 
-declare type WindowEventName = keyof WindowEventMap;
-declare type DocumentEventName = keyof DocumentEventMap;
-declare type GeneralEventName = keyof GlobalEventHandlersEventMap;
-declare type WindowEventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
-declare type DocumentEventListener<E extends DocumentEventName> = (ev: DocumentEventMap[E]) => any;
-declare type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlersEventMap[E]) => any;
+type WindowEventName$1 = keyof WindowEventMap;
+type DocumentEventName = keyof DocumentEventMap;
+type GeneralEventName = keyof GlobalEventHandlersEventMap;
+type WindowEventListener<E extends WindowEventName$1> = (ev: WindowEventMap[E]) => any;
+type DocumentEventListener<E extends DocumentEventName> = (ev: DocumentEventMap[E]) => any;
+type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlersEventMap[E]) => any;
 /**
  * Overload 1: Omitted Window target
  *
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends WindowEventName>(event: E, listener: WindowEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<E extends WindowEventName$1>(event: E, listener: WindowEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 /**
  * Overload 2: Explicitly Document target
  *
@@ -180,7 +227,7 @@ interface UseDraggableReturn {
  */
 declare function useDraggable<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseDraggableOptions): UseDraggableReturn;
 
-declare type ElementBounding = {
+type ElementBounding = {
     width: number;
     height: number;
     top: number;
@@ -208,7 +255,7 @@ declare type ElementBounding = {
  */
 declare function useElementBounding<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): ElementBounding;
 
-declare type ElementSize = {
+type ElementSize = {
     width: number;
     height: number;
 };
@@ -249,11 +296,11 @@ declare function useElementSize<T extends Exclude<MaybeElement, Window | Documen
  */
 declare function useElementVisibility<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>): boolean;
 
-declare type CursorState = {
+type CursorState = {
     x: number;
     y: number;
 };
-declare type MouseSourceType = 'mouse' | 'touch' | null;
+type MouseSourceType = 'mouse' | 'touch' | null;
 interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Mouse position based by page or client
@@ -264,7 +311,7 @@ interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Listen to `touchmove` events
      *
-     * @defaultValue true
+     * @defaultValue `true`
      */
     touch?: boolean;
     /**
@@ -290,8 +337,7 @@ interface UseMouseReturn extends CursorState {
  */
 declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 
-interface UseMouseInElementOptions extends UseMouseOptions {
-}
+interface UseMouseInElementOptions extends UseMouseOptions {}
 interface UseMouseInElementReturn extends UseMouseReturn {
     isOutside: boolean;
 }
@@ -370,7 +416,7 @@ interface UseResizeObserverReturn {
  */
 declare function useResizeObserver<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, callback: ResizeObserverCallback, options?: ResizeObserverOptions): UseResizeObserverReturn;
 
-declare type WindowSize = {
+type WindowSize = {
     width: number;
     height: number;
 };
@@ -441,7 +487,7 @@ declare function useOnUnmounted(fn: () => void): void;
  */
 declare function useMounted(): boolean;
 
-declare type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+type WatchStateCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
 interface WatchStateOptions extends ConfigurableEventFilter {
     immediate?: boolean;
 }
@@ -470,12 +516,16 @@ interface WatchStateOptions extends ConfigurableEventFilter {
  * @returns
  *
  */
-declare function useWatchState<T extends any>(source: T, callback: WatchStateCallback<T, T>, options?: WatchStateOptions): {
+declare function useWatchState<T extends any>(
+    source: T,
+    callback: WatchStateCallback<T, T>,
+    options?: WatchStateOptions
+): {
     pause(): void;
     resume(): void;
 };
 
-declare type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
+type WatchRefCallback<V = any, OV = any> = (value: V, oldValue: OV) => any;
 interface WatchRefOptions extends WatchStateOptions {
     deps?: DependencyList;
 }
@@ -524,9 +574,37 @@ interface UseDeviceOrientationReturn extends DeviceOrientationState {
  */
 declare function useDeviceOrientation(): UseDeviceOrientationReturn;
 
-declare type KeyEventGuard = (event: KeyboardEvent) => boolean;
-declare type KeyEventHandler = (e: KeyboardEvent) => void;
-declare type KeyFilter = string | string[] | KeyEventGuard;
+interface UseFpsOptions {
+    /**
+     * Calculate the FPS on every x frames.
+     * @defaultValue 10
+     */
+    every?: number;
+}
+/**
+ * Reactive FPS (frames per second).
+ *
+ * @param options
+ * @returns
+ */
+declare function useFps(options?: UseFpsOptions): number;
+
+type WindowEventName = keyof WindowEventMap;
+interface UseIdleOptions extends ConfigurableEventFilter {
+    events?: WindowEventName[];
+    initialState?: boolean;
+}
+declare function useIdle(
+    timeout?: number,
+    options?: UseIdleOptions
+): {
+    idle: boolean;
+    lastActive: number;
+};
+
+type KeyEventGuard = (event: KeyboardEvent) => boolean;
+type KeyEventHandler = (e: KeyboardEvent) => void;
+type KeyFilter = string | string[] | KeyEventGuard;
 interface UseKeyStrokeOptions {
     target?: MaybeElementRef;
     event?: 'keydown' | 'keyup' | 'keypress';
@@ -564,7 +642,7 @@ interface UseMagicKeysOptions {
     /**
      * Register passive listener
      *
-     * @default true
+     * @defaultValue true
      */
     passive?: boolean;
     /**
@@ -572,7 +650,7 @@ interface UseMagicKeysOptions {
      */
     onEventFired?: (e: KeyboardEvent) => void | boolean;
 }
-declare type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
+type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeysInternal> & MagicKeysInternal>;
 /**
  * Reactive keys pressed state, with magical keys combination support.
  *
@@ -637,11 +715,63 @@ interface UseParallaxOptions {
  * @returns
  *
  */
-declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
+declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(
+    target: MaybeElementRef<T>,
+    options?: UseParallaxOptions
+): {
     roll: number;
     tilt: number;
     source: string;
 };
+
+interface ScrollingState {
+    x: number;
+    y: number;
+    isScrolling: boolean;
+}
+interface ArrivedState {
+    top: boolean;
+    right: boolean;
+    bottom: boolean;
+    left: boolean;
+}
+interface UseScrollOptions extends ConfigurableEventFilter {
+    /**
+     * The check time when scrolling ends.
+     * This configuration will be setting to (throttle + idle) when the `throttle` is configured.
+     *
+     * @defaultValue 200
+     */
+    idle?: number;
+    /**
+     * Listener options for scroll event.
+     *
+     * @defaultValue {capture: false, passive: true}
+     */
+    eventListenerOptions?: boolean | AddEventListenerOptions;
+    /**
+     * Trigger it when scrolling.
+     */
+    onScroll?: (e: Event) => void;
+    /**
+     * Trigger it when scrolling ends.
+     */
+    onStop?: (e: Event) => void;
+}
+interface UseScrollReturn {
+    x: number;
+    y: number;
+    isScrolling: boolean;
+    arrivedState: ArrivedState;
+}
+/**
+ * Reactive scroll.
+ *
+ * @param target
+ * @param options
+ * @returns
+ */
+declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
 
 /**
  * Reactively track user text selection based on [`Window.getSelection`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection).
@@ -684,11 +814,11 @@ declare function useUpdate(): () => void;
  */
 declare function useDebounceFn<T extends FunctionArgs>(fn: T, wait?: number, options?: DebounceSettings): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-declare type EventHookOn<T = any> = (fn: (param?: T) => void) => {
+type EventHookOn<T = any> = (fn: (param?: T) => void) => {
     off: () => void;
 };
-declare type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
-declare type EventHookTrigger<T = any> = (param?: T) => void;
+type EventHookOff<T = any> = (fn: (param?: T) => void) => void;
+type EventHookTrigger<T = any> = (param?: T) => void;
 interface EventHook<T = any> {
     on: EventHookOn<T>;
     off: EventHookOff<T>;
@@ -721,4 +851,88 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseResizeObserverReturn, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useReactive, useResizeObserver, useTextSelection, useThrottleFn, useTimeoutFn, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export {
+    ArrivedState,
+    CursorState,
+    DeviceOrientationState,
+    ElementBounding,
+    ElementSize,
+    EventHook,
+    EventHookOff,
+    EventHookOn,
+    EventHookTrigger,
+    KeyEventGuard,
+    KeyEventHandler,
+    KeyFilter,
+    MagicKeysInternal,
+    MouseSourceType,
+    ScrollingState,
+    UseDeviceOrientationReturn,
+    UseDraggableOptions,
+    UseDraggableReturn,
+    UseFpsOptions,
+    UseIdleOptions,
+    UseKeyStrokeOptions,
+    UseMagicKeysOptions,
+    UseMagicKeysReturn,
+    UseMouseInElementOptions,
+    UseMouseInElementReturn,
+    UseMouseOptions,
+    UseMouseReturn,
+    UseMutationObserverReturn,
+    UseParallaxOptions,
+    UseRafFnFnCallbackArguments,
+    UseRafFnOptions,
+    UseRafFnReturn,
+    UseResizeObserverReturn,
+    UseScrollOptions,
+    UseScrollReturn,
+    UseTimeoutFnOptions,
+    UseTimestampOptions,
+    UseTitleOptions,
+    UseTitleReturn,
+    UseWindowSizeOptions,
+    WatchRefCallback,
+    WatchRefOptions,
+    WatchStateCallback,
+    WatchStateOptions,
+    WindowSize,
+    useClipboard,
+    useDebounceFn,
+    useDeviceOrientation,
+    useDocumentVisibility,
+    useDraggable,
+    useElementBounding,
+    useElementSize,
+    useElementVisibility,
+    useEventHook,
+    useEventListener,
+    useFps,
+    useIdle,
+    useKeyDown,
+    useKeyPress,
+    useKeyStroke,
+    useKeyUp,
+    useLatest,
+    useMagicKeys,
+    useMounted,
+    useMouse,
+    useMouseInElement,
+    useMutationObserver,
+    useOnMounted,
+    useOnUnmounted,
+    useParallax,
+    useRafFn,
+    useReactive,
+    useResizeObserver,
+    useScroll,
+    useTextSelection,
+    useThrottleFn,
+    useTimeoutFn,
+    useTimestamp,
+    useTitle,
+    useUpdate,
+    useWatchRef,
+    useWatchState,
+    useWindowSize
+};

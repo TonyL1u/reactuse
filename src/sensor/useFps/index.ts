@@ -4,6 +4,7 @@ import { useRafFn } from '../../animation/useRafFn';
 export interface UseFpsOptions {
     /**
      * Calculate the FPS on every x frames.
+     *
      * @defaultValue 10
      */
     every?: number;
@@ -12,7 +13,13 @@ export interface UseFpsOptions {
 /**
  * Reactive FPS (frames per second).
  *
- * @param options
+ * @example
+ * ```ts
+ * import { useFps } from 'reactuse';
+ *
+ * const fps = useFps();
+ * ```
+ * @param options -
  * @returns
  */
 export function useFps(options: UseFpsOptions = {}) {
