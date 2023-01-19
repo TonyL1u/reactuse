@@ -14,9 +14,9 @@ interface UseRafFnFnCallbackArguments {
 }
 interface UseRafFnOptions {
     /**
-     * run fn immediately
+     * Run the callback function immediately
      *
-     * @defaultValue `true`
+     * @defaultValue true
      */
     immediate?: boolean;
 }
@@ -30,10 +30,16 @@ interface UseRafFnReturn {
  *
  * @example
  * ```ts
- * const { pause, resume } = useRafFn();
+ * import { useState } from 'react';
+ * import { useRafFn } from 'reactuse';
+ *
+ * const [count, setCount] = useState(0);
+ * const { resume, pause } = useRafFn(() => {
+ *     setCount(count + 1);
+ * });
  * ```
- * @param fn callback fn
- * @param options
+ * @param fn - Callback function
+ * @param options -
  * @returns
  */
 declare function useRafFn(fn: (args: UseRafFnFnCallbackArguments) => void, options?: UseRafFnOptions): UseRafFnReturn;
@@ -42,38 +48,93 @@ interface UseTimeoutFnOptions {
     /**
      * Running the timer automatically after calling this function
      *
-     * @defaultValue `true`
+     * @defaultValue true
      */
     auto?: boolean;
 }
+interface UseTimeoutFnReturn {
+    isPending: boolean;
+    start: () => void;
+    stop: () => void;
+}
 /**
+ * Wrapper for `setTimeout` with controls.
  *
- * @param cb
- * @param interval
- * @param options
+ * @example
+ * ```ts
+ * import { useTimeoutFn } from 'reactuse';
+ *
+ * const { start, stop } = useTimeoutFn(() => {
+ *     // fired after 1000ms...
+ * }, 1000)
+ *
+ * start(); // start timer
+ * stop(); // stop timer
+ * ```
+ * @param cb - The function to be executed
+ * @param interval -
+ * @param options -
  * @returns
  */
-declare function useTimeoutFn(
-    cb: (...args: unknown[]) => any,
-    interval: number,
-    options?: UseTimeoutFnOptions
-): {
-    isPending: boolean;
-    start: (...args: unknown[]) => void;
-    stop: () => void;
-};
+declare function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number, options?: UseTimeoutFnOptions): UseTimeoutFnReturn;
+
+interface UseTimeoutOptions extends UseTimeoutFnOptions {
+}
+interface UseTimeoutReturn extends Omit<UseTimeoutFnReturn, 'isPending'> {
+    ready: boolean;
+}
+/**
+ * Update value after a given time with controls.
+ *
+ * @example
+ * ```ts
+ * import { useTimeout } from 'reactuse';
+ *
+ * const { ready } = useTimeout(2000);
+ *
+ * console.log(ready); // ready will be set to true after 2s
+ * ```
+ * @param interval - Change status after x ms.
+ * @param options -
+ * @returns
+ */
+declare function useTimeout(interval?: number, options?: UseTimeoutOptions): UseTimeoutReturn;
 
 interface UseTimestampOptions {
     offset?: number;
     immediate?: boolean;
     callback?: (timestamp: number) => void;
 }
+/**
+ * Reactive current timestamp.
+ *
+ * @example
+ * ```ts
+ * import { useTimestamp } from 'reactuse';
+ *
+ * const now = useTimestamp();
+ * ```
+ * @param options -
+ * @returns
+ */
 declare function useTimestamp(options?: UseTimestampOptions): number;
 
 interface UseClipboardOptions {
+    /**
+     * Initial copying source text
+     */
     source?: string;
+    /**
+     * Fallback to lower api when the Clipboard API {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin} not supported
+     */
     legacy?: boolean;
     copiedDelay?: number;
+}
+interface UseClipboardReturn {
+    isSupported: boolean;
+    copy: (source?: string) => void;
+    text: string;
+    copied: boolean;
 }
 /**
  * Reactive [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).
@@ -81,7 +142,7 @@ interface UseClipboardOptions {
  * Access to the contents of the clipboard is gated behind the [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API).
  * Without user permission, reading or altering the clipboard contents is not permitted.
  *
- * @param options
+ * @param options -
  * @returns
  */
 declare function useClipboard(options?: UseClipboardOptions): {
@@ -311,7 +372,7 @@ interface UseMouseOptions extends ConfigurableEventFilter {
     /**
      * Listen to `touchmove` events
      *
-     * @defaultValue `true`
+     * @defaultValue true
      */
     touch?: boolean;
     /**
@@ -337,7 +398,8 @@ interface UseMouseReturn extends CursorState {
  */
 declare function useMouse(options?: UseMouseOptions): UseMouseReturn;
 
-interface UseMouseInElementOptions extends UseMouseOptions {}
+interface UseMouseInElementOptions extends UseMouseOptions {
+}
 interface UseMouseInElementReturn extends UseMouseReturn {
     isOutside: boolean;
 }
@@ -516,11 +578,7 @@ interface WatchStateOptions extends ConfigurableEventFilter {
  * @returns
  *
  */
-declare function useWatchState<T extends any>(
-    source: T,
-    callback: WatchStateCallback<T, T>,
-    options?: WatchStateOptions
-): {
+declare function useWatchState<T extends any>(source: T, callback: WatchStateCallback<T, T>, options?: WatchStateOptions): {
     pause(): void;
     resume(): void;
 };
@@ -577,6 +635,7 @@ declare function useDeviceOrientation(): UseDeviceOrientationReturn;
 interface UseFpsOptions {
     /**
      * Calculate the FPS on every x frames.
+     *
      * @defaultValue 10
      */
     every?: number;
@@ -584,23 +643,49 @@ interface UseFpsOptions {
 /**
  * Reactive FPS (frames per second).
  *
- * @param options
+ * @example
+ * ```ts
+ * import { useFps } from 'reactuse';
+ *
+ * const fps = useFps();
+ * ```
+ * @param options -
  * @returns
  */
 declare function useFps(options?: UseFpsOptions): number;
 
 type WindowEventName = keyof WindowEventMap;
 interface UseIdleOptions extends ConfigurableEventFilter {
+    /**
+     * Event names that listen to for detected user activity
+     *
+     * @defaultValue ['mousemove', 'mousedown', 'resize', 'keydown', 'touchstart', 'wheel']
+     */
     events?: WindowEventName[];
     initialState?: boolean;
 }
-declare function useIdle(
-    timeout?: number,
-    options?: UseIdleOptions
-): {
+interface UseIdleReturn {
     idle: boolean;
+    /**
+     * Timestamp that the user is being active last time
+     */
     lastActive: number;
-};
+}
+/**
+ * Tracks whether the user is being inactive.
+ *
+ * @example
+ * ```ts
+ * import { useIdle } from 'reactuse';
+ *
+ * const { idle, lastActive } = useIdle(2000);
+ * console.log(idle);
+ * ```
+ * @param timeout - Set to idled after x ms
+ * @param options -
+ * @returns
+ */
+declare function useIdle(timeout?: number, options?: UseIdleOptions): UseIdleReturn;
 
 type KeyEventGuard = (event: KeyboardEvent) => boolean;
 type KeyEventHandler = (e: KeyboardEvent) => void;
@@ -619,9 +704,10 @@ interface UseKeyStrokeOptions {
 declare function useKeyStroke(handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
 /**
  * Overload 2: Listen to a specific key
+ *
  * @param key - The key to be listener
  * @param handler - callback
- * @param options
+ * @param options -
  */
 declare function useKeyStroke(key: KeyFilter, handler: KeyEventHandler, options?: UseKeyStrokeOptions): Fn;
 declare function useKeyDown(key: KeyFilter, handler: KeyEventHandler, options?: Omit<UseKeyStrokeOptions, 'event'>): Fn;
@@ -715,10 +801,7 @@ interface UseParallaxOptions {
  * @returns
  *
  */
-declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(
-    target: MaybeElementRef<T>,
-    options?: UseParallaxOptions
-): {
+declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>(target: MaybeElementRef<T>, options?: UseParallaxOptions): {
     roll: number;
     tilt: number;
     source: string;
@@ -773,6 +856,14 @@ interface UseScrollReturn {
  */
 declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
 
+interface UseTextSelectionReturn {
+    /**
+     * Current selected text.
+     */
+    text: string;
+    ranges: Range[];
+    rects: DOMRect[];
+}
 /**
  * Reactively track user text selection based on [`Window.getSelection`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection).
  *
@@ -783,11 +874,7 @@ declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: Ma
  * const { text } = useTextSelection();
  * ```
  */
-declare function useTextSelection(): {
-    text: string;
-    ranges: Range[];
-    rects: DOMRect[];
-};
+declare function useTextSelection(): UseTextSelectionReturn;
 
 declare function useLatest<T>(value: T): react.MutableRefObject<T>;
 
@@ -851,88 +938,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export {
-    ArrivedState,
-    CursorState,
-    DeviceOrientationState,
-    ElementBounding,
-    ElementSize,
-    EventHook,
-    EventHookOff,
-    EventHookOn,
-    EventHookTrigger,
-    KeyEventGuard,
-    KeyEventHandler,
-    KeyFilter,
-    MagicKeysInternal,
-    MouseSourceType,
-    ScrollingState,
-    UseDeviceOrientationReturn,
-    UseDraggableOptions,
-    UseDraggableReturn,
-    UseFpsOptions,
-    UseIdleOptions,
-    UseKeyStrokeOptions,
-    UseMagicKeysOptions,
-    UseMagicKeysReturn,
-    UseMouseInElementOptions,
-    UseMouseInElementReturn,
-    UseMouseOptions,
-    UseMouseReturn,
-    UseMutationObserverReturn,
-    UseParallaxOptions,
-    UseRafFnFnCallbackArguments,
-    UseRafFnOptions,
-    UseRafFnReturn,
-    UseResizeObserverReturn,
-    UseScrollOptions,
-    UseScrollReturn,
-    UseTimeoutFnOptions,
-    UseTimestampOptions,
-    UseTitleOptions,
-    UseTitleReturn,
-    UseWindowSizeOptions,
-    WatchRefCallback,
-    WatchRefOptions,
-    WatchStateCallback,
-    WatchStateOptions,
-    WindowSize,
-    useClipboard,
-    useDebounceFn,
-    useDeviceOrientation,
-    useDocumentVisibility,
-    useDraggable,
-    useElementBounding,
-    useElementSize,
-    useElementVisibility,
-    useEventHook,
-    useEventListener,
-    useFps,
-    useIdle,
-    useKeyDown,
-    useKeyPress,
-    useKeyStroke,
-    useKeyUp,
-    useLatest,
-    useMagicKeys,
-    useMounted,
-    useMouse,
-    useMouseInElement,
-    useMutationObserver,
-    useOnMounted,
-    useOnUnmounted,
-    useParallax,
-    useRafFn,
-    useReactive,
-    useResizeObserver,
-    useScroll,
-    useTextSelection,
-    useThrottleFn,
-    useTimeoutFn,
-    useTimestamp,
-    useTitle,
-    useUpdate,
-    useWatchRef,
-    useWatchState,
-    useWindowSize
-};
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };

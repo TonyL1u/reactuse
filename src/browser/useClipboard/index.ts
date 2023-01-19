@@ -5,12 +5,10 @@ import { useSupported } from '../../shared/useSupported';
 export interface UseClipboardOptions {
     /**
      * Initial copying source text
-     *
-     * @defaultValue ''
      */
     source?: string;
     /**
-     * Fall back to lower api when the Clipboard API {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin} not supported
+     * Fallback to lower api when the Clipboard API {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#the_time_origin} not supported
      */
     legacy?: boolean;
     copiedDelay?: number;

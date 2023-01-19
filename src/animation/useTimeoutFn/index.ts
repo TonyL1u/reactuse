@@ -32,7 +32,7 @@ export interface UseTimeoutFnReturn {
  * start(); // start timer
  * stop(); // stop timer
  * ```
- * @param cb -
+ * @param cb - The function to be executed
  * @param interval -
  * @param options -
  * @returns

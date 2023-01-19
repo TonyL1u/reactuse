@@ -36,8 +36,8 @@ declare function useTimeoutFn(cb: (...args: unknown[]) => any, interval: number,
 
 ## Params
 
-|   Name   |             Type              | Description | Optional |
-| :------: | :---------------------------: | :---------: | :------: |
-|    cb    | `(...args: unknown[]) => any` |      -      |  false   |
-| interval |           `number`            |      -      |  false   |
-| options  |     `UseTimeoutFnOptions`     |      -      |   true   |
+|   Name   |             Type              |         Description         | Optional |
+| :------: | :---------------------------: | :-------------------------: | :------: |
+|    cb    | `(...args: unknown[]) => any` | The function to be executed |  false   |
+| interval |           `number`            |              -              |  false   |
+| options  |     `UseTimeoutFnOptions`     |              -              |   true   |
