@@ -882,6 +882,33 @@ declare function useReactive(): void;
 
 declare function useUpdate(): () => void;
 
+interface UseCounterOptions {
+    min?: number;
+    max?: number;
+}
+interface UseCounterReturn {
+    count: number;
+    get: () => number;
+    set: (value?: number) => void;
+    inc: (step?: number) => void;
+    dec: (step?: number) => void;
+    reset: () => void;
+}
+/**
+ * Basic counter with utility functions.
+ *
+ * @example
+ * ```ts
+ * import { useCounter } from 'reactuse';
+ *
+ * const { count, inc, dec, set, reset } = useCounter();
+ * ```
+ * @param initialValue - The initial value of the counter.
+ * @param options -
+ * @returns
+ */
+declare function useCounter(initialValue?: number, options?: UseCounterOptions): UseCounterReturn;
+
 /**
  * Debounce execution of a function.
  *
@@ -938,4 +965,4 @@ declare function useEventHook<T = any>(): EventHook<T>;
  */
 declare function useThrottleFn<T extends FunctionArgs>(fn: T, wait?: number, trailing?: boolean, leading?: boolean): DebouncedFunc<(...args: Parameters<T>) => ReturnType<T>>;
 
-export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useUpdate, useWatchRef, useWatchState, useWindowSize };
