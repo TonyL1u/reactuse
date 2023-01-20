@@ -687,6 +687,97 @@ interface UseIdleReturn {
  */
 declare function useIdle(timeout?: number, options?: UseIdleOptions): UseIdleReturn;
 
+interface ScrollingState {
+    x: number;
+    y: number;
+    isScrolling: boolean;
+}
+interface ArrivedState {
+    top: boolean;
+    right: boolean;
+    bottom: boolean;
+    left: boolean;
+}
+interface UseScrollOptions extends ConfigurableEventFilter {
+    /**
+     * The check time when scrolling ends.
+     * This configuration will be setting to (throttle + idle) when the `throttle` is configured.
+     *
+     * @defaultValue 200
+     */
+    idle?: number;
+    /**
+     * Offset arrived states by x pixels
+     *
+     */
+    offset?: {
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };
+    /**
+     * Listener options for scroll event.
+     *
+     * @defaultValue {capture: false, passive: true}
+     */
+    eventListenerOptions?: boolean | AddEventListenerOptions;
+    /**
+     * Trigger it when scrolling.
+     */
+    onScroll?: (e: Event) => void;
+    /**
+     * Trigger it when scrolling ends.
+     */
+    onStop?: (e: Event) => void;
+}
+interface UseScrollReturn {
+    x: number;
+    y: number;
+    isScrolling: boolean;
+    arrivedState: ArrivedState;
+}
+/**
+ * Reactive scroll.
+ *
+ * @param target
+ * @param options
+ * @returns
+ */
+declare function useScroll<T extends MaybeElement>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
+
+interface UseInfiniteScrollOptions extends UseScrollOptions {
+    /**
+     * The minimum distance between the bottom of the element and the bottom of the viewport
+     *
+     * @defaultValue 0
+     */
+    distance?: number;
+    /**
+     * The direction in which to listen the scroll.
+     *
+     * @defaultValue 'bottom'
+     */
+    direction?: 'top' | 'bottom' | 'left' | 'right';
+}
+/**
+ * Infinite scrolling of the element.
+ *
+ * @example
+ * ```ts
+ * import { useInfiniteScroll } from 'reactuse';
+ *
+ * const el = useRef<HTMLDivElement>(null);
+ * useInfiniteScroll(el, () => {
+ *     // load more method
+ * })
+ * ```
+ * @param element - The scrolling element
+ * @param onLoadMore - Load more method
+ * @param options -
+ */
+declare function useInfiniteScroll<T extends MaybeElement>(element: MaybeElementRef<T>, onLoadMore?: (state: UseScrollReturn) => void | Promise<void>, options?: UseInfiniteScrollOptions): boolean;
+
 type KeyEventGuard = (event: KeyboardEvent) => boolean;
 type KeyEventHandler = (e: KeyboardEvent) => void;
 type KeyFilter = string | string[] | KeyEventGuard;
@@ -806,55 +897,6 @@ declare function useParallax<T extends Exclude<MaybeElement, Window | Document>>
     tilt: number;
     source: string;
 };
-
-interface ScrollingState {
-    x: number;
-    y: number;
-    isScrolling: boolean;
-}
-interface ArrivedState {
-    top: boolean;
-    right: boolean;
-    bottom: boolean;
-    left: boolean;
-}
-interface UseScrollOptions extends ConfigurableEventFilter {
-    /**
-     * The check time when scrolling ends.
-     * This configuration will be setting to (throttle + idle) when the `throttle` is configured.
-     *
-     * @defaultValue 200
-     */
-    idle?: number;
-    /**
-     * Listener options for scroll event.
-     *
-     * @defaultValue {capture: false, passive: true}
-     */
-    eventListenerOptions?: boolean | AddEventListenerOptions;
-    /**
-     * Trigger it when scrolling.
-     */
-    onScroll?: (e: Event) => void;
-    /**
-     * Trigger it when scrolling ends.
-     */
-    onStop?: (e: Event) => void;
-}
-interface UseScrollReturn {
-    x: number;
-    y: number;
-    isScrolling: boolean;
-    arrivedState: ArrivedState;
-}
-/**
- * Reactive scroll.
- *
- * @param target
- * @param options
- * @returns
- */
-declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
 
 interface UseTextSelectionReturn {
     /**
@@ -1010,4 +1052,4 @@ declare function useToggle<L = false, R = true>(): UseToggleReturn<L, R>;
  */
 declare function useToggle<L, R>(initialValue: L, toggledValue: R): UseToggleReturn<L, R>;
 
-export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };

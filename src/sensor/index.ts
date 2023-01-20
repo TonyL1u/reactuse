@@ -1,6 +1,7 @@
 export * from './useDeviceOrientation';
 export * from './useFps';
 export * from './useIdle';
+export * from './useInfiniteScroll';
 export * from './useKeyStroke';
 export * from './useMagicKeys';
 export * from './useMouse';
