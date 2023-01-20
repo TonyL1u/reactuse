@@ -21,6 +21,15 @@ interface UseScrollOptions extends ConfigurableEventFilter {
      */
     idle?: number;
     /**
+     * Offset arrived states by x pixels
+     */
+    offset?: {
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };
+    /**
      * Trigger it when scrolling.
      */
     onScroll?: (e: Event) => void;
@@ -41,7 +50,7 @@ interface ArrivedState {
     right: boolean;
     top: boolean;
 }
-declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
+declare function useScroll<T extends MaybeElement>(target: MaybeElementRef<T>, options?: UseScrollOptions): UseScrollReturn;
 ```
 
 ## Params
@@ -53,6 +62,6 @@ declare function useScroll<T extends Exclude<MaybeElement, Document>>(target: Ma
 
 ## Type Params
 
-| Name |                  Constraint                   | Default Type | Description |
-| :--: | :-------------------------------------------: | :----------: | :---------: |
-|  T   | `<T extends Exclude<MaybeElement, Document>>` |      -       |             |
+| Name |         Constraint         | Default Type | Description |
+| :--: | :------------------------: | :----------: | :---------: |
+|  T   | `<T extends MaybeElement>` |      -       |             |
