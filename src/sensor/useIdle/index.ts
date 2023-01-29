@@ -2,11 +2,9 @@ import { useState, useRef } from 'react';
 import { useEventListener } from '../../browser/useEventListener';
 import { useOnMounted } from '../../shared/useOnMounted';
 import { throttleFilter, createTimestamp } from '../../helper';
-import type { ConfigurableEventFilter } from '../../helper';
+import type { ConfigurableEventFilter, WindowEventName } from '../../helper';
 
 const defaultEvents: WindowEventName[] = ['mousemove', 'mousedown', 'resize', 'keydown', 'touchstart', 'wheel'];
-
-type WindowEventName = keyof WindowEventMap;
 
 export interface UseIdleOptions extends ConfigurableEventFilter {
     /**

@@ -25,7 +25,7 @@ export default () => {
         <div className="tw-w-full tw-h-full tw-flex tw-justify-center">
             <div ref={el} className="tw-h-full tw-overflow-auto tw-w-[50%] tw-bg-gray-100 tw-rounded tw-p-2 tw-box-border tw-space-y-2">
                 {renderList}
-                {isLoading && <div className="tw-flex tw-justify-center tw-text-xs">加载中...</div>}
+                {isLoading && <div className="tw-flex tw-justify-center tw-text-xs">Loading...</div>}
             </div>
         </div>
     );

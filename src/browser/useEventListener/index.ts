@@ -3,15 +3,15 @@ import { useLatest } from '../../state/useLatest';
 import { useWatchRef } from '../../shared/useWatchRef';
 import { useOnUnmounted } from '../../shared/useOnUnmounted';
 import { noop } from '../../helper';
-import type { Fn, MaybeElementRef, MaybeElement } from '../../helper';
+import type { Fn, MaybeElementRef, MaybeElement, WindowEventName, DocumentEventName, GeneralEventName } from '../../helper';
 import type { RefObject } from 'react';
 
-type WindowEventName = keyof WindowEventMap;
-type DocumentEventName = keyof DocumentEventMap;
-type GeneralEventName = keyof GlobalEventHandlersEventMap;
 type WindowEventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
+
 type DocumentEventListener<E extends DocumentEventName> = (ev: DocumentEventMap[E]) => any;
+
 type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlersEventMap[E]) => any;
+
 /**
  * Overload 1: Omitted Window target
  *

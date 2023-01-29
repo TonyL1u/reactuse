@@ -42,7 +42,7 @@ interface UseInfiniteScrollOptions extends UseScrollOptions {
      */
     distance?: number;
 }
-declare function useInfiniteScroll<T extends MaybeElement>(element: MaybeElementRef<T>, onLoadMore?: (state: UseScrollReturn) => void | Promise<void>, options?: UseInfiniteScrollOptions): void;
+declare function useInfiniteScroll<T extends MaybeElement>(element: MaybeElementRef<T>, onLoadMore?: (state: UseScrollReturn) => void | Promise<void>, options?: UseInfiniteScrollOptions): boolean;
 ```
 
 ## Params

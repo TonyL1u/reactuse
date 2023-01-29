@@ -157,16 +157,16 @@ type FunctionArgs<P extends any[] = any[], R = any> = (...args: P) => R;
 type MaybeRefObject<T> = T | RefObject<T>;
 type MaybeElement = Window | Document | Element | SVGElement | undefined | null;
 type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRefObject<T>;
+type WindowEventName = keyof WindowEventMap;
+type DocumentEventName = keyof DocumentEventMap;
+type GeneralEventName = keyof GlobalEventHandlersEventMap;
 
 type EventFilter<T extends FunctionArgs = FunctionArgs, R extends FunctionArgs = T> = (invoke: T) => R;
 interface ConfigurableEventFilter {
     eventFilter?: EventFilter;
 }
 
-type WindowEventName$1 = keyof WindowEventMap;
-type DocumentEventName = keyof DocumentEventMap;
-type GeneralEventName = keyof GlobalEventHandlersEventMap;
-type WindowEventListener<E extends WindowEventName$1> = (ev: WindowEventMap[E]) => any;
+type WindowEventListener<E extends WindowEventName> = (ev: WindowEventMap[E]) => any;
 type DocumentEventListener<E extends DocumentEventName> = (ev: DocumentEventMap[E]) => any;
 type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlersEventMap[E]) => any;
 /**
@@ -175,7 +175,7 @@ type GeneralEventListener<E extends GeneralEventName> = (ev: GlobalEventHandlers
  * @param event
  * @param listener
  */
-declare function useEventListener<E extends WindowEventName$1>(event: E, listener: WindowEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
+declare function useEventListener<E extends WindowEventName>(event: E, listener: WindowEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 /**
  * Overload 2: Explicitly Document target
  *
@@ -654,7 +654,6 @@ interface UseFpsOptions {
  */
 declare function useFps(options?: UseFpsOptions): number;
 
-type WindowEventName = keyof WindowEventMap;
 interface UseIdleOptions extends ConfigurableEventFilter {
     /**
      * Event names that listen to for detected user activity
@@ -777,6 +776,40 @@ interface UseInfiniteScrollOptions extends UseScrollOptions {
  * @param options -
  */
 declare function useInfiniteScroll<T extends MaybeElement>(element: MaybeElementRef<T>, onLoadMore?: (state: UseScrollReturn) => void | Promise<void>, options?: UseInfiniteScrollOptions): boolean;
+
+type KeyModifier = 'Alt' | 'AltGraph' | 'CapsLock' | 'Control' | 'Fn' | 'FnLock' | 'Meta' | 'NumLock' | 'ScrollLock' | 'Shift' | 'Symbol' | 'SymbolLock';
+interface UseKeyModifierOptions {
+    /**
+     * Event names that will prompt update to modifier states
+     *
+     * @defaultValue ['mousedown', 'mouseup', 'keydown', 'keyup']
+     */
+    events?: WindowEventName[];
+    /**
+     * Initial value of the returned ref
+     *
+     * @defaultValue false
+     */
+    initial?: boolean;
+}
+/**
+ * Reactive [Modifier State](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState).
+ * Tracks state of any of the [supported modifiers](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState#browser_compatibility) - see Browser Compatibility notes.
+ *
+ * @example
+ * ```ts
+ * import { useKeyModifier } from 'reactuse';
+ *
+ * const Shift = useKeyModifier('Shift');
+ *
+ * // Press down the Shift key
+ * console.log(Shift);  // true
+ * ```
+ * @param modifier Key modifier
+ * @param options
+ * @returns
+ */
+declare function useKeyModifier<T extends KeyModifier>(modifier: T, options?: UseKeyModifierOptions): boolean;
 
 type KeyEventGuard = (event: KeyboardEvent) => boolean;
 type KeyEventHandler = (e: KeyboardEvent) => void;
@@ -1052,4 +1085,4 @@ declare function useToggle<L = false, R = true>(): UseToggleReturn<L, R>;
  */
 declare function useToggle<L, R>(initialValue: L, toggledValue: R): UseToggleReturn<L, R>;
 
-export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, KeyModifier, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyModifierOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyModifier, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };
