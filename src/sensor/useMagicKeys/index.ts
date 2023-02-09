@@ -34,8 +34,6 @@ export type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof Ma
  *
  * > This hook returns a [`proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object. So that, it's **NOT** support by <u>IE 11 or below</u>.
  *
- * @param options -
- *
  * @example
  *
  * ```ts
@@ -68,6 +66,8 @@ export type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof Ma
  * const keys = useMagicKeys();
  * const ShiftA = keys['shift+a'];
  * ```
+ * @param options
+ * @returns
  */
 export function useMagicKeys(options: UseMagicKeysOptions = {}): UseMagicKeysReturn {
     const { delimiter, passive = true, onEventFired = noop } = options;

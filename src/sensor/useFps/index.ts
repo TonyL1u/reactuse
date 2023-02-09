@@ -19,7 +19,7 @@ export interface UseFpsOptions {
  *
  * const fps = useFps();
  * ```
- * @param options -
+ * @param options
  * @returns
  */
 export function useFps(options: UseFpsOptions = {}) {
