@@ -649,7 +649,7 @@ interface UseFpsOptions {
  *
  * const fps = useFps();
  * ```
- * @param options -
+ * @param options
  * @returns
  */
 declare function useFps(options?: UseFpsOptions): number;
@@ -866,8 +866,6 @@ type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeys
  *
  * > This hook returns a [`proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object. So that, it's **NOT** support by <u>IE 11 or below</u>.
  *
- * @param options -
- *
  * @example
  *
  * ```ts
@@ -900,6 +898,8 @@ type UseMagicKeysReturn = Readonly<Omit<Record<string, boolean>, keyof MagicKeys
  * const keys = useMagicKeys();
  * const ShiftA = keys['shift+a'];
  * ```
+ * @param options
+ * @returns
  */
 declare function useMagicKeys(options?: UseMagicKeysOptions): UseMagicKeysReturn;
 
@@ -955,7 +955,29 @@ declare function useLatest<T>(value: T): react.MutableRefObject<T>;
 
 declare function useReactive(): void;
 
+interface UseStorageOptions {
+    storage?: Storage;
+    mergeDefaults?: boolean;
+    listenToStorageChanges?: boolean;
+    onError?: (e: unknown) => void;
+}
+type UseStorageReturn<T> = readonly [T | null, (data: T) => void, () => void];
+declare function useStorage(key: string, defaults: boolean, options?: UseStorageOptions): UseStorageReturn<boolean>;
+declare function useStorage(key: string, defaults: string, options?: UseStorageOptions): UseStorageReturn<string>;
+declare function useStorage(key: string, defaults: number, options?: UseStorageOptions): UseStorageReturn<number>;
+declare function useStorage<T>(key: string, defaults: T, options?: UseStorageOptions): UseStorageReturn<T>;
+
 declare function useUpdate(): () => void;
+
+/**
+ * Reactively clamp a value between two other values.
+ *
+ * @param value Default value
+ * @param min
+ * @param max
+ * @returns
+ */
+declare function useClamp(value: number, min: number, max: number): [number, (value: SetStateAction<number>) => void];
 
 interface UseCounterOptions {
     min?: number;
@@ -1053,6 +1075,70 @@ interface EventHook<T = any> {
  */
 declare function useEventHook<T = any>(): EventHook<T>;
 
+interface UseOffsetPaginationOptions {
+    /**
+     * Total number of items.
+     */
+    total?: number;
+    /**
+     * The number of items to display per page.
+     * @default 10
+     */
+    pageSize?: number;
+    /**
+     * The current page number.
+     *
+     * @default 1
+     */
+    page?: number;
+    /**
+     * Callback when the `page` change.
+     */
+    onPageChange?: (returnValue: UseOffsetPaginationReturn) => unknown;
+    /**
+     * Callback when the `pageSize` change.
+     */
+    onPageSizeChange?: (returnValue: UseOffsetPaginationReturn) => unknown;
+    /**
+     * Callback when the `pageCount` change.
+     */
+    onPageCountChange?: (returnValue: UseOffsetPaginationReturn) => unknown;
+}
+interface UseOffsetPaginationReturn {
+    currentPage: number;
+    currentPageSize: number;
+    pageCount: number;
+    isFirstPage: boolean;
+    isLastPage: boolean;
+    setPageSize: (size: SetStateAction<number>) => void;
+    setPage: (page: SetStateAction<number>) => void;
+    prev: () => void;
+    next: () => void;
+}
+/**
+ * Reactive offset pagination.
+ *
+ * @example
+ * ```ts
+ * import { useOffsetPagination } from 'reactuse';
+ *
+ * const { currentPage, currentPageSize, pageCount, isFirstPage, isLastPage, prev, next, setPage, setPageSize } = useOffsetPagination({
+ *     total: data.length,
+ *     page: 1,
+ *     pageSize: 10,
+ *     onPageChange({ currentPage, currentPageSize }) {
+ *         // your data fetching function
+ *     },
+ *     onPageSizeChange({ currentPage, currentPageSize }) {
+ *         // your data fetching function
+ *     }
+ * });
+ * ```
+ * @param options
+ * @returns
+ */
+declare function useOffsetPagination(options: UseOffsetPaginationOptions): UseOffsetPaginationReturn;
+
 /**
  * Throttle execution of a function. Especially useful for rate limiting execution of handlers on events like resize and scroll.
  *
@@ -1085,4 +1171,4 @@ declare function useToggle<L = false, R = true>(): UseToggleReturn<L, R>;
  */
 declare function useToggle<L, R>(initialValue: L, toggledValue: R): UseToggleReturn<L, R>;
 
-export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, KeyModifier, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyModifierOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyModifier, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, KeyModifier, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyModifierOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseOffsetPaginationOptions, UseOffsetPaginationReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseStorageOptions, UseStorageReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClamp, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyModifier, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOffsetPagination, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useStorage, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };

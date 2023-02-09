@@ -43,3 +43,16 @@
 .doc-demo-widget-button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
+.doc-demo-widget-table {
+    display: block;
+    border-collapse: collapse;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+.doc-demo-widget-table tr {
+    border-top: 1px solid rgba(60, 60, 67, 0.12);
+}
+.doc-demo-widget-table td {
+    border: 1px solid rgba(60, 60, 67, .12);
+    padding: 8px 16px;
+}
