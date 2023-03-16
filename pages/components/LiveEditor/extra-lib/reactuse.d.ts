@@ -193,6 +193,40 @@ declare function useEventListener<E extends DocumentEventName>(target: Document,
  */
 declare function useEventListener<T extends MaybeElement, E extends GeneralEventName>(target: MaybeElementRef<T>, event: E, listener: GeneralEventListener<E>, options?: boolean | AddEventListenerOptions): Fn;
 
+interface UseFileDialogOptions {
+    /**
+     * @defaultValue true
+     */
+    multiple?: boolean;
+    /**
+     * @defaultValue '*'
+     */
+    accept?: string;
+    /**
+     * Select the input source for the capture file.
+     */
+    capture?: string;
+}
+interface UseFileDialogReturn {
+    readonly files: FileList | null;
+    open: (localOptions?: Partial<UseFileDialogOptions>) => void;
+    reset: () => void;
+}
+/**
+ * Open file dialog with ease.
+ *
+ * @example
+ * ```ts
+ * import { useFileDialog } from 'reactuse';
+ *
+ * const { files, open, reset } = useFileDialog();
+ * open(); // open a file dialog
+ * ```
+ * @param options
+ * @returns
+ */
+declare function useFileDialog(options?: UseFileDialogOptions): UseFileDialogReturn;
+
 interface UseTitleOptions {
     observe?: boolean;
 }
@@ -1171,4 +1205,4 @@ declare function useToggle<L = false, R = true>(): UseToggleReturn<L, R>;
  */
 declare function useToggle<L, R>(initialValue: L, toggledValue: R): UseToggleReturn<L, R>;
 
-export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, KeyModifier, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyModifierOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseOffsetPaginationOptions, UseOffsetPaginationReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseStorageOptions, UseStorageReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClamp, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyModifier, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOffsetPagination, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useStorage, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };
+export { ArrivedState, CursorState, DeviceOrientationState, ElementBounding, ElementSize, EventHook, EventHookOff, EventHookOn, EventHookTrigger, KeyEventGuard, KeyEventHandler, KeyFilter, KeyModifier, MagicKeysInternal, MouseSourceType, ScrollingState, UseClipboardOptions, UseClipboardReturn, UseCounterOptions, UseCounterReturn, UseCycleListOptions, UseCycleListReturn, UseDeviceOrientationReturn, UseDraggableOptions, UseDraggableReturn, UseFileDialogOptions, UseFileDialogReturn, UseFpsOptions, UseIdleOptions, UseIdleReturn, UseInfiniteScrollOptions, UseKeyModifierOptions, UseKeyStrokeOptions, UseMagicKeysOptions, UseMagicKeysReturn, UseMouseInElementOptions, UseMouseInElementReturn, UseMouseOptions, UseMouseReturn, UseMutationObserverReturn, UseOffsetPaginationOptions, UseOffsetPaginationReturn, UseParallaxOptions, UseRafFnFnCallbackArguments, UseRafFnOptions, UseRafFnReturn, UseResizeObserverReturn, UseScrollOptions, UseScrollReturn, UseStorageOptions, UseStorageReturn, UseTextSelectionReturn, UseTimeoutFnOptions, UseTimeoutFnReturn, UseTimeoutOptions, UseTimeoutReturn, UseTimestampOptions, UseTitleOptions, UseTitleReturn, UseToggleReturn, UseWindowSizeOptions, WatchRefCallback, WatchRefOptions, WatchStateCallback, WatchStateOptions, WindowSize, useClamp, useClipboard, useCounter, useCycleList, useDebounceFn, useDeviceOrientation, useDocumentVisibility, useDraggable, useElementBounding, useElementSize, useElementVisibility, useEventHook, useEventListener, useFileDialog, useFps, useIdle, useInfiniteScroll, useKeyDown, useKeyModifier, useKeyPress, useKeyStroke, useKeyUp, useLatest, useMagicKeys, useMounted, useMouse, useMouseInElement, useMutationObserver, useOffsetPagination, useOnMounted, useOnUnmounted, useParallax, useRafFn, useReactive, useResizeObserver, useScroll, useStorage, useTextSelection, useThrottleFn, useTimeout, useTimeoutFn, useTimestamp, useTitle, useToggle, useUpdate, useWatchRef, useWatchState, useWindowSize };

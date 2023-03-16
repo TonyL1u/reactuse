@@ -9,6 +9,7 @@
                 "allowObject": true
             }
         ],
-        "no-unused-vars": ["warn", { "destructuredArrayIgnorePattern": "^_", "args": "none" }]
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "destructuredArrayIgnorePattern": "^_", "args": "none" }]
     }
 }

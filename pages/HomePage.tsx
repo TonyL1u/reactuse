@@ -6,7 +6,7 @@ import './styles/HomePage.scss';
 
 const Demos = import.meta.glob<string>('/src/**/**/demo.tsx', { eager: true, as: 'raw' });
 const sources = Object.entries(Demos).map(([key, code]) => {
-    const [_, category, name] = key.match(/\/src\/(.*)\/(.*)\/demo.tsx/)!;
+    const [_, __, name] = key.match(/\/src\/(.*)\/(.*)\/demo.tsx/)!;
     return { name, code };
 });
 function getRandomDemo() {
@@ -57,7 +57,7 @@ export default () => {
                     </button>
                 </div>
             </div>
-            <div className="tw-w-full tw-max-w-[800px] " style={{ transform }}>
+            <div className="tw-w-full tw-max-w-[1000px]" style={{ transform }}>
                 <LiveEditor code={code} showToolbox={false} />
             </div>
         </div>
