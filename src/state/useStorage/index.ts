@@ -32,8 +32,26 @@ function createStorageSerializers<T extends StorageDataType>(data: T): Serialize
 
 export interface UseStorageOptions {
     storage?: Storage;
+    /**
+     * Merge the default value with the value read from the storage.
+     *
+     * When setting it to true, it will perform a **shallow merge** for objects.
+     * You can pass a function to perform custom merge (e.g. deep merge), for example:
+     *
+     * @defaultValue false
+     */
     mergeDefaults?: boolean;
+    /**
+     * Listen to storage changes, useful for multiple tabs application
+     *
+     * @defaultValue false
+     */
     listenToStorageChanges?: boolean;
+    /**
+     * On error callback
+     *
+     * Default log error to `console.error`
+     */
     onError?: (e: unknown) => void;
 }
 
